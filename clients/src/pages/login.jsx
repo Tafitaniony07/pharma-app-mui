@@ -7,6 +7,7 @@ import { useState } from "react";
 import logo from "../assets/logo.png";
 import { useForm } from "react-hook-form";
 import Button from "../components/btn/MuiButton.jsx";
+import axios from "../api/axios.jsx";
 
 const Login = () => {
 	const [showPassword, setShowPassword] = useState(false);
@@ -16,17 +17,30 @@ const Login = () => {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, isSubmitSuccessful },
+		resetField,
 	} = useForm({
 		mode: "onTouched",
 	});
-	const onSubmit = (data) => {
-		if (data.identifiant && data.password != " ") {
-			setResponse(true);
-		} else {
-			console.log("Error");
+
+	async function onSubmit(identifiant, password) {
+		if (isSubmitSuccessful) {
+			setTimeout(() => {
+				resetField("identifiant");
+				resetField("password");
+				setResponse(true);
+			}, 3000);
+
+			try {
+				await axios.post("/login", {
+					identifiant,
+					password,
+				});
+			} catch (error) {
+				console.error(error);
+			}
 		}
-	};
+	}
 	const handleMouseDownPassword = (event) => {
 		event.preventDefault();
 	};
