@@ -1,6 +1,5 @@
 import { Stack } from "@mui/material";
 import Box from "@mui/material/Box";
-
 import FormNewAccount from "../components/formNewAccount.jsx";
 import AdminSideBar from "./admin/adminSideBar.jsx";
 import NavBar from "../components/header.jsx";

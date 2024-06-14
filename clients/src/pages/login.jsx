@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { ArrowRightTwoTone, Visibility, VisibilityOff } from "@mui/icons-material";
 import { Container, FormControl, IconButton, InputAdornment, InputLabel, Link, OutlinedInput } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +9,7 @@ import logo from "../assets/logo.png";
 import { useForm } from "react-hook-form";
 import Button from "../components/btn/MuiButton.jsx";
 import axios from "../api/axios.jsx";
+import { Toaster, toast } from "sonner";
 
 const Login = () => {
 	const [showPassword, setShowPassword] = useState(false);
@@ -17,28 +19,33 @@ const Login = () => {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors, isSubmitSuccessful },
+		formState: { errors },
 		resetField,
 	} = useForm({
 		mode: "onTouched",
 	});
 
-	async function onSubmit(identifiant, password) {
-		if (isSubmitSuccessful) {
-			setTimeout(() => {
-				resetField("identifiant");
-				resetField("password");
-				setResponse(true);
-			}, 3000);
-
-			try {
-				await axios.post("/login", {
-					identifiant,
-					password,
+	async function onSubmit(data) {
+		try {
+			axios
+				.post("/login", {
+					identifiant: data.identifiant,
+					password: data.password,
+				})
+				.then((response) => {
+					if (response.statusText === "OK") {
+						resetField("identifiant");
+						resetField("password");
+						setResponse(true);
+					}
+				})
+				.catch((e) => {
+					if (e.response.status === 401) {
+						toast.warning("error");
+					}
 				});
-			} catch (error) {
-				console.error(error);
-			}
+		} catch (error) {
+			console.error(error);
 		}
 	}
 	const handleMouseDownPassword = (event) => {
@@ -125,6 +132,7 @@ const Login = () => {
 						>
 							Mot de passe oublié ?
 						</Link>
+						<Toaster position="top-center" richColors closeButton />
 					</Box>
 				</form>
 			</Container>

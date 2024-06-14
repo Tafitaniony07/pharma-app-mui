@@ -15,7 +15,7 @@ const FormNewAccount = () => {
 		mode: "onTouched",
 	});
 	const onSubmit = () => {
-		let text = "Account created successfully !";
+		let text = "Le compte a été créé avec succès !";
 		toast.success(text);
 	};
 	const accountType = [
@@ -64,7 +64,6 @@ const FormNewAccount = () => {
 	return (
 		<Box>
 			<img src={logo} width={150} />
-
 			<Box>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<Typography variant="h5" align="left" color="primary" my={4}>
