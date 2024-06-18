@@ -7,6 +7,7 @@ import { TransactionProvider } from "../pages/vendeur/TransactionContext.jsx"; /
 import ExpiryDate from "../pages/expiryDate.jsx";
 import VendeurDashboard from "../pages/vendeur/vendeurDashboard.jsx";
 import Trosa from "../components/Trosa.jsx";
+import Transaction from "../pages/admin/transaction.jsx";
 
 export default function Router() {
 	return (
@@ -21,6 +22,7 @@ export default function Router() {
 					<Route path="/create_account" element={<SignUp />}></Route>
 					<Route path="/achat" element={<VendeurDashboard />}></Route>
 					<Route path="/trosa" element={<Trosa />}></Route>
+					<Route path="/list_transaction" element={<Transaction />}></Route>
 				</Routes>
 			</BrowserRouter>
 		</TransactionProvider>

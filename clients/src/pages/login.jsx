@@ -12,6 +12,7 @@ import { Toaster, toast } from "sonner";
 
 const Login = () => {
 	const [showPassword, setShowPassword] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const [isResponse, setResponse] = useState(false);
 	const navigate = useNavigate();
 	const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -24,7 +25,6 @@ const Login = () => {
 	} = useForm({
 		mode: "onTouched",
 	});
-
 	useEffect(() => {
 		if (isResponse) {
 			navigate("/dashboard");
@@ -32,9 +32,10 @@ const Login = () => {
 	}, [isResponse, navigate]);
 
 	async function onSubmit(data) {
+		setLoading(true);
 		try {
 			const response = await axios.post("/login", {
-				identifiant: data.identifiant,
+				username: data.identifiant,
 				password: data.password,
 			});
 
@@ -58,7 +59,7 @@ const Login = () => {
 	};
 
 	return (
-		<>
+		<Box className="login-bg">
 			<Container
 				maxWidth="xs"
 				sx={{
@@ -124,6 +125,11 @@ const Login = () => {
 							/>
 						</FormControl>
 						<Button type="submit" text="Se connecter" fullWidth endIcon={<ArrowRightTwoTone />} />
+						{loading && (
+							<LoadingButton loading variant="outlined">
+								Submit
+							</LoadingButton>
+						)}
 						<Link
 							onClick={() => navigate("/dashboard")}
 							underline="always"
@@ -141,7 +147,7 @@ const Login = () => {
 					</Box>
 				</form>
 			</Container>
-		</>
+		</Box>
 	);
 };
 

@@ -207,7 +207,7 @@ const ListMedicamentsVendeur = () => {
 				</Grid>
 				<Grid item xs={5}>
 					<Panier
-						// addCart={addCart}
+						addCart={addCart}
 						clientName={clientName}
 						paymentStatus={paymentStatus}
 						remainingAmount={remainingAmount}

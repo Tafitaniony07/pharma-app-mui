@@ -28,14 +28,14 @@ function NavBar() {
 			<Container maxWidth="xl">
 				<Toolbar sx={{ justifyContent: "space-between" }}>
 					<img src={logo} width={120} />
-					<Stack spacing={6} direction="row">
+					{/* <Stack spacing={6} direction="row">
 						<Badge color="error" badgeContent={50}>
 							<DateRange color="primary" />
 						</Badge>
 						<Badge color="error" badgeContent={100}>
 							<ProductionQuantityLimitsSharp color="primary" />
 						</Badge>
-					</Stack>
+					</Stack> */}
 					<Box
 						sx={{
 							display: "flex",
