@@ -6,9 +6,9 @@ import AdminSideBar from "../pages/admin/adminSideBar";
 
 const Trosa = () => {
 	return (
-		<Box mt={13}>
+		<Box mt={12}>
 			<NavBar />
-			<Stack direction="row" justifyContent="space-between" gap={3} m="25px">
+			<Stack direction="row" justifyContent="space-between" alignItems="start">
 				<Box sx={{ bgcolor: "white", borderRadius: 5 }} flex={1}>
 					<AdminSideBar />
 				</Box>
@@ -17,6 +17,7 @@ const Trosa = () => {
 						bgcolor: "white",
 						borderRadius: 5,
 						p: 5,
+						mr: 3,
 					}}
 					flex={4}
 				>
