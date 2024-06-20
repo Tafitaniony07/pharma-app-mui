@@ -24,8 +24,8 @@ const FormNewAccount = () => {
 			label: "Vendeur",
 		},
 		{
-			value: "proprietaire",
-			label: "Proprietaire",
+			value: "gestionnaire",
+			label: "Gestionnaire",
 		},
 	];
 	const items = [
@@ -37,7 +37,6 @@ const FormNewAccount = () => {
 			label: "Role Compte",
 			name: "role",
 			type: "select",
-			defaultValue: "Vendeur",
 			options: accountType,
 		},
 		{
@@ -46,8 +45,8 @@ const FormNewAccount = () => {
 			type: "email",
 		},
 		{
-			name: "identifiant",
-			label: "Identifiant",
+			name: "username",
+			label: "Nom d'utilisateur",
 		},
 		{
 			name: "password",
@@ -62,7 +61,7 @@ const FormNewAccount = () => {
 		},
 	];
 	return (
-		<Box>
+		<>
 			<img src={logo} width={150} />
 			<Box>
 				<form onSubmit={handleSubmit(onSubmit)}>
@@ -82,7 +81,6 @@ const FormNewAccount = () => {
 									error={!!errors[field.name]}
 									helperText={errors[field.name]?.message}
 									type={field.type}
-									defaultValue={field.defaultValue}
 									autoFocus={field.autoFocus}
 									select={field.type === "select"}
 								>
@@ -101,7 +99,7 @@ const FormNewAccount = () => {
 								text="Créer maintenant"
 								color="secondary"
 								fullWidth
-								endIcon={<AccountCircle />}
+								startIcon={<AccountCircle />}
 							/>
 						</Box>
 					</Box>
@@ -119,7 +117,7 @@ const FormNewAccount = () => {
 					className: "class",
 				}}
 			/>
-		</Box>
+		</>
 	);
 };
 

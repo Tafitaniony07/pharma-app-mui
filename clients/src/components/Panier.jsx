@@ -94,15 +94,15 @@ const Panier = ({
 					</Typography>
 					<Stack direction="row" spacing={2} sx={{ mt: 2 }}>
 						<Button variant="contained" color="primary" onClick={saveTransaction}>
-							Enregistrer la transaction
+							Enregistrer
 						</Button>
 						<Button variant="contained" color="secondary" onClick={printInvoice} startIcon={<Print />}>
-							Imprimer la facture
+							Imprimer
 						</Button>
 					</Stack>
 				</TableContainer>
 			) : (
-				<p>Votre panier est vide.</p>
+				<Typography color="white">Votre panier est vide.</Typography>
 			)}
 		</>
 	);

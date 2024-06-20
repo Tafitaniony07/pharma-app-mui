@@ -1,161 +1,83 @@
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
-// import CssBaseline from '@mui/material/CssBaseline';
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import CategoryIcon from "@mui/icons-material/Category";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import SettingsIcon from "@mui/icons-material/Settings";
-import { useNavigate } from "react-router-dom";
-import { DateRange, History, Logout, Person, ProductionQuantityLimitsSharp } from "@mui/icons-material";
+
+import { useLocation, useNavigate } from "react-router-dom";
+import { DateRange, History, Logout, ProductionQuantityLimitsSharp } from "@mui/icons-material";
 
 export default function SideBarVendeur() {
 	const navigate = useNavigate();
+	const location = useLocation();
+	const isActive = (path) => location.pathname === path;
+	const items = [
+		{
+			icon: <DashboardIcon />,
+			path: "/vendeur",
+		},
+		{
+			icon: <DateRange />,
+			path: "/expirydate",
+		},
+		{
+			icon: <ProductionQuantityLimitsSharp />,
+			path: "/least_stock",
+		},
+		{
+			icon: <History />,
+			path: "/transactions",
+		},
+		{
+			icon: <Logout />,
+			path: "/",
+		},
+	];
 	return (
-		<Box sx={{ display: "flex" }}>
-			{/* <CssBaseline /> */}
+		<Box sx={{ display: "flex", bgcolor: "white", borderRadius: 5, position: "fixed", height: "100vh" }}>
 			<List sx={{ width: "100%", my: 3 }}>
-				<ListItem
-					disablePadding
-					sx={{ display: "block" }}
-					onClick={() => {
-						navigate("/dashboard");
-					}}
-				>
-					<ListItemButton
-						sx={{
-							minHeight: 48,
-							justifyContent: open ? "initial" : "center",
-							px: 5,
+				{items.map((item, index) => (
+					<ListItem
+						key={index}
+						disablePadding
+						sx={{ display: "block" }}
+						onClick={() => {
+							navigate(item.path);
 						}}
 					>
-						<ListItemIcon
+						<ListItemButton
 							sx={{
-								minWidth: 0,
-								mr: open ? 3 : "auto",
-								justifyContent: "center",
+								minHeight: 48,
+								justifyContent: "initial",
+								px: 5,
+								mt: index === 0 ? 0 : 2.5,
+								color: isActive(item.path) ? "#4d4373" : "inherit",
+								borderRight: isActive(item.path) ? "4px solid #4d4373" : "none",
+								backgroundColor: isActive(item.path) ? "rgba(58, 0, 128, 0.025)" : "transparent",
+								transition: "transform 0.8s ease",
+								"&:hover": {
+									transform: "translateX(10px)", // Légère mise à l'échelle
+									borderColor: "secondary.main", // Couleur de la bordure lors du survol
+									cursor: "pointer",
+									background: "#fff",
+									borderRadius: 1,
+								},
 							}}
 						>
-							<DashboardIcon />
-						</ListItemIcon>
-						<ListItemText primary="DashBoard" sx={{ opacity: open ? 1 : 0 }} />
-					</ListItemButton>
-				</ListItem>
-				
-				
-				<ListItem
-					disablePadding
-					sx={{ display: "block" }}
-					onClick={() => {
-						navigate("/expirydate");
-					}}
-				>
-					<ListItemButton
-						sx={{
-							minHeight: 48,
-							justifyContent: open ? "initial" : "center",
-							mt: 2.5,
-							px: 5,
-						}}
-					>
-						<ListItemIcon
-							sx={{
-								minWidth: 0,
-								mr: open ? 3 : "auto",
-								justifyContent: "center",
-							}}
-						>
-							<DateRange />
-						</ListItemIcon>
-						<ListItemText primary="Expiry Date" sx={{ opacity: open ? 1 : 0 }} />
-					</ListItemButton>
-				</ListItem>
-				<ListItem
-					disablePadding
-					sx={{ display: "block" }}
-					onClick={() => {
-						navigate("/expirydate");
-					}}
-				>
-					<ListItemButton
-						sx={{
-							minHeight: 48,
-							justifyContent: open ? "initial" : "center",
-							mt: 2.5,
-							px: 5,
-						}}
-					>
-						<ListItemIcon
-							sx={{
-								minWidth: 0,
-								mr: open ? 3 : "auto",
-								justifyContent: "center",
-							}}
-						>
-							<ProductionQuantityLimitsSharp />
-						</ListItemIcon>
-						<ListItemText primary="Least Stock" sx={{ opacity: open ? 1 : 0 }} />
-					</ListItemButton>
-				</ListItem>
-				<ListItem
-					disablePadding
-					sx={{ display: "block" }}
-					onClick={() => {
-						navigate("/transactions");
-					}}
-				>
-					<ListItemButton
-						sx={{
-							minHeight: 48,
-							justifyContent: open ? "initial" : "center",
-							mt: 2.5,
-							px: 5,
-						}}
-					>
-						<ListItemIcon
-							sx={{
-								minWidth: 0,
-								mr: open ? 3 : "auto",
-								justifyContent: "center",
-							}}
-						>
-							<History />
-						</ListItemIcon>
-						<ListItemText primary="Transactions" sx={{ opacity: open ? 1 : 0 }} />
-					</ListItemButton>
-				</ListItem>
-				
-				<ListItem
-					disablePadding
-					sx={{ display: "block" }}
-					onClick={() => {
-						navigate("/settings");
-					}}
-				>
-					<ListItemButton
-						sx={{
-							minHeight: 48,
-							justifyContent: open ? "initial" : "center",
-							mt: 2.5,
-							px: 5,
-						}}
-					>
-						<ListItemIcon
-							sx={{
-								minWidth: 0,
-								mr: open ? 3 : "auto",
-								justifyContent: "center",
-							}}
-						>
-							<Logout />
-						</ListItemIcon>
-
-						<ListItemText primary="Log Out" sx={{ opacity: open ? 1 : 0 }} />
-					</ListItemButton>
-				</ListItem>
+							<ListItemIcon
+								sx={{
+									minWidth: 0,
+									mr: 3,
+									color: isActive(item.path) ? "#4d4373" : "inherit",
+									justifyContent: "center",
+								}}
+							>
+								{item.icon}
+							</ListItemIcon>
+						</ListItemButton>
+					</ListItem>
+				))}
 			</List>
 		</Box>
 	);

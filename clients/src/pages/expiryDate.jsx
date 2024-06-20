@@ -7,13 +7,13 @@ import AdminSideBar from "./admin/adminSideBar.jsx";
 
 const ExpiryDate = () => {
 	return (
-		<Box mt={13} mb={10}>
+		<Box mt={12}>
 			<NavBar />
-			<Stack direction="row" justifyContent="space-between" gap={3} m={3}>
-				<Box sx={{ bgcolor: "white", borderRadius: 5, width: "20%" }}>
+			<Stack direction="row" justifyContent="space-between" alignItems="stretch">
+				<Box flex={1}>
 					<AdminSideBar />
 				</Box>
-				<Box sx={{ width: "70%", flexGrow: 1, bgcolor: "white", borderRadius: 5, p: 3 }}>
+				<Box bgcolor="white" height="85vh" borderRadius={5} p={3} mb={3} mr={3} flex={4}>
 					<StickyHeadTable />
 				</Box>
 			</Stack>

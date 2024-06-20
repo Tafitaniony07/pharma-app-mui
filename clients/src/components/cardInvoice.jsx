@@ -1,15 +1,5 @@
-import { Add, ArrowRightTwoTone, Check, ExpandLess } from "@mui/icons-material";
-import {
-	Box,
-	Button,
-	Collapse,
-	List,
-	ListItemButton,
-	ListItemIcon,
-	ListItemText,
-	Stack,
-	Typography,
-} from "@mui/material";
+import { Add, ArrowRightTwoTone, ExpandLess, ExpandMore } from "@mui/icons-material";
+import { Box, Button, ListItemIcon, ListItemText, Stack, Typography, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
 
 const CardInvoice = () => {
@@ -75,59 +65,64 @@ const CardInvoice = () => {
 			border: "1px solid orange",
 		},
 	];
-	const trosaOption = [
-		{ text: "Nouveau Trosa", icon: <Add />, path: "/trosa" },
-		{ text: "Listes de Trosa", icon: <Check />, path: "/list_trosa" },
-	];
-	const [open, setOpen] = useState(false);
 
-	const handleClick = () => {
-		setOpen(!open);
+	const [filterType, setFilterType] = useState("");
+	const [anchorEl, setAnchorEl] = useState(null);
+
+	const handleClick = (event) => {
+		setAnchorEl(event.currentTarget);
 	};
+
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
+	const handleFilterChange = (type) => {
+		setFilterType(type);
+		handleClose();
+	};
+
+	const filteredInvoices = filterType ? listInvoice.filter((invoice) => invoice.type === filterType) : listInvoice;
+
 	return (
 		<>
 			<Stack spacing={3} direction="row" alignItems="center" justifyContent="space-between">
 				<Typography component="h2" sx={{ fontSize: "25px" }} color="secondary">
 					All Transactions
 					<Typography component="p" color="black">
-						There are {listInvoice.length} total transactions
+						There are {filteredInvoices.length} total transactions
 					</Typography>
 				</Typography>
 				<Box>
-					<ListItemButton
+					<Button
+						aria-controls="filter-menu"
+						aria-haspopup="true"
 						onClick={handleClick}
 						sx={{
 							minHeight: 48,
 							justifyContent: "initial",
 							px: 5,
 						}}
+						endIcon={anchorEl ? <ExpandLess /> : <ExpandMore />}
 					>
 						<ListItemIcon>
 							<ArrowRightTwoTone />
 						</ListItemIcon>
 						<ListItemText primary="Filtrer par" />
-						{open ? <ExpandLess /> : <ExpandLess />}
-					</ListItemButton>
+					</Button>
+					<Menu
+						id="filter-menu"
+						anchorEl={anchorEl}
+						keepMounted
+						open={Boolean(anchorEl)}
+						onClose={handleClose}
+					>
+						<MenuItem onClick={() => handleFilterChange("paid")}>Paid</MenuItem>
+						<MenuItem onClick={() => handleFilterChange("pending")}>Pending</MenuItem>
+						<MenuItem onClick={() => handleFilterChange("")}>All</MenuItem>
+					</Menu>
 				</Box>
 
-				<Collapse in={open} timeout="auto" unmountOnExit>
-					{trosaOption.map((item, index) => (
-						<List disablePadding key={index}>
-							<ListItemButton>
-								<ListItemIcon
-									sx={{
-										minWidth: 0,
-										mr: 3,
-										justifyContent: "center",
-									}}
-								>
-									{item.icon}
-								</ListItemIcon>
-								<ListItemText primary={item.text} />
-							</ListItemButton>
-						</List>
-					))}
-				</Collapse>
 				<Button
 					sx={{
 						borderRadius: "50px",
@@ -141,7 +136,7 @@ const CardInvoice = () => {
 					Add New
 				</Button>
 			</Stack>
-			{listInvoice.map((invoice) => (
+			{filteredInvoices.map((invoice) => (
 				<Box
 					display="flex"
 					alignItems="center"

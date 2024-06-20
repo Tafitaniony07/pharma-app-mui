@@ -2,6 +2,6 @@
 import axios from "axios";
 
 export default axios.create({
-	baseURL: "https://pharma-f4xd.onrender.com/api/account/",
+	baseURL: "https://pharma-f4xd.onrender.com/api/",
 	withCredentials: true,
 });
