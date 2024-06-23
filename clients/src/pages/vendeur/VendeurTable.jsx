@@ -1,43 +1,12 @@
-/* eslint-disable no-unused-vars */
-import React, { useState, useContext, useRef } from "react";
-import {
-	Grid,
-	TextField,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-	TableSortLabel,
-	InputAdornment,
-	TableFooter,
-	TablePagination,
-	Fab,
-	Select,
-	MenuItem,
-	Button,
-	Stack,
-	CircularProgress,
-	Paper,
-	Typography,
-	DialogActions,
-	DialogContent,
-	DialogTitle,
-	Dialog,
-	createTheme,
-	ThemeProvider,
-} from "@mui/material";
+import { useState, useContext } from "react";
+import { Grid, TextField, InputAdornment, Stack, Box } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { ShoppingCartOutlined, Visibility, Check, Print } from "@mui/icons-material";
-import { toast, Toaster } from "sonner";
-import { TransactionContext } from "./TransactionContext";
+import { toast } from "sonner";
+import { TransactionContext } from "./TransactionContext.jsx";
 import { useNavigate } from "react-router";
 import MedicamentTable from "../../components/MedicamentTable.jsx";
 import Panier from "../../components/Panier.jsx";
 import TransactionDialog from "../../components/TransitionDialog.jsx";
-import { useReactToPrint } from "react-to-print";
-// import Invoice from "../../components/print";
 
 const ListMedicamentsVendeur = () => {
 	const { transactions, setTransactions } = useContext(TransactionContext);
@@ -57,11 +26,11 @@ const ListMedicamentsVendeur = () => {
 
 	// Sample medications data
 	const Medicaments = [
-		{ name: "AAMLA gelu /30", price: 1500, unitPrice: 500 },
-		{ name: "ABBOTICINE gnl/sp", price: 15200, unitPrice: 3800 },
-		{ name: "Paracetamol", price: 1800, unitPrice: 600 },
-		{ name: "Parabufen", price: 2800, unitPrice: 700 },
-		{ name: "ABUFENE 400mg cpr /30", price: 18800, unitPrice: 4700 },
+		{ name: "AAMLA gelu /30", priceGros: 1500, unitPrice: 500 },
+		{ name: "ABBOTICINE gnl/sp", priceGros: 15200, unitPrice: 3800 },
+		{ name: "Paracetamol", priceGros: 1800, unitPrice: 600 },
+		{ name: "Parabufen", priceGros: 2800, unitPrice: 700 },
+		{ name: "ABUFENE 400mg cpr /30", priceGros: 18800, unitPrice: 4700 },
 	];
 
 	// Filter and sort the medications
@@ -149,29 +118,19 @@ const ListMedicamentsVendeur = () => {
 		setDialogOpen(true); // Ouvrir la boîte de dialogue après enregistrement de la transaction
 	};
 
-	// Print invoice
-	// const invoiceRef = useRef();
-
-	// const handlePrint = useReactToPrint({
-	// 	content: () => invoiceRef.current,
-	// });
-
-	// const printInvoice = () => {
-	// 	handlePrint();
-	// };
-	// Calculate total price
 	const calculateTotalPrice = () => {
 		return addCart.reduce((total, item) => total + item.price, 0);
 	};
 
 	return (
 		<>
-			<Grid container spacing={3}>
-				<Grid item xs={12}>
+			<Stack direction="row" justifyContent="space-between" alignItems="stretch" maxWidth="100%">
+				<Box bgcolor="white" borderRadius={5} p={3} mr={3} flex={4}>
 					<TextField
 						label="Filtrer par nom"
 						value={filterText}
 						color="success"
+						sx={{ mb: 3 }}
 						onChange={(e) => setFilterText(e.target.value)}
 						fullWidth
 						InputProps={{
@@ -182,8 +141,6 @@ const ListMedicamentsVendeur = () => {
 							),
 						}}
 					/>
-				</Grid>
-				<Grid item xs={7}>
 					<MedicamentTable
 						filterText={filterText}
 						setFilterText={setFilterText}
@@ -204,8 +161,8 @@ const ListMedicamentsVendeur = () => {
 						handleChangePage={handleChangePage}
 						handleChangeRowsPerPage={handleChangeRowsPerPage}
 					/>
-				</Grid>
-				<Grid item xs={5}>
+				</Box>
+				<Box bgcolor="secondary.main" borderRadius={5} p={2} mr={3} flex={1}>
 					<Panier
 						addCart={addCart}
 						clientName={clientName}
@@ -217,26 +174,11 @@ const ListMedicamentsVendeur = () => {
 						setPaymentStatus={setPaymentStatus}
 						setRemainingAmount={setRemainingAmount}
 						saveTransaction={saveTransaction}
-						// printInvoice={printInvoice}
 					/>
-				</Grid>
-			</Grid>
+				</Box>
+			</Stack>
 
-			<TransactionDialog
-				dialogOpen={dialogOpen}
-				setDialogOpen={setDialogOpen}
-				navigate={navigate}
-				// printInvoice={printInvoice}
-			/>
-			{/* <div style={{ display: "block" }}>
-				<Invoice
-					// ref={invoiceRef}
-					clientName={clientName}
-					paymentStatus={paymentStatus}
-					remainingAmount={remainingAmount}
-					cartItems={addCart}
-				/>
-			</div> */}
+			<TransactionDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} navigate={navigate} />
 		</>
 	);
 };

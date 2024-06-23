@@ -7,27 +7,19 @@ import { Stock } from "../../api/product.js";
 import { useAccountStore } from "../../accountStore.js";
 import { useTokenStore } from "../../tokenStore.js";
 
-const Dashboard = () => {
-	const {account} = useAccountStore()
-	useEffect(()=>{
-		console.log(account);
-		const getStock = async ()=>{
-				return await Stock()
-			}
-			getStock()
-		})
+const AdminDashboard = () => {
 	return (
-		<Box>
+		<Box mt={12}>
 			<NavBar />
-			<Stack direction="row" justifyContent="space-between" gap={3} mx="25px" mt={13}>
-				<Box bgcolor="white" borderRadius={5} flex={1}>
+			<Stack direction="row" justifyContent="space-between" alignItems="stretch">
+				<Box flex={1}>
 					<AdminSideBar />
 				</Box>
-				<Box bgcolor="white" borderRadius={5} p={3} flex={4}>
+				<Box bgcolor="white" height="85vh" borderRadius={5} p={3} mb={3} mr={3} flex={4}>
 					<AdminListProducts />
 				</Box>
 			</Stack>
 		</Box>
 	);
 };
-export default Dashboard;
+export default AdminDashboard;

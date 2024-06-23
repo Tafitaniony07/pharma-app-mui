@@ -4,15 +4,14 @@ import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { useState, useEffect } from "react";
-import logo from "../assets/logo.png";
+import logo from "../../assets/logo.png";
 import { useForm } from "react-hook-form";
-import Button from "../components/btn/MuiButton.jsx";
+import Button from "../../components/btn/MuiButton.jsx";
 import { Toaster, toast } from "sonner";
-import useAuth from "../hooks/useAuth.js";
+import useAuth from "../../hooks/useAuth.js";
 
 const Login = () => {
 	const [showPassword, setShowPassword] = useState(false);
-	const [loading, setLoading] = useState(false);
 	const [isResponse, setResponse] = useState(false);
 	const navigate = useNavigate();
 	const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -32,7 +31,6 @@ const Login = () => {
 	}, [isResponse, navigate]);
 
 	async function onSubmit(data) {
-		setLoading(true);
 		try {
 			// const response = await myAxios.post("account/login", {
 			// 	username: data.identifiant,
@@ -41,7 +39,7 @@ const Login = () => {
 			const response = await login(data.identifiant, data.password)
 			console.log(response);
 			if (response.status === 200) {
-				resetField("identifiant");
+				resetField("username");
 				resetField("password");
 				setResponse(true);
 			}
@@ -83,14 +81,14 @@ const Login = () => {
 					>
 						<img src={logo} width={220} />
 						<TextField
-							label="Identifiant"
+							label="Nom d'utilisateur"
 							color="primary"
 							fullWidth
-							{...register("identifiant", {
+							{...register("username", {
 								required: "Veuillez remplir ce champ",
 							})}
-							error={!!errors.identifiant}
-							helperText={errors.identifiant?.message}
+							error={!!errors.username}
+							helperText={errors.username?.message}
 							sx={{
 								marginTop: "20px",
 							}}
@@ -126,11 +124,6 @@ const Login = () => {
 							/>
 						</FormControl>
 						<Button type="submit" text="Se connecter" fullWidth endIcon={<ArrowRightTwoTone />} />
-						{/* {loading && (
-							<LoadingButton loading variant="outlined">
-								Submit
-							</LoadingButton>
-						)} */}
 						<Link
 							onClick={() => navigate("/dashboard")}
 							underline="always"

@@ -23,7 +23,6 @@ import {
 } from "@mui/material";
 import { format, addMonths, isBefore } from "date-fns";
 import SearchIcon from "@mui/icons-material/Search";
-// import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { Add, Close, Delete, Edit, Save, Visibility } from "@mui/icons-material";
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
@@ -176,7 +175,7 @@ const AdminListProducts = () => {
 
 			<Grid item xs={12}>
 				<TableContainer>
-					<Table>
+					<Table stickyHeader>
 						<TableHead>
 							<TableRow>
 								{columns.map((column) => (
@@ -268,7 +267,7 @@ const AdminListProducts = () => {
 						</TableBody>
 
 						<TableFooter>
-							<TableRow>
+							<TableRow mt={10}>
 								<TablePagination
 									rowsPerPageOptions={[5, 10, 25]}
 									colSpan={12}

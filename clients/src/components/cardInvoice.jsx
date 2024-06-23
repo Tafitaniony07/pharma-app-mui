@@ -1,16 +1,7 @@
-import { Add, ArrowRightTwoTone, Check, ExpandLess } from "@mui/icons-material";
-import {
-	Box,
-	Button,
-	Collapse,
-	List,
-	ListItemButton,
-	ListItemIcon,
-	ListItemText,
-	Stack,
-	Typography,
-} from "@mui/material";
+import { Add, ArrowRightTwoTone, ExpandLess, ExpandMore } from "@mui/icons-material";
+import { Box, Button, ListItemIcon, ListItemText, Stack, Typography, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 const CardInvoice = () => {
 	const listInvoice = [
@@ -19,7 +10,7 @@ const CardInvoice = () => {
 			clientName: "John Doe",
 			paymentDue: "12-08-24",
 			total: 15000,
-			type: "paid",
+			type: "payé",
 			bgcolor: "#045D5D",
 			border: "none",
 			color: "#fff",
@@ -29,7 +20,7 @@ const CardInvoice = () => {
 			clientName: "Jensen Walker",
 			paymentDue: "02-11-24",
 			total: 80000,
-			type: "pending",
+			type: "en cours",
 			bgcolor: "#fff",
 			color: "orange",
 			border: "1px solid orange",
@@ -39,7 +30,7 @@ const CardInvoice = () => {
 			clientName: "Mike Tyson",
 			paymentDue: "05-09-24",
 			total: 75000,
-			type: "paid",
+			type: "payé",
 			bgcolor: "#045D5D",
 			border: "none",
 			color: "#fff",
@@ -49,7 +40,7 @@ const CardInvoice = () => {
 			clientName: "Paul Dayron",
 			paymentDue: "12-03-23",
 			total: 330000,
-			type: "pending",
+			type: "en cours",
 			bgcolor: "#fff",
 			color: "orange",
 			border: "1px solid orange",
@@ -59,7 +50,7 @@ const CardInvoice = () => {
 			clientName: "John Doe",
 			paymentDue: "12-08-24",
 			total: 15000,
-			type: "paid",
+			type: "payé",
 			bgcolor: "#045D5D",
 			color: "#fff",
 			border: "none",
@@ -69,66 +60,79 @@ const CardInvoice = () => {
 			clientName: "Paul Dayron",
 			paymentDue: "12-03-23",
 			total: 330000,
-			type: "pending",
+			type: "en cours",
 			bgcolor: "#fff",
 			color: "orange",
 			border: "1px solid orange",
 		},
 	];
-	const trosaOption = [
-		{ text: "Nouveau Trosa", icon: <Add />, path: "/trosa" },
-		{ text: "Listes de Trosa", icon: <Check />, path: "/list_trosa" },
-	];
-	const [open, setOpen] = useState(false);
 
-	const handleClick = () => {
-		setOpen(!open);
+	const navigate = useNavigate();
+	const [filterType, setFilterType] = useState("");
+	const [anchorEl, setAnchorEl] = useState(null);
+
+	const handleClick = (event) => {
+		setAnchorEl(event.currentTarget);
 	};
+
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
+	const handleFilterChange = (type) => {
+		setFilterType(type);
+		handleClose();
+	};
+
+	const filteredInvoices = filterType ? listInvoice.filter((invoice) => invoice.type === filterType) : listInvoice;
+
 	return (
 		<>
 			<Stack spacing={3} direction="row" alignItems="center" justifyContent="space-between">
 				<Typography component="h2" sx={{ fontSize: "25px" }} color="secondary">
-					All Transactions
+					Tous les transactions
 					<Typography component="p" color="black">
-						There are {listInvoice.length} total transactions
+						Il y a {filteredInvoices.length} total de transactions
 					</Typography>
 				</Typography>
 				<Box>
-					<ListItemButton
+					<Button
+						aria-controls="filter-menu"
+						aria-haspopup="true"
 						onClick={handleClick}
 						sx={{
 							minHeight: 48,
 							justifyContent: "initial",
+							bgcolor: "#f9f9f9",
+							color: "secondary.main",
 							px: 5,
 						}}
+						endIcon={anchorEl ? <ExpandLess /> : <ExpandMore />}
 					>
-						<ListItemIcon>
-							<ArrowRightTwoTone />
-						</ListItemIcon>
-						<ListItemText primary="Filtrer par" />
-						{open ? <ExpandLess /> : <ExpandLess />}
-					</ListItemButton>
+						<ListItemText primary="Filtrer par" sx={{ textTransform: "capitalize" }} />
+					</Button>
+					<Menu
+						id="filter-menu"
+						anchorEl={anchorEl}
+						keepMounted
+						open={Boolean(anchorEl)}
+						onClose={handleClose}
+						sx={{
+							"& .MuiPaper-root": {
+								boxShadow: "none",
+							},
+						}}
+					>
+						<MenuItem sx={{ width: 175 }} onClick={() => handleFilterChange("payé")}>
+							Payé
+						</MenuItem>
+						<MenuItem onClick={() => handleFilterChange("en cours")}>En cours</MenuItem>
+						<MenuItem onClick={() => handleFilterChange("")}>Tout</MenuItem>
+					</Menu>
 				</Box>
 
-				<Collapse in={open} timeout="auto" unmountOnExit>
-					{trosaOption.map((item, index) => (
-						<List disablePadding key={index}>
-							<ListItemButton>
-								<ListItemIcon
-									sx={{
-										minWidth: 0,
-										mr: 3,
-										justifyContent: "center",
-									}}
-								>
-									{item.icon}
-								</ListItemIcon>
-								<ListItemText primary={item.text} />
-							</ListItemButton>
-						</List>
-					))}
-				</Collapse>
 				<Button
+					onClick={() => navigate("/trosa")}
 					sx={{
 						borderRadius: "50px",
 						bgcolor: "#f9f9f9",
@@ -138,10 +142,10 @@ const CardInvoice = () => {
 					}}
 					startIcon={<Add />}
 				>
-					Add New
+					Ajouter un nouveau trosa
 				</Button>
 			</Stack>
-			{listInvoice.map((invoice) => (
+			{filteredInvoices.map((invoice) => (
 				<Box
 					display="flex"
 					alignItems="center"
