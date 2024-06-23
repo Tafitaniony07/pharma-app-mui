@@ -1,9 +1,21 @@
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, accordionActionsClasses } from "@mui/material";
 import NavBar from "../../components/header.jsx";
 import AdminSideBar from "./adminSideBar.jsx";
 import AdminListProducts from "./adminListProducts.jsx";
+import { useEffect } from "react";
+import { Stock } from "../../api/product.js";
+import { useAccountStore } from "../../accountStore.js";
+import { useTokenStore } from "../../tokenStore.js";
 
 const Dashboard = () => {
+	const {account} = useAccountStore()
+	useEffect(()=>{
+		console.log(account);
+		const getStock = async ()=>{
+				return await Stock()
+			}
+			getStock()
+		})
 	return (
 		<Box>
 			<NavBar />

@@ -7,8 +7,8 @@ import { useState, useEffect } from "react";
 import logo from "../assets/logo.png";
 import { useForm } from "react-hook-form";
 import Button from "../components/btn/MuiButton.jsx";
-import axios from "../api/axios.jsx";
 import { Toaster, toast } from "sonner";
+import useAuth from "../hooks/useAuth.js";
 
 const Login = () => {
 	const [showPassword, setShowPassword] = useState(false);
@@ -16,7 +16,7 @@ const Login = () => {
 	const [isResponse, setResponse] = useState(false);
 	const navigate = useNavigate();
 	const handleClickShowPassword = () => setShowPassword((show) => !show);
-
+	const {login} = useAuth()
 	const {
 		register,
 		handleSubmit,
@@ -34,11 +34,12 @@ const Login = () => {
 	async function onSubmit(data) {
 		setLoading(true);
 		try {
-			const response = await axios.post("/login", {
-				username: data.identifiant,
-				password: data.password,
-			});
-
+			// const response = await myAxios.post("account/login", {
+			// 	username: data.identifiant,
+			// 	password: data.password,
+			// });
+			const response = await login(data.identifiant, data.password)
+			console.log(response);
 			if (response.status === 200) {
 				resetField("identifiant");
 				resetField("password");
@@ -125,11 +126,11 @@ const Login = () => {
 							/>
 						</FormControl>
 						<Button type="submit" text="Se connecter" fullWidth endIcon={<ArrowRightTwoTone />} />
-						{loading && (
+						{/* {loading && (
 							<LoadingButton loading variant="outlined">
 								Submit
 							</LoadingButton>
-						)}
+						)} */}
 						<Link
 							onClick={() => navigate("/dashboard")}
 							underline="always"
