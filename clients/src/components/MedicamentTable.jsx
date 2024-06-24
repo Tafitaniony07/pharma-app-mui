@@ -7,101 +7,50 @@ import {
 	TableHead,
 	TableRow,
 	TableSortLabel,
-	TextField,
-	Select,
-	MenuItem,
 	Fab,
 	CircularProgress,
 	Stack,
 } from "@mui/material";
-import { Check, ArrowRightAlt } from "@mui/icons-material";
+import { ArrowRightAlt } from "@mui/icons-material";
+import { TruncateText } from "./TruncateText.jsx";
 
-const MedicamentTable = ({
-	sortColumn,
-	sortDirection,
-	handleSort,
-	paginatedData,
-	loadingState,
-	addCart,
-	units,
-	quantities,
-	setUnits,
-	setQuantities,
-	addToCart,
-}) => {
+const MedicamentTable = ({ sortColumn, sortDirection, handleSort, paginatedData, loadingState, addToCart }) => {
+	const columns = [
+		{ minWidth: 100, label: "Designation", filter: "name" },
+		{ minWidth: 85, label: "Marque", filter: "brand" },
+		{ minWidth: 85, label: "Classe", filter: "class" },
+		{ minWidth: 85, label: "Prix Détail", filter: "price" },
+		{ minWidth: 85, label: "Prix Gros", filter: "price" },
+		{ minWidth: 50, label: "Actions" },
+	];
+
 	return (
 		<>
 			<TableContainer>
 				<Table stickyHeader aria-label="sticky header">
 					<TableHead>
 						<TableRow>
-							<TableCell>
-								<TableSortLabel
-									active={sortColumn === "name"}
-									direction={sortDirection}
-									onClick={() => handleSort("name")}
-								>
-									Nom
-								</TableSortLabel>
-							</TableCell>
-							<TableCell>Q. Détail</TableCell>
-							<TableCell>Q. Gros</TableCell>
-							<TableCell>
-								<TableSortLabel
-									active={sortColumn === "price"}
-									direction={sortDirection}
-									onClick={() => handleSort("price")}
-								>
-									Prix Gros
-								</TableSortLabel>
-							</TableCell>
-							<TableCell>
-								<TableSortLabel
-									active={sortColumn === "price"}
-									direction={sortDirection}
-									onClick={() => handleSort("price")}
-								>
-									Prix Détails
-								</TableSortLabel>
-							</TableCell>
-							<TableCell>Actions</TableCell>
+							{columns.map((column, index) => (
+								<TableCell key={index} style={{ minWidth: column.minWidth }}>
+									<TableSortLabel
+										active={sortColumn === `${column.filter}`}
+										direction={sortDirection}
+										onClick={() => handleSort(`${column.filter}`)}
+									>
+										{column.label}
+									</TableSortLabel>
+								</TableCell>
+							))}
 						</TableRow>
 					</TableHead>
 					<TableBody>
 						{paginatedData.map((item, index) => (
 							<TableRow key={index}>
-								<TableCell>{item.name}</TableCell>
-								<TableCell>{item.quantity}</TableCell>
-								<TableCell>
-									<TextField
-										type="number"
-										value={quantities[item.name] || 1}
-										onChange={(e) =>
-											setQuantities({
-												...quantities,
-												[item.name]: parseInt(e.target.value, 10),
-											})
-										}
-										size="small"
-										sx={{ width: 60 }}
-									/>
-								</TableCell>
-								<TableCell>
-									<TextField
-										type="number"
-										value={quantities[item.name] || 1}
-										onChange={(e) =>
-											setQuantities({
-												...quantities,
-												[item.name]: parseInt(e.target.value, 10),
-											})
-										}
-										size="small"
-										sx={{ width: 60 }}
-									/>
-								</TableCell>
-								<TableCell>{item.priceGros} Ar</TableCell>
+								<TableCell>{TruncateText(item.name, 15)}</TableCell>
+								<TableCell>{item.marque}</TableCell>
+								<TableCell>{item.classe}</TableCell>
 								<TableCell>{item.unitPrice} Ar</TableCell>
+								<TableCell>{item.priceGros} Ar</TableCell>
 								<TableCell>
 									<Stack direction="row" gap={2}>
 										{loadingState[item.name] ? (
