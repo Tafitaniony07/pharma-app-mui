@@ -9,11 +9,13 @@ import logo from "../assets/logo.png";
 import { Badge, Button, Stack, Typography } from "@mui/material";
 import { DateRange, LogoutRounded, ProductionQuantityLimitsSharp } from "@mui/icons-material";
 import { useNavigate } from "react-router";
+import useAuth from "../hooks/useAuth";
 
 function NavBar() {
 	const navigate = useNavigate();
-
+	const {logout} = useAuth()
 	function handleClick() {
+		logout()
 		navigate("/");
 	}
 	return (

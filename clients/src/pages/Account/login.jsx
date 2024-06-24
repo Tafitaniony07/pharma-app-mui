@@ -15,7 +15,7 @@ const Login = () => {
 	const [isResponse, setResponse] = useState(false);
 	const navigate = useNavigate();
 	const handleClickShowPassword = () => setShowPassword((show) => !show);
-	const {login} = useAuth()
+	const {login, account} = useAuth()
 	const {
 		register,
 		handleSubmit,
@@ -26,9 +26,11 @@ const Login = () => {
 	});
 	useEffect(() => {
 		if (isResponse) {
-			navigate("/dashboard");
+			if (account.account_type === "gestionnaires")
+				navigate("/admin")
+			else navigate('vendeur')
 		}
-	}, [isResponse, navigate]);
+	}, [isResponse, navigate, account]);
 
 	async function onSubmit(data) {
 		try {
@@ -36,7 +38,8 @@ const Login = () => {
 			// 	username: data.identifiant,
 			// 	password: data.password,
 			// });
-			const response = await login(data.identifiant, data.password)
+			console.log(data.username);
+			const response = await login(data.username, data.password)
 			console.log(response);
 			if (response.status === 200) {
 				resetField("username");

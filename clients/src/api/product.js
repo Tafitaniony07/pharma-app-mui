@@ -21,6 +21,32 @@ export async function Stock(){
         throw error
     }
 }
+
+/**
+ * 
+ * @param {*} product object produit
+ * @returns list de produit crée
+ */
+export async function createProduct(product){
+    const {access} = useTokenStore.getState()
+    console.log("Access", product);
+    try {
+        const res = await myAxiosPrivate.post(
+            'stock/create-product',
+            product,
+            {
+                headers : {
+                    Authorization : `Bearer ${access}`
+                }
+            }
+        )
+        console.log(res.data);
+        return res
+    } catch (error) {
+        console.log(error);
+        throw error
+    }
+}
 /**
  * 
  * @param {*} stockList list de produit
@@ -28,15 +54,18 @@ export async function Stock(){
  */
 export async function createStock(stockList){
     const {access} = useTokenStore.getState()
+    console.log("Access", access);
     try {
-        const res = await myAxiosPrivate.create(
+        const res = await myAxiosPrivate.post(
             'stock/create-stock',
+            {stockList},
             {
                 headers : {
                     Authorization : `Bearer ${access}`
                 }
             }
         )
+        console.log(res.data);
         return res
     } catch (error) {
         throw error

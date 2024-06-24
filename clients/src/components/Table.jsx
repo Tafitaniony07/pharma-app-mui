@@ -7,8 +7,9 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { Box, TableFooter, TableSortLabel, Typography } from "@mui/material";
 import { Medicaments } from "../data/listmedicaments.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { addMonths, format, isBefore } from "date-fns";
+import { StockInExpired } from "../api/product.js";
 
 export default function StickyHeadTable() {
 	const [sortColumn, setSortColumn] = useState("designation");
@@ -23,7 +24,13 @@ export default function StickyHeadTable() {
 		{ filter: "quantity", label: "Quantité" },
 		{ filter: "date_peremption", label: "Date de péremption" },
 	];
-
+	useEffect(()=>{
+		const medicaments = async ()=>{
+			const res = await StockInExpired()
+			console.log(res.data);
+		}
+		medicaments()
+	}, [])
 	const sortedData = Medicaments.sort((a, b) => {
 		if (a[sortColumn] < b[sortColumn]) return sortDirection === "asc" ? -1 : 1;
 		if (a[sortColumn] > b[sortColumn]) return sortDirection === "asc" ? 1 : -1;
