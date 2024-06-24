@@ -7,10 +7,11 @@ import { myAxios } from "./axios";
  * @returns objects with data
  */
 export async function Login(username, password){
+    console.log(username, password);
     try {
         const res = await myAxios.post(
             'account/login',
-            {username , password }
+            {username , password}
         )
         console.log("Account REs", res);
         return res

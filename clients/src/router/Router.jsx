@@ -15,7 +15,7 @@ export default function Router() {
 			<BrowserRouter>
 				<Routes>
 					<Route path="/" element={<Login />}></Route>
-					<Route path="/admin_dashboard" element={<AdminDashboard />}></Route>
+					<Route path="/admin" element={<AdminDashboard />}></Route>
 					<Route path="/addproduct" element={<AddProduct />}></Route>
 					<Route path="/expirydate" element={<ExpiryDate />}></Route>
 					<Route path="/create_account" element={<CreateAccount />}></Route>

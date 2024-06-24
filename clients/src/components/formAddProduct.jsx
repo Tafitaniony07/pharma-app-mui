@@ -6,6 +6,7 @@ import Button from "../components/btn/MuiButton";
 import FieldAddProduct from "./fieldAddProduct.jsx";
 import AddProductExcel from "./addProductExcel.jsx";
 import {myAxiosPrivate} from "../api/axios.js";
+import {createProduct, createStock} from '../api/product.js'
 
 const FormAddProduct = () => {
 	const {
@@ -19,22 +20,30 @@ const FormAddProduct = () => {
 
 	const handleRegister = (data) => {
 		try {
-			myAxiosPrivate
-				.post("/addproduct", {
-					famille: data.famille,
+			const datas = 
+			{
+				prix_uniter: data.prix_uniter,
+				prix_gros: data.prix_gros,
+				qte_uniter: data.qte_uniter,
+				qte_gros: data.qte_gros,
+				date_peremption: data.date_peremption,
+				marque: data.marque,
+				detail : {
 					designation: data.designation,
+					famille : data.famille,
 					classe: data.classe,
-					marque: data.marque,
+					qte_max : data.qte_max,
 					type_uniter: data.type_uniter,
 					type_gros: data.type_gros,
-					prix_uniter: data.prix_uniter,
-					prix_gros: data.prix_gros,
-					qte_uniter: data.qte_uniter,
-					qte_gros: data.qte_gros,
-					qte_max: data.qte_max,
-					date_peremption: data.date_peremption,
-					fournisseur: [data.fournisseur, data.adresse, data.contact],
-				})
+				},
+				fournisseur: {
+					nom : data.fournisseur,
+					adress : data.adresse,
+					contact : data.contact
+				}
+			}
+			
+			createProduct(datas)
 				.then((response) => {
 					if (response.status === 201 && isSubmitSuccessful == true) {
 						// Réinitialiser les champs du formulaire après une soumission réussie
