@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { Grid, TextField, InputAdornment, Stack, Box } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { toast } from "sonner";
+import { Toaster, toast } from "sonner";
 import { TransactionContext } from "./TransactionContext.jsx";
 import { useNavigate } from "react-router";
 import MedicamentTable from "../../components/MedicamentTable.jsx";
@@ -26,11 +26,51 @@ const ListMedicamentsVendeur = () => {
 
 	// Sample medications data
 	const Medicaments = [
-		{ name: "AAMLA gelu /30", priceGros: 1500, unitPrice: 500 },
-		{ name: "ABBOTICINE gnl/sp", priceGros: 15200, unitPrice: 3800 },
-		{ name: "Paracetamol", priceGros: 1800, unitPrice: 600 },
-		{ name: "Parabufen", priceGros: 2800, unitPrice: 700 },
-		{ name: "ABUFENE 400mg cpr /30", priceGros: 18800, unitPrice: 4700 },
+		{
+			name: "AAMLA gelu /30",
+			classe: "comprimé",
+			marque: "Nivo SA",
+			quantityDetails: 0,
+			quantityBulk: 0,
+			unitPrice: 1500,
+			priceGros: 14000,
+		},
+		{
+			name: "Teste Grossesse",
+			classe: "consomable",
+			marque: "MEDA",
+			unitPrice: 3000,
+			quantityDetails: 0,
+			quantityBulk: 0,
+			priceGros: 28000,
+		},
+		{
+			name: "Paracetamol",
+			classe: "injectable",
+			marque: "cmc",
+			unitPrice: 1800,
+			priceGros: 16000,
+			quantityDetails: 0,
+			quantityBulk: 0,
+		},
+		{
+			name: "Parabufen",
+			classe: "comprimé",
+			marque: "Shifa",
+			unitPrice: 2800,
+			quantityDetails: 0,
+			quantityBulk: 0,
+			priceGros: 27000,
+		},
+		{
+			name: "ABUFENE 400mg cpr /30",
+			classe: "comprimé",
+			marque: "Nivo SA",
+			unitPrice: 1200,
+			priceGros: 10000,
+			quantityDetails: 0,
+			quantityBulk: 0,
+		},
 	];
 
 	// Filter and sort the medications
@@ -61,20 +101,29 @@ const ListMedicamentsVendeur = () => {
 	};
 
 	const paginatedData = sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
-	// Add item to cart
 	const addToCart = (item) => {
-		const unit = units[item.name] || "plaquette";
-		const quantity = quantities[item.name] || 1;
-		let itemPrice = unit === "boîte" ? item.price : item.unitPrice;
-		if (unit === "boîte" && quantity > 4) {
-			itemPrice = itemPrice * 0.95; // Apply 5% discount
-		}
-		const cartItem = { ...item, price: itemPrice * quantity, unit, quantity };
-		if (addCart.some((cartItem) => cartItem.name === item.name && cartItem.unit === unit)) {
+		const detailQty = quantities[item.name]?.detail || 0;
+		const grosQty = quantities[item.name]?.gros || 0;
+
+		const quantityDetails = detailQty > 0 ? detailQty : 0;
+		const quantityBulk = grosQty > 0 ? grosQty : 0;
+
+		const itemPriceDetails = item.unitPrice * quantityDetails;
+		const itemPriceBulk = item.priceGros * quantityBulk;
+		const totalItemPrice = itemPriceDetails + itemPriceBulk;
+
+		const cartItem = {
+			...item,
+			price: totalItemPrice,
+			quantityDetails: quantityDetails,
+			quantityBulk: quantityBulk,
+		};
+
+		if (addCart.some((cartItem) => cartItem.name === item.name)) {
 			toast.warning("L'article est déjà ajouté au panier");
 			return;
 		}
+
 		setLoadingState({ ...loadingState, [item.name]: true });
 		setTimeout(() => {
 			setAddCart((prev) => [...prev, cartItem]);
@@ -82,22 +131,44 @@ const ListMedicamentsVendeur = () => {
 		}, 500);
 	};
 
-	const navigate = useNavigate();
-
 	// Update cart quantity
-	const updateCartQuantity = (name, quantity) => {
+	const updateCartQuantity = (name, type, quantity) => {
 		setAddCart((prevCart) =>
-			prevCart.map((item) =>
-				item.name === name
-					? {
-							...item,
-							quantity,
-							price: item.unit === "boîte" ? item.price * quantity : item.unitPrice * quantity,
-					  }
-					: item
-			)
+			prevCart.map((item) => {
+				if (item.name === name) {
+					let newQuantityDetails = item.quantityDetails;
+					let newQuantityBulk = item.quantityBulk;
+
+					if (type === "details") {
+						newQuantityDetails = quantity;
+					} else if (type === "bulk") {
+						newQuantityBulk = quantity;
+					}
+
+					const newPriceDetails = item.unitPrice * newQuantityDetails;
+					const newPriceBulk = item.priceGros * newQuantityBulk;
+					const newTotalPrice = newPriceDetails + newPriceBulk;
+
+					return {
+						...item,
+						quantityDetails: newQuantityDetails,
+						quantityBulk: newQuantityBulk,
+						price: newTotalPrice,
+					};
+				}
+				return item;
+			})
 		);
 	};
+	const removeFromCart = (name) => {
+		setAddCart((prevCart) => prevCart.filter((item) => item.name !== name));
+		toast.warning("L'article a été retiré du panier");
+	};
+	const clearCart = () => {
+		setAddCart([]);
+	};
+
+	const navigate = useNavigate();
 
 	// Save transaction
 	const saveTransaction = () => {
@@ -121,11 +192,49 @@ const ListMedicamentsVendeur = () => {
 	const calculateTotalPrice = () => {
 		return addCart.reduce((total, item) => total + item.price, 0);
 	};
+	const handlePrint = () => {
+		const printContent = `
+            <h1>Transaction</h1>
+            <p>Nom du client: ${clientName}</p>
+            <p>État du paiement: ${paymentStatus}</p>
+            <p>Date d'achat: ${new Date().toLocaleString()}</p>
+            <table border="1" style="border-collapse: collapse; width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Unité</th>
+                        <th>Quantité</th>
+                        <th>Prix</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${addCart
+						.map(
+							(item) => `
+                        <tr>
+                            <td>${item.name}</td>
+                            <td>${item.unit}</td>
+                            <td>${item.quantity}</td>
+                            <td>${item.price} Ar</td>
+                        </tr>
+                    `
+						)
+						.join("")}
+                </tbody>
+            </table>
+            <p>Total: ${calculateTotalPrice()} Ar</p>
+        `;
+
+		const printWindow = window.open("", "", "width=800,height=600");
+		printWindow.document.write(printContent);
+		printWindow.document.close();
+		printWindow.print();
+	};
 
 	return (
 		<>
 			<Stack direction="row" justifyContent="space-between" alignItems="stretch" maxWidth="100%">
-				<Box bgcolor="white" borderRadius={5} p={3} mr={3} flex={4}>
+				<Box bgcolor="white" borderRadius={5} p={3} mr={3} flex={5}>
 					<TextField
 						label="Filtrer par nom"
 						value={filterText}
@@ -162,9 +271,19 @@ const ListMedicamentsVendeur = () => {
 						handleChangeRowsPerPage={handleChangeRowsPerPage}
 					/>
 				</Box>
-				<Box bgcolor="secondary.main" borderRadius={5} p={2} mr={3} flex={1}>
+				<Box
+					sx={{
+						borderRadius: 5,
+						p: 2,
+						mr: 3,
+						bgcolor: "#fff",
+					}}
+					flex={3}
+				>
 					<Panier
 						addCart={addCart}
+						clearCart={clearCart}
+						removeFromCart={removeFromCart}
 						clientName={clientName}
 						paymentStatus={paymentStatus}
 						remainingAmount={remainingAmount}
@@ -177,8 +296,14 @@ const ListMedicamentsVendeur = () => {
 					/>
 				</Box>
 			</Stack>
+			<Toaster position="top-center" richColors />
 
-			<TransactionDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} navigate={navigate} />
+			<TransactionDialog
+				dialogOpen={dialogOpen}
+				setDialogOpen={setDialogOpen}
+				navigate={navigate}
+				printInvoice={handlePrint}
+			/>
 		</>
 	);
 };

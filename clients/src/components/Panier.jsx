@@ -13,7 +13,8 @@ import {
 	Button,
 	Stack,
 } from "@mui/material";
-import { Print } from "@mui/icons-material";
+import { Cancel, ClearAll } from "@mui/icons-material";
+import { TruncateText } from "./TruncateText.jsx";
 
 const Panier = ({
 	addCart,
@@ -26,7 +27,8 @@ const Panier = ({
 	setPaymentStatus,
 	setRemainingAmount,
 	saveTransaction,
-	printInvoice,
+	clearCart,
+	removeFromCart,
 }) => {
 	return (
 		<>
@@ -36,28 +38,62 @@ const Panier = ({
 						<TableHead>
 							<TableRow>
 								<TableCell>Nom</TableCell>
-								<TableCell>Unité</TableCell>
-								<TableCell>Quantité</TableCell>
+								<TableCell>Q.D</TableCell>
+								<TableCell>Q.G</TableCell>
 								<TableCell>Prix</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
 							{addCart.map((item, index) => (
 								<TableRow key={index}>
-									<TableCell>{item.name}</TableCell>
-									<TableCell>{item.unit}</TableCell>
+									<TableCell>{TruncateText(item.name, 12)}</TableCell>
 									<TableCell>
 										<TextField
 											type="number"
-											value={item.quantity}
+											value={item.quantityDetails}
 											onChange={(e) =>
-												updateCartQuantity(item.name, parseInt(e.target.value, 10))
+												updateCartQuantity(item.name, "details", parseInt(e.target.value, 10))
 											}
 											size="small"
-											sx={{ width: 60 }}
+											sx={{
+												width: 60,
+												"& .MuiOutlinedInput-input": {
+													padding: "7px 5px",
+												},
+											}}
 										/>
 									</TableCell>
-									<TableCell>{item.price} Ar</TableCell>
+									<TableCell>
+										<TextField
+											type="number"
+											value={item.quantityBulk}
+											onChange={(e) =>
+												updateCartQuantity(item.name, "bulk", parseInt(e.target.value, 10))
+											}
+											size="small"
+											sx={{
+												width: 60,
+												"& .MuiOutlinedInput-input": {
+													padding: "7px 5px",
+												},
+											}}
+										/>
+									</TableCell>
+									<TableCell>
+										<Stack direction="row" alignItems="center" gap={2}>
+											{item.price} Ar
+											<Cancel
+												color="error"
+												onClick={() => removeFromCart(item.name)}
+												sx={{
+													"&: hover": {
+														cursor: "pointer",
+														color: "secondary.main",
+													},
+												}}
+											/>
+										</Stack>
+									</TableCell>
 								</TableRow>
 							))}
 						</TableBody>
@@ -65,16 +101,20 @@ const Panier = ({
 					<TextField
 						label="Nom du client"
 						value={clientName}
+						sx={{
+							mt: 2,
+						}}
 						onChange={(e) => setClientName(e.target.value)}
 						fullWidth
-						sx={{ mt: 2 }}
 					/>
 					<Select
 						label="État du paiement"
 						value={paymentStatus}
 						onChange={(e) => setPaymentStatus(e.target.value)}
 						fullWidth
-						sx={{ mt: 2 }}
+						sx={{
+							mt: 2,
+						}}
 					>
 						<MenuItem value="Payé">Payé</MenuItem>
 						<MenuItem value="Reste à payer">Reste à payer</MenuItem>
@@ -86,23 +126,25 @@ const Panier = ({
 							value={remainingAmount}
 							onChange={(e) => setRemainingAmount(parseInt(e.target.value, 10))}
 							fullWidth
-							sx={{ mt: 2 }}
+							sx={{
+								mt: 2,
+							}}
 						/>
 					)}
-					<Typography variant="h6" sx={{ mt: 2 }}>
+					<Typography variant="h6" sx={{ my: 2 }}>
 						Total: {calculateTotalPrice()} Ar
 					</Typography>
 					<Stack direction="row" spacing={2} sx={{ mt: 2 }}>
 						<Button variant="contained" color="primary" onClick={saveTransaction}>
-							Enregistrer
+							Valider
 						</Button>
-						<Button variant="contained" color="secondary" onClick={printInvoice} startIcon={<Print />}>
-							Imprimer
+						<Button variant="contained" color="secondary" onClick={clearCart} startIcon={<ClearAll />}>
+							Vider le panier
 						</Button>
 					</Stack>
 				</TableContainer>
 			) : (
-				<Typography color="white">Votre panier est vide.</Typography>
+				<Typography color="secondary">Votre panier est vide.</Typography>
 			)}
 		</>
 	);
