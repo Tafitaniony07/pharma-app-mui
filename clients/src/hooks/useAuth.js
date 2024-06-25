@@ -19,10 +19,10 @@ export default function useAuth(){
             throw error
         }
     }, [])
-    const logout = useCallback(async()=>{
-        setAccessToken("")
-        setRefreshToken('')
+    const logout = useCallback(()=>{
         setAccount(null)
+        setAccessToken('')
+        setRefreshToken('')
     }, [])
     return {
         account,

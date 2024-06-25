@@ -9,7 +9,7 @@ import { Box, TableFooter, TableSortLabel, Typography } from "@mui/material";
 import { Medicaments } from "../data/listmedicaments.jsx";
 import { useEffect, useState } from "react";
 import { addMonths, format, isBefore } from "date-fns";
-import { StockInExpired } from "../api/product.js";
+import { stockInExpired } from "../api/product.js";
 
 export default function StickyHeadTable() {
 	const [sortColumn, setSortColumn] = useState("designation");
@@ -26,7 +26,7 @@ export default function StickyHeadTable() {
 	];
 	useEffect(()=>{
 		const medicaments = async ()=>{
-			const res = await StockInExpired()
+			const res = await stockInExpired()
 			console.log(res.data);
 		}
 		medicaments()

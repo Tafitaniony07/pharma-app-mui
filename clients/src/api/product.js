@@ -5,7 +5,7 @@ import {useTokenStore} from '../tokenStore'
  * 
  * @returns list product
  */
-export async function Stock(){
+export async function stock(){
     const {access} = useTokenStore.getState()
     try {
         const res = await myAxiosPrivate.get(
@@ -74,7 +74,7 @@ export async function createStock(stockList){
 /***
  * @returns list product expiré en 3 mois
  */
-export async function StockInExpired(){
+export async function stockInExpired(){
     const {access} = useTokenStore.getState()
     try {
         const res = await myAxiosPrivate.get(
@@ -97,10 +97,11 @@ export async function StockInExpired(){
  */
 export async function UpdateProduct(id, data){
     const {access} = useTokenStore.getState()
+    console.log("Update", data);
     try {
         const res = await myAxiosPrivate.patch(
             `stock/update-product/${id}`,
-            {data},
+            data,
             {
                 headers : {
                     Authorization : `Bearer ${access}`

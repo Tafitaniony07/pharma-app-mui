@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	Grid,
 	TextField,
@@ -27,6 +27,7 @@ import { Add, Close, Delete, Edit, Save, Visibility } from "@mui/icons-material"
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { Medicaments } from "../../data/listmedicaments.jsx";
+import { UpdateProduct, stock, stockInExpired } from "../../api/product.js";
 
 const AdminListProducts = () => {
 	const [filterText, setFilterText] = useState("");
@@ -38,16 +39,46 @@ const AdminListProducts = () => {
 	const [selectedItem, setSelectedItem] = useState(null);
 	const [openDialog, setOpenDialog] = useState(false);
 	const [openEditDialog, setOpenEditDialog] = useState(false);
+	const [filteredData, setFilteredData] = useState([])
+	const [sortedData, setsortedData] = useState([])
+	const [paginatedData, setpaginatedData] = useState([])
 
-	const filteredData = Medicaments.filter((item) =>
-		item.designation.toLowerCase().includes(filterText.toLowerCase())
-	);
+	useEffect(()=>{
+		const datas = async ()=>{
+			const res = await stock()
+			console.log("Rappel", res);
+			setFilteredData(()=>{
+				return (res.data).filter((item) =>
+					item.detail_product.designation.toLowerCase().includes(filterText.toLowerCase())
+				);
+			})
+		}
+		datas()
+	}, [stockData])
+	
+	useEffect(()=>{
+		const sortedData = filteredData.sort((a, b) => {
+			if (a[sortColumn] < b[sortColumn]) return sortDirection === "asc" ? -1 : 1;
+			if (a[sortColumn] > b[sortColumn]) return sortDirection === "asc" ? 1 : -1;
+			return 0;
+		});
+		setsortedData(sortedData)
+	}, [filteredData])
+	
+	useEffect(()=>{
+		const paginate = sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+		setpaginatedData(paginate)
+	}, [sortedData])
 
-	const sortedData = filteredData.sort((a, b) => {
-		if (a[sortColumn] < b[sortColumn]) return sortDirection === "asc" ? -1 : 1;
-		if (a[sortColumn] > b[sortColumn]) return sortDirection === "asc" ? 1 : -1;
-		return 0;
-	});
+	// filteredData = Medicaments.filter((item) =>
+	// 	item.designation.toLowerCase().includes(filterText.toLowerCase())
+	// );
+
+	// sortedData = filteredData.sort((a, b) => {
+	// 	if (a[sortColumn] < b[sortColumn]) return sortDirection === "asc" ? -1 : 1;
+	// 	if (a[sortColumn] > b[sortColumn]) return sortDirection === "asc" ? 1 : -1;
+	// 	return 0;
+	// });
 
 	const handleSort = (column) => {
 		if (column === sortColumn) {
@@ -67,7 +98,7 @@ const AdminListProducts = () => {
 		setPage(0);
 	};
 
-	const paginatedData = sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+	// const paginatedData = sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
 	const handleView = (item) => {
 		setSelectedItem(item);
@@ -102,12 +133,16 @@ const AdminListProducts = () => {
 		mode: "onTouched",
 	});
 
-	const onSubmitEdit = (data) => {
+	const onSubmitEdit = async (data) => {
+		data.pk = selectedItem.pk
+		console.log("Data", data);
+		const datas = await UpdateProduct(selectedItem.pk, data)
 		const updatedStockData = stockData.map((item) =>
-			item.designation === selectedItem.designation ? { ...item, ...data } : item
+			item.detail_product.designation === selectedItem.detail_product.designation ? { ...item, ...data } : item
 		);
+		console.log(datas);
 		setStockData(updatedStockData);
-		handleCloseEditDialog();
+		// handleCloseEditDialog();
 		reset();
 	};
 
@@ -195,13 +230,13 @@ const AdminListProducts = () => {
 						<TableBody>
 							{paginatedData.map((item, index) => (
 								<TableRow key={index}>
-									<TableCell>{item.family}</TableCell>
-									<TableCell>{item.designation}</TableCell>
-									<TableCell>{item.classe}</TableCell>
-									<TableCell>{item.marque}</TableCell>
-									<TableCell>{item.price_uniter} Ar</TableCell>
-									<TableCell>{item.price_gros} Ar</TableCell>
-									<TableCell>{item.quantity} (bte)</TableCell>
+									<TableCell>{item.detail_product.famille}</TableCell>
+									<TableCell>{item.detail_product.designation}</TableCell>
+									<TableCell>{item.detail_product.classe}</TableCell>
+									<TableCell>{item.marque_product}</TableCell>
+									<TableCell>{item.prix_uniter} Ar</TableCell>
+									<TableCell>{item.prix_gros} Ar</TableCell>
+									<TableCell>{item.qte_gros} (bte)</TableCell>
 									<TableCell>
 										<Typography
 											component="div"
@@ -312,22 +347,32 @@ const AdminListProducts = () => {
 				<DialogTitle>Modifier le produit</DialogTitle>
 				<form onSubmit={handleSubmit(onSubmitEdit)}>
 					<DialogContent>
-						{selectedItem && (
+						{selectedItem !== null && (
 							<>
 								<TextField
 									label="Nom"
-									defaultValue={selectedItem.designation}
-									{...register("designation", { required: "Ce champ est requis" })}
+									defaultValue={selectedItem.detail_product.designation}
+									{...register("designation", { required: true })}
 									error={!!errors.designation}
 									helperText={errors.designation?.message}
 									fullWidth
 									margin="dense"
 								/>
 								<TextField
-									label="Quantité"
+									label="Quantité uniter"
 									type="number"
-									defaultValue={selectedItem.quantity}
-									{...register("quantity", { required: "Ce champ est requis" })}
+									defaultValue={selectedItem.qte_uniter}
+									{...register("qte_uniter", { required: "Ce champ est requis" })}
+									error={!!errors.quantity}
+									helperText={errors.quantity?.message}
+									fullWidth
+									margin="dense"
+								/>
+								<TextField
+									label="Quantité gros"
+									type="number"
+									defaultValue={selectedItem.qte_uniter}
+									{...register("qte_gros", { required: "Ce champ est requis" })}
 									error={!!errors.quantity}
 									helperText={errors.quantity?.message}
 									fullWidth
@@ -344,10 +389,10 @@ const AdminListProducts = () => {
 									margin="dense"
 								/>
 								<TextField
-									label="Prix"
+									label="Prix de gros"
 									type="number"
-									defaultValue={selectedItem.price_gros}
-									{...register("price_gros", { required: "Ce champ est requis" })}
+									defaultValue={selectedItem.prix_gros}
+									{...register("prix_gros", { required: "Ce champ est requis" })}
 									error={!!errors.price_gros}
 									helperText={errors.price_gros?.message}
 									fullWidth
@@ -401,6 +446,7 @@ const AdminListProducts = () => {
 							}}
 							size="medium"
 							variant="contained"
+							type="submit"
 							disableElevation
 							fullWidth
 							startIcon={<Save />}

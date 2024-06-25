@@ -3,12 +3,29 @@ import NavBar from "../../components/header.jsx";
 import AdminSideBar from "./adminSideBar.jsx";
 import AdminListProducts from "./adminListProducts.jsx";
 import { useEffect } from "react";
-import { Stock } from "../../api/product.js";
 import { useAccountStore } from "../../accountStore.js";
 import { useTokenStore } from "../../tokenStore.js";
-
+import useAuth from "../../hooks/useAuth.js";
+import LoaderMain from "../../components/loader.jsx";
+import { useState } from "react";
 const AdminDashboard = () => {
+	const {account} = useAuth()
+	const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        console.log("Rendu", account);
+        if (account !== null) {
+            setIsLoading(false);
+        } else {
+            setIsLoading(true);
+        }
+    }, [account])
+
 	return (
+		<>
+		{isLoading ? 
+		<LoaderMain account={account}/>
+		: 
 		<Box mt={12}>
 			<NavBar />
 			<Stack direction="row" justifyContent="space-between" alignItems="stretch">
@@ -19,7 +36,8 @@ const AdminDashboard = () => {
 					<AdminListProducts />
 				</Box>
 			</Stack>
-		</Box>
+		</Box>}
+		</>
 	);
 };
 export default AdminDashboard;

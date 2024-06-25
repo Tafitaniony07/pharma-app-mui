@@ -14,7 +14,7 @@ export default function AdminSideBar() {
 	const location = useLocation();
 	const isActive = (path) => location.pathname === path;
 	const menuItems = [
-		{ text: "DashBoard", icon: <DashboardIcon />, path: "/admin_dashboard" },
+		{ text: "DashBoard", icon: <DashboardIcon />, path: "/admin" },
 		{ text: "Ajout Produit", icon: <AddCircleIcon />, path: "/addproduct" },
 		{ text: "D. Peremption", icon: <DateRange />, path: "/expirydate" },
 		{ text: "Etat de Stock", icon: <ProductionQuantityLimitsOutlined />, path: "/leaststock" },
