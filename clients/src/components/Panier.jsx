@@ -10,11 +10,12 @@ import {
 	Select,
 	MenuItem,
 	Typography,
-	Button,
 	Stack,
+	Box,
 } from "@mui/material";
-import { Cancel, ClearAll } from "@mui/icons-material";
+import { Cancel, ClearAll, ShoppingBasket } from "@mui/icons-material";
 import { TruncateText } from "./TruncateText.jsx";
+import Button from "./btn/MuiButton.jsx";
 
 const Panier = ({
 	addCart,
@@ -98,6 +99,7 @@ const Panier = ({
 							))}
 						</TableBody>
 					</Table>
+
 					<TextField
 						label="Nom du client"
 						value={clientName}
@@ -135,16 +137,26 @@ const Panier = ({
 						Total: {calculateTotalPrice()} Ar
 					</Typography>
 					<Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-						<Button variant="contained" color="primary" onClick={saveTransaction}>
-							Valider
-						</Button>
-						<Button variant="contained" color="secondary" onClick={clearCart} startIcon={<ClearAll />}>
-							Vider le panier
-						</Button>
+						<Button
+							text="Valider la commande"
+							sx={{ py: 1 }}
+							color="secondary"
+							onClick={saveTransaction}
+							startIcon={<ShoppingBasket />}
+						/>
+						<Button
+							text="Vider le panier"
+							sx={{ py: 1 }}
+							color="inherit"
+							onClick={clearCart}
+							startIcon={<ClearAll />}
+						/>
 					</Stack>
 				</TableContainer>
 			) : (
-				<Typography color="secondary">Votre panier est vide.</Typography>
+				<Typography component="h2" fontSize={22} textAlign="center" mt={5} color="GrayText">
+					Votre panier est vide.
+				</Typography>
 			)}
 		</>
 	);

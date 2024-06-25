@@ -8,22 +8,26 @@ import Transaction from "../pages/admin/transaction.jsx";
 import Login from "../pages/Account/login.jsx";
 import CreateAccount from "../pages/Account/createAccount.jsx";
 import AdminDashboard from "../pages/admin/adminDashboard.jsx";
+import LostPassword from "../pages/Account/lostPassword.jsx";
 
 export default function Router() {
 	return (
-		<TransactionProvider>
-			<BrowserRouter>
-				<Routes>
-					<Route path="/" element={<Login />}></Route>
-					<Route path="/admin_dashboard" element={<AdminDashboard />}></Route>
-					<Route path="/addproduct" element={<AddProduct />}></Route>
-					<Route path="/expirydate" element={<ExpiryDate />}></Route>
-					<Route path="/create_account" element={<CreateAccount />}></Route>
-					<Route path="/vendeur" element={<VendeurDashboard />}></Route>
-					<Route path="/trosa" element={<Trosa />}></Route>
-					<Route path="/list_transaction" element={<Transaction />}></Route>
-				</Routes>
-			</BrowserRouter>
-		</TransactionProvider>
+		<>
+			<TransactionProvider>
+				<BrowserRouter>
+					<Routes>
+						<Route path="/" element={<Login />}></Route>
+						<Route path="/admin_dashboard" element={<AdminDashboard />}></Route>
+						<Route path="/addproduct" element={<AddProduct />}></Route>
+						<Route path="/expirydate" element={<ExpiryDate />}></Route>
+						<Route path="/create_account" element={<CreateAccount />}></Route>
+						<Route path="/vendeur" element={<VendeurDashboard />}></Route>
+						<Route path="/trosa" element={<Trosa />}></Route>
+						<Route path="/list_transaction" element={<Transaction />}></Route>
+						<Route path="/update_password" element={<LostPassword />}></Route>
+					</Routes>
+				</BrowserRouter>
+			</TransactionProvider>
+		</>
 	);
 }

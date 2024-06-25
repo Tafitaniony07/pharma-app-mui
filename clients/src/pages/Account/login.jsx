@@ -1,5 +1,14 @@
 import { ArrowRightTwoTone, Visibility, VisibilityOff } from "@mui/icons-material";
-import { Container, FormControl, IconButton, InputAdornment, InputLabel, Link, OutlinedInput } from "@mui/material";
+import {
+	Container,
+	FormControl,
+	FormHelperText,
+	IconButton,
+	InputAdornment,
+	InputLabel,
+	Link,
+	OutlinedInput,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -92,7 +101,7 @@ const Login = () => {
 								marginTop: "20px",
 							}}
 						/>
-						<FormControl fullWidth variant="outlined" color="primary">
+						<FormControl fullWidth variant="outlined" color="primary" error={!!errors.password}>
 							<InputLabel
 								sx={{
 									color: "primary.light",
@@ -102,11 +111,11 @@ const Login = () => {
 								Mot de passe
 							</InputLabel>
 							<OutlinedInput
+								color="primary"
 								type={showPassword ? "text" : "password"}
 								{...register("password", {
 									required: "Veuillez remplir ce champ",
 								})}
-								error={!!errors.password}
 								endAdornment={
 									<InputAdornment position="end">
 										<IconButton
@@ -121,11 +130,12 @@ const Login = () => {
 								}
 								label=" Mot de passe"
 							/>
+							<FormHelperText>{errors.password?.message}</FormHelperText>
 						</FormControl>
 						<Button type="submit" text="Se connecter" fullWidth endIcon={<ArrowRightTwoTone />} />
 
 						<Link
-							onClick={() => navigate("/dashboard")}
+							onClick={() => navigate("/update_password")}
 							underline="always"
 							color="primary"
 							sx={{

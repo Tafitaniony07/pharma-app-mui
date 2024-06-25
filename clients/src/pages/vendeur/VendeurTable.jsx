@@ -167,7 +167,6 @@ const ListMedicamentsVendeur = () => {
 	const clearCart = () => {
 		setAddCart([]);
 	};
-
 	const navigate = useNavigate();
 
 	// Save transaction
