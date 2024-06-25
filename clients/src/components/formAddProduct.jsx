@@ -14,6 +14,7 @@ const FormAddProduct = () => {
 		handleSubmit,
 		formState: { errors, isSubmitSuccessful },
 		reset,
+		resetField
 	} = useForm({
 		mode: "onTouched",
 	});
@@ -47,7 +48,9 @@ const FormAddProduct = () => {
 				.then((response) => {
 					if (response.status === 201 && isSubmitSuccessful == true) {
 						// Réinitialiser les champs du formulaire après une soumission réussie
-						reset();
+						console.log("AToo");
+						resetField()
+						reset()
 						toast.success("Successfully !");
 					}
 				})

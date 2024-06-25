@@ -122,9 +122,8 @@ export async function UpdateProduct(id, data){
 export async function DeleteProduct(id, data){
     const {access} = useTokenStore.getState()
     try {
-        const res = await myAxiosPrivate.patch(
+        const res = await myAxiosPrivate.delete(
             `stock/delete-product/${id}`,
-            {data},
             {
                 headers : {
                     Authorization : `Bearer ${access}`

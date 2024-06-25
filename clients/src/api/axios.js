@@ -18,6 +18,7 @@ export const myAxiosPrivate = axios.create({
 
 import useRefreshToken from "../hooks/useRefresh";
 import { useAccountStore } from "../accountStore";
+
 myAxiosPrivate.interceptors.response.use(
     res=>res,
     async error =>{
@@ -30,15 +31,16 @@ myAxiosPrivate.interceptors.response.use(
             const res = await useRefreshToken()
             console.log("NEW TOKEN", res.data);
             console.log(res.status)
+            const {setAccount} = useAccountStore.getState()
             if (res.status === 200){
                 const {setAccessToken} = useTokenStore.getState()
-                const {setAccount} = useAccountStore.getState()
                 prevRequest.headers['Authorization'] = `Bearer ${res.data['access']}`
                 setAccessToken(res.data['access'])
                 setAccount(res.data['access'])
                 console.log("prev request", prevRequest);     
                 return myAxiosPrivate(prevRequest);  
             }
+            setAccount(null)
         }
         return Promise.reject(error)
     }

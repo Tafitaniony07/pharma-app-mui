@@ -27,7 +27,7 @@ import { Add, Close, Delete, Edit, Save, Visibility } from "@mui/icons-material"
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { Medicaments } from "../../data/listmedicaments.jsx";
-import { UpdateProduct, stock, stockInExpired } from "../../api/product.js";
+import { DeleteProduct, UpdateProduct, stock, stockInExpired } from "../../api/product.js";
 
 const AdminListProducts = () => {
 	const [filterText, setFilterText] = useState("");
@@ -118,7 +118,13 @@ const AdminListProducts = () => {
 		setOpenEditDialog(false);
 	};
 
-	const handleDelete = (item) => {
+	const handleDelete = async (item) => {
+		try {
+			await DeleteProduct(item.pk)
+		} catch (error) {
+			throw error	
+		}
+
 		setStockData(stockData.filter((data) => data !== item));
 	};
 

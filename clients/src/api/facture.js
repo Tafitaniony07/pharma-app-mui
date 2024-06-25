@@ -18,5 +18,5 @@ export async function ListFacture(){
         return res
     } catch (error) {
         throw error
-    }  
+    }   
 }
