@@ -3,12 +3,13 @@ import AddProduct from "../pages/admin/addProduct";
 import { TransactionProvider } from "../pages/vendeur/TransactionContext.jsx"; // Importation du contexte
 import ExpiryDate from "../pages/expiryDate.jsx";
 import VendeurDashboard from "../pages/vendeur/vendeurDashboard.jsx";
-import Trosa from "../components/Trosa.jsx";
-import Transaction from "../pages/admin/transaction.jsx";
 import Login from "../pages/Account/login.jsx";
 import CreateAccount from "../pages/Account/createAccount.jsx";
 import AdminDashboard from "../pages/admin/adminDashboard.jsx";
 import LostPassword from "../pages/Account/lostPassword.jsx";
+import ListTrosa from "../pages/admin/listTrosa.jsx";
+import ListTransactions from "../pages/listTransactions.jsx";
+import RuptureStock from "../pages/etatStock.jsx";
 
 export default function Router() {
 	return (
@@ -22,8 +23,9 @@ export default function Router() {
 						<Route path="/expirydate" element={<ExpiryDate />}></Route>
 						<Route path="/create_account" element={<CreateAccount />}></Route>
 						<Route path="/vendeur" element={<VendeurDashboard />}></Route>
-						<Route path="/trosa" element={<Trosa />}></Route>
-						<Route path="/list_transaction" element={<Transaction />}></Route>
+						<Route path="/list_trosa" element={<ListTrosa />}></Route>
+						<Route path="/transactions" element={<ListTransactions />}></Route>
+						<Route path="/least_stock" element={<RuptureStock />}></Route>
 						<Route path="/update_password" element={<LostPassword />}></Route>
 					</Routes>
 				</BrowserRouter>

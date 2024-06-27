@@ -7,7 +7,7 @@ import FieldAddProduct from "./fieldAddProduct.jsx";
 import AddProductExcel from "./addProductExcel.jsx";
 import axios from "../api/axios.jsx";
 
-const FormAddProduct = () => {
+const AddProductForm = () => {
 	const {
 		register,
 		handleSubmit,
@@ -115,4 +115,4 @@ const FormAddProduct = () => {
 	);
 };
 
-export default FormAddProduct;
+export default AddProductForm;

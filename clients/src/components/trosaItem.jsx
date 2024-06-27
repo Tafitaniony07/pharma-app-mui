@@ -1,111 +1,139 @@
-import { Add, ArrowRightTwoTone, ExpandLess, ExpandMore } from "@mui/icons-material";
-import { Box, Button, ListItemIcon, ListItemText, Stack, Typography, Menu, MenuItem } from "@mui/material";
+import { Add, ArrowRightTwoTone, Delete, Edit, ExpandLess, ExpandMore } from "@mui/icons-material";
+import { Box, Button, ListItemText, Stack, Typography, Menu, MenuItem, Fab } from "@mui/material";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import AddTrosaDialog from "./addTrosaDialog.jsx";
+import EditTrosaDialog from "./editTrosaDialog.jsx";
+import DeleteTrosaDialog from "./deleteTrosaDialog.jsx";
+import { Toaster, toast } from "sonner";
 
-const CardInvoice = () => {
-	const listInvoice = [
+const TrosaItem = () => {
+	const [open, setOpen] = useState(false);
+	const [openEditDialog, setOpenEditDialog] = useState(false);
+	const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+	const [selectedItem, setSelectedItem] = useState(null);
+	const handleOpenDialog = () => {
+		setOpen(true);
+	};
+	const handleCloseDialog = () => {
+		setOpen(false);
+		setOpenEditDialog(false);
+		setOpenDeleteDialog(false);
+	};
+	const [listTrosa, setListTrosa] = useState([
 		{
 			id: 1,
-			clientName: "John Doe",
-			paymentDue: "12-08-24",
+			fournisseur: "John Doe",
+			date_trosa: "12-08-24",
 			total: 15000,
-			type: "payé",
+			state: "payé",
 			bgcolor: "#045D5D",
 			border: "none",
 			color: "#fff",
 		},
 		{
 			id: 2,
-			clientName: "Jensen Walker",
-			paymentDue: "02-11-24",
+			fournisseur: "Jensen Walker",
+			date_trosa: "02-11-24",
 			total: 80000,
-			type: "en cours",
+			state: "en cours",
 			bgcolor: "#fff",
 			color: "orange",
 			border: "1px solid orange",
 		},
 		{
 			id: 3,
-			clientName: "Mike Tyson",
-			paymentDue: "05-09-24",
+			fournisseur: "Mike Tyson",
+			date_trosa: "05-09-24",
 			total: 75000,
-			type: "payé",
+			state: "payé",
 			bgcolor: "#045D5D",
 			border: "none",
 			color: "#fff",
 		},
 		{
 			id: 4,
-			clientName: "Paul Dayron",
-			paymentDue: "12-03-23",
+			fournisseur: "Paul Dayron",
+			date_trosa: "12-03-23",
 			total: 330000,
-			type: "en cours",
+			state: "en cours",
 			bgcolor: "#fff",
 			color: "orange",
 			border: "1px solid orange",
 		},
 		{
 			id: 5,
-			clientName: "John Doe",
-			paymentDue: "12-08-24",
+			fournisseur: "John Doe",
+			date_trosa: "12-08-24",
 			total: 15000,
-			type: "payé",
+			state: "payé",
 			bgcolor: "#045D5D",
 			color: "#fff",
 			border: "none",
 		},
 		{
 			id: 6,
-			clientName: "Paul Dayron",
-			paymentDue: "12-03-23",
+			fournisseur: "Paul Dayron",
+			date_trosa: "12-03-23",
 			total: 330000,
-			type: "en cours",
+			state: "en cours",
 			bgcolor: "#fff",
 			color: "orange",
 			border: "1px solid orange",
 		},
-	];
+	]);
 
-	const navigate = useNavigate();
-	const [filterType, setFilterType] = useState("");
+	const [filterState, setFilterState] = useState("");
 	const [anchorEl, setAnchorEl] = useState(null);
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
 	};
-
+	const handleEditTrosa = (item) => {
+		setSelectedItem(item);
+		console.log(item);
+		setOpenEditDialog(true);
+	};
+	const handleDeleteTrosa = (item) => {
+		setSelectedItem(item);
+		setOpenDeleteDialog(true);
+	};
+	const deleteTrosa = (item) => {
+		setListTrosa((prevList) => prevList.filter((trosa) => trosa.id !== item.id));
+		handleCloseDialog();
+		toast.success("La trosa a été supprimée avec succès !");
+	};
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
 
-	const handleFilterChange = (type) => {
-		setFilterType(type);
+	const handleFilterChange = (state) => {
+		setFilterState(state);
 		handleClose();
 	};
 
-	const filteredInvoices = filterType ? listInvoice.filter((invoice) => invoice.type === filterType) : listInvoice;
+	const filteredItem = filterState ? listTrosa.filter((item) => item.state === filterState) : listTrosa;
 
 	return (
 		<>
 			<Stack spacing={3} direction="row" alignItems="center" justifyContent="space-between">
 				<Typography component="h2" sx={{ fontSize: "25px" }} color="secondary">
-					Tous les transactions
+					Tous les Trosa
 					<Typography component="p" color="black">
-						Il y a {filteredInvoices.length} total de transactions
+						Il y a {filteredItem.length} total de trosa
 					</Typography>
 				</Typography>
 				<Box>
 					<Button
 						aria-controls="filter-menu"
 						aria-haspopup="true"
+						variant="outlined"
 						onClick={handleClick}
 						sx={{
 							minHeight: 48,
 							justifyContent: "initial",
-							bgcolor: "#f9f9f9",
 							color: "secondary.main",
 							px: 5,
+							borderRadius: "50px",
 						}}
 						endIcon={anchorEl ? <ExpandLess /> : <ExpandMore />}
 					>
@@ -130,9 +158,8 @@ const CardInvoice = () => {
 						<MenuItem onClick={() => handleFilterChange("")}>Tout</MenuItem>
 					</Menu>
 				</Box>
-
 				<Button
-					onClick={() => navigate("/trosa")}
+					onClick={handleOpenDialog}
 					sx={{
 						borderRadius: "50px",
 						bgcolor: "#f9f9f9",
@@ -145,12 +172,12 @@ const CardInvoice = () => {
 					Ajouter un nouveau trosa
 				</Button>
 			</Stack>
-			{filteredInvoices.map((invoice) => (
+			{filteredItem.map((item) => (
 				<Box
 					display="flex"
 					alignItems="center"
 					justifyContent="space-between"
-					key={invoice.id}
+					key={item.id}
 					p={2}
 					sx={{
 						background: "#045D5D08",
@@ -169,26 +196,26 @@ const CardInvoice = () => {
 						<Typography component="h5" color="secondary">
 							#
 							<Typography component="span" color="black">
-								{invoice.id}
+								{item.id}
 							</Typography>
 						</Typography>
 						<Typography component="div" bgcolor="white" px={3} py={0.5} borderRadius={10}>
-							Date {invoice.paymentDue}
+							Date {item.date_trosa}
 						</Typography>
-						<Typography component="h4">{invoice.clientName}</Typography>
+						<Typography component="h4">{item.fournisseur}</Typography>
 					</Stack>
 					<Stack spacing={5} direction="row" alignItems="center">
 						<Typography component="h4" color="black">
-							Total:
+							{item.state === "payé" ? "Total" : "Montant Restant"}:
 							<Typography component="span" color="secondary">
-								{invoice.total} Ar
+								{item.total} Ar
 							</Typography>
 						</Typography>
 						<Button
 							sx={{
 								borderRadius: "50px",
-								background: `${invoice.bgcolor}`,
-								color: `${invoice.color}`,
+								background: `${item.bgcolor}`,
+								color: `${item.color}`,
 								textTransform: "capitalize",
 								px: 3,
 								"&:hover": {
@@ -198,13 +225,54 @@ const CardInvoice = () => {
 							}}
 							endIcon={<ArrowRightTwoTone />}
 						>
-							{invoice.type}
+							{item.state}
 						</Button>
+						{item.state === "payé" ? (
+							<Fab
+								size="small"
+								aria-label="delete"
+								onClick={() => handleDeleteTrosa(item)}
+								sx={{
+									background: "rgba(255, 0, 0, 0.105)",
+									boxShadow: "0",
+									border: "1px solid rgba(255, 0, 0, 0.145)",
+									"&:hover": {
+										background: "rgba(255, 0, 0, 0.245)",
+										color: "red",
+									},
+								}}
+							>
+								<Delete />
+							</Fab>
+						) : (
+							<Fab
+								size="small"
+								aria-label="edit"
+								onClick={() => handleEditTrosa(item)}
+								sx={{
+									background: "rgba(0, 128, 0, 0.105)",
+									boxShadow: "0",
+									border: "1px solid rgba(0, 128, 0, 0.145)",
+								}}
+							>
+								<Edit />
+							</Fab>
+						)}
 					</Stack>
 				</Box>
 			))}
+
+			<AddTrosaDialog open={open} onClose={handleCloseDialog} />
+			<EditTrosaDialog open={openEditDialog} onClose={handleCloseDialog} selectedItem={selectedItem} />
+			<DeleteTrosaDialog
+				open={openDeleteDialog}
+				onClose={handleCloseDialog}
+				deleteTrosa={deleteTrosa}
+				selectedItem={selectedItem}
+			/>
+			<Toaster position="top-center" richColors />
 		</>
 	);
 };
 
-export default CardInvoice;
+export default TrosaItem;

@@ -1,9 +1,9 @@
 import { Box, Stack } from "@mui/material";
 import NavBar from "../../components/header.jsx";
 import AdminSideBar from "./adminSideBar.jsx";
-import CardInvoice from "../../components/cardInvoice.jsx";
+import TrosaItem from "../../components/trosaItem.jsx";
 
-const Transaction = () => {
+const ListTrosa = () => {
 	return (
 		<Box mt={12}>
 			<NavBar />
@@ -20,11 +20,11 @@ const Transaction = () => {
 					}}
 					flex={4}
 				>
-					<CardInvoice />
+					<TrosaItem />
 				</Box>
 			</Stack>
 		</Box>
 	);
 };
 
-export default Transaction;
+export default ListTrosa;

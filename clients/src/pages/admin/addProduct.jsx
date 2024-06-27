@@ -3,7 +3,7 @@ import React from "react";
 import { Box, Stack } from "@mui/material";
 import SideBar from "../admin/adminSideBar.jsx";
 import NavBar from "../../components/header.jsx";
-import FormAddProduct from "../../components/formAddProduct.jsx";
+import AddProductForm from "../../components/addProductForm.jsx";
 
 const AddProduct = () => {
 	return (
@@ -14,7 +14,7 @@ const AddProduct = () => {
 					<SideBar />
 				</Box>
 				<Box mb={3} mr={3} flex={4}>
-					<FormAddProduct />
+					<AddProductForm />
 				</Box>
 			</Stack>
 		</Box>

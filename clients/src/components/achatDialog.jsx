@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
-// TransactionDialog.js
+
 import { Dialog, DialogTitle, DialogContent, DialogActions, Typography } from "@mui/material";
 import Button from "./btn/MuiButton.jsx";
 
-const TransactionDialog = ({ dialogOpen, setDialogOpen, navigate, printInvoice }) => {
+const AchatDialog = ({ dialogOpen, setDialogOpen, navigate, printInvoice }) => {
 	return (
 		<Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
 			<DialogTitle
@@ -54,4 +54,4 @@ const TransactionDialog = ({ dialogOpen, setDialogOpen, navigate, printInvoice }
 	);
 };
 
-export default TransactionDialog;
+export default AchatDialog;

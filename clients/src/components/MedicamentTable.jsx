@@ -9,6 +9,7 @@ import {
 	TableSortLabel,
 	Fab,
 	CircularProgress,
+	Box,
 	Stack,
 } from "@mui/material";
 import { ArrowRightAlt } from "@mui/icons-material";
@@ -25,8 +26,8 @@ const MedicamentTable = ({ sortColumn, sortDirection, handleSort, paginatedData,
 	];
 
 	return (
-		<>
-			<TableContainer>
+		<Box sx={{ height: "100%", width: "100%" }}>
+			<TableContainer sx={{ maxHeight: "70vh", borderRadius: 3 }}>
 				<Table stickyHeader aria-label="sticky header">
 					<TableHead>
 						<TableRow>
@@ -51,7 +52,7 @@ const MedicamentTable = ({ sortColumn, sortDirection, handleSort, paginatedData,
 								<TableCell>{item.classe}</TableCell>
 								<TableCell>{item.unitPrice} Ar</TableCell>
 								<TableCell>{item.priceGros} Ar</TableCell>
-								<TableCell>
+								<TableCell style={{ whiteSpace: "nowrap" }}>
 									<Stack direction="row" gap={2}>
 										{loadingState[item.name] ? (
 											<Fab
@@ -62,6 +63,7 @@ const MedicamentTable = ({ sortColumn, sortDirection, handleSort, paginatedData,
 													boxShadow: "0",
 													color: "#fff",
 													border: "1px solid rgba(0, 128, 0, 0.145)",
+													zIndex: 0,
 												}}
 											>
 												<CircularProgress size={24} color="inherit" />
@@ -71,6 +73,9 @@ const MedicamentTable = ({ sortColumn, sortDirection, handleSort, paginatedData,
 												size="small"
 												color="success"
 												aria-label="add"
+												sx={{
+													zIndex: 0,
+												}}
 												onClick={() => addToCart(item)}
 											>
 												<ArrowRightAlt />
@@ -83,7 +88,7 @@ const MedicamentTable = ({ sortColumn, sortDirection, handleSort, paginatedData,
 					</TableBody>
 				</Table>
 			</TableContainer>
-		</>
+		</Box>
 	);
 };
 

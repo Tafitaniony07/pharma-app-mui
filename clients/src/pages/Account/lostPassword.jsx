@@ -139,7 +139,7 @@ const LostPassword = () => {
 							<Button
 								sx={{ width: "45%", flexGrow: 1, height: "55px" }}
 								type="submit"
-								text="Modifier"
+								text="Mettre à jour"
 								startIcon={<Save />}
 							/>
 							<Button

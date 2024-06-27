@@ -29,14 +29,15 @@ const MyTheme = createTheme({
 			styleOverrides: {
 				head: {
 					padding: "15px",
-					background: "#f9f9f9",
+					background: "#f9fbff",
 					color: "#045D5D",
+					border: "none",
 					fontFamily: "Exo2-Medium",
 					fontSize: "16px",
 				},
 				body: {
 					background: "#fff",
-					padding: " 10px 12px",
+					padding: " 15px 12px",
 					borderBottom: "1px solid #f9f9f9 !important",
 				},
 			},

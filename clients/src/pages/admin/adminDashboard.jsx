@@ -11,7 +11,7 @@ const AdminDashboard = () => {
 				<Box flex={1}>
 					<AdminSideBar />
 				</Box>
-				<Box bgcolor="white" height="85vh" borderRadius={5} p={3} mb={3} mr={3} flex={4}>
+				<Box bgcolor="white" minHeight="85vh" borderRadius={5} p={3} mb={3} mr={3} flex={4}>
 					<AdminListProducts />
 				</Box>
 			</Stack>
