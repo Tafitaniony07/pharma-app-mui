@@ -4,8 +4,8 @@ import { useForm, Controller } from "react-hook-form";
 import { Toaster, toast } from "sonner";
 import Button from "./btn/MuiButton.jsx";
 import { Save } from "@mui/icons-material";
-import axios from "../api/axios.jsx";
 import { formatDate } from "./formatDate.js";
+import axios from "axios";
 
 const UpdateTrosaForm = ({ selectedItem }) => {
 	const {

@@ -3,8 +3,8 @@ import { useForm, Controller } from "react-hook-form";
 import { Toaster, toast } from "sonner";
 import Button from "./btn/MuiButton.jsx";
 import { Save } from "@mui/icons-material";
-import axios from "../api/axios.jsx";
 import { getTodayDate } from "./getDateToday.js";
+import axios from "axios";
 
 const AddTrosaForm = () => {
 	const {

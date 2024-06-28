@@ -4,9 +4,9 @@ import { Box, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Fab 
 import { Save, Close } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { Toaster, toast } from "sonner";
-import axios from "../api/axios.jsx";
 import Button from "../components/btn/MuiButton.jsx";
 import { formatDate } from "./formatDate.js";
+import axios from "axios";
 
 const EditProductDialog = ({ open, onClose, selectedItem }) => {
 	const {

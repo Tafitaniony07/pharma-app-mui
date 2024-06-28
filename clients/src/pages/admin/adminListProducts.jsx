@@ -1,15 +1,18 @@
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { Grid, TextField, InputAdornment, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router";
 import { Medicaments } from "../../data/listmedicaments.jsx";
+import { UpdateProduct, stock, stockInExpired } from "../../api/product.js";
 
 import ViewProductDialog from "../../components/viewProductDialog.jsx";
 import EditProductDialog from "../../components/editProductDialog.jsx";
 import ProductTable from "../../components/productTable.jsx";
 import Button from "../../components/btn/MuiButton.jsx";
 import useSortDataTable from "../../components/sortDataTable.js";
+import { useForm } from "react-hook-form";
 
 const AdminListProducts = () => {
 	const navigate = useNavigate();
@@ -18,10 +21,11 @@ const AdminListProducts = () => {
 	const [selectedItem, setSelectedItem] = useState(null);
 	const [openViewDialog, setOpenViewDialog] = useState(false);
 	const [openEditDialog, setOpenEditDialog] = useState(false);
+	const [filteredData, setFilteredData] = useState([]);
+	const [sortedData, setsortedData] = useState([]);
+	// const [paginatedData, setpaginatedData] = useState([]);
 
-	const filteredData = Medicaments.filter((item) =>
-		item.designation.toLowerCase().includes(filterText.toLowerCase())
-	);
+	const data = Medicaments.filter((item) => item.designation.toLowerCase().includes(filterText.toLowerCase()));
 	const {
 		sortedData: paginatedData,
 		sortColumn,
@@ -31,7 +35,7 @@ const AdminListProducts = () => {
 		handleSort,
 		handleChangePage,
 		handleChangeRowsPerPage,
-	} = useSortDataTable(filteredData);
+	} = useSortDataTable(data);
 
 	const columns = [
 		{ filter: "famille", label: "Famille" },
@@ -60,12 +64,27 @@ const AdminListProducts = () => {
 	const handleDelete = (item) => {
 		setStockData(stockData.filter((data) => data !== item));
 	};
-	const onSubmitEdit = (data) => {
+
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+		reset,
+	} = useForm({
+		mode: "onTouched",
+	});
+
+	const onSubmitEdit = async (data) => {
+		data.pk = selectedItem.pk;
+		console.log("Data", data);
+		const datas = await UpdateProduct(selectedItem.pk, data);
 		const updatedStockData = stockData.map((item) =>
-			item.designation === selectedItem.designation ? { ...item, ...data } : item
+			item.detail_product.designation === selectedItem.detail_product.designation ? { ...item, ...data } : item
 		);
+		console.log(datas);
 		setStockData(updatedStockData);
-		handleCloseEditDialog();
+
+		reset();
 	};
 
 	return (

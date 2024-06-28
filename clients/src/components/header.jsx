@@ -8,13 +8,12 @@ import Avatar from "@mui/material/Avatar";
 import logo from "../assets/logo.png";
 import { Button, Stack, Typography } from "@mui/material";
 import { LogoutRounded } from "@mui/icons-material";
-import { useNavigate } from "react-router";
+import useAuth from "../hooks/useAuth";
 
 function NavBar() {
-	const navigate = useNavigate();
-
+	const { logout } = useAuth();
 	function handleClick() {
-		navigate("/");
+		logout();
 	}
 	return (
 		<AppBar

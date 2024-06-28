@@ -27,7 +27,8 @@
     "react-to-print": "^2.15.1",
     "react-virtuoso": "^4.7.10",
     "sonner": "^1.4.41",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@hookform/devtools": "^4.3.1",
