@@ -6,15 +6,14 @@ import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import logo from "../assets/logo.png";
-import { Badge, Button, Stack, Typography } from "@mui/material";
-import { DateRange, LogoutRounded, ProductionQuantityLimitsSharp } from "@mui/icons-material";
+import { Button, Stack, Typography } from "@mui/material";
+import { LogoutRounded } from "@mui/icons-material";
 import useAuth from "../hooks/useAuth";
 
 function NavBar() {
-	const {logout} = useAuth()
+	const { logout } = useAuth();
 	function handleClick() {
-			logout()	
-		
+		logout();
 	}
 	return (
 		<AppBar
@@ -28,14 +27,7 @@ function NavBar() {
 			<Container maxWidth="xl">
 				<Toolbar sx={{ justifyContent: "space-between" }}>
 					<img src={logo} width={120} />
-					{/* <Stack spacing={6} direction="row">
-						<Badge color="error" badgeContent={50}>
-							<DateRange color="primary" />
-						</Badge>
-						<Badge color="error" badgeContent={100}>
-							<ProductionQuantityLimitsSharp color="primary" />
-						</Badge>
-					</Stack> */}
+
 					<Box
 						sx={{
 							display: "flex",

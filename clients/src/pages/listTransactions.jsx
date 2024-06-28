@@ -1,15 +1,14 @@
-// eslint-disable-next-line no-unused-vars
 import { Box, Stack } from "@mui/material";
-import NavBar from "../components/header";
-import FormTrosa from "./formTrosa.jsx";
-import AdminSideBar from "../pages/admin/adminSideBar";
+import TransactionItem from "../components/transactionItem.jsx";
+import NavBar from "../components/header.jsx";
+import AdminSideBar from "./admin/adminSideBar.jsx";
 
-const Trosa = () => {
+const ListTransactions = () => {
 	return (
 		<Box mt={12}>
 			<NavBar />
 			<Stack direction="row" justifyContent="space-between" alignItems="start">
-				<Box sx={{ bgcolor: "white", borderRadius: 5 }} flex={1}>
+				<Box flex={1}>
 					<AdminSideBar />
 				</Box>
 				<Box
@@ -21,11 +20,11 @@ const Trosa = () => {
 					}}
 					flex={4}
 				>
-					<FormTrosa />
+					<TransactionItem />
 				</Box>
 			</Stack>
 		</Box>
 	);
 };
 
-export default Trosa;
+export default ListTransactions;

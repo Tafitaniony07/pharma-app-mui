@@ -1,180 +1,160 @@
-import { ArrowRightTwoTone } from "@mui/icons-material";
-import { Button, Container, Link, Typography } from "@mui/material";
+import { Login, Save, Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+	Container,
+	FormControl,
+	FormHelperText,
+	IconButton,
+	InputAdornment,
+	InputLabel,
+	OutlinedInput,
+	Stack,
+	Typography,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import { useState } from "react";
+import logo from "../../assets/logo.png";
 import { useForm } from "react-hook-form";
-import { DevTool } from "@hookform/devtools";
+import Button from "../../components/btn/MuiButton.jsx";
 import { Toaster, toast } from "sonner";
 
 const LostPassword = () => {
+	const [showPassword, setShowPassword] = useState(false);
+	const navigate = useNavigate();
+	const handleClickShowPassword = () => setShowPassword((show) => !show);
+
 	const {
 		register,
 		handleSubmit,
-		control,
 		formState: { errors },
+		reset,
+		watch,
 	} = useForm({
 		mode: "onTouched",
 	});
 
-	const onSubmit = (data) => {
-		let text = data.identifiant + "__" + data.password + "__" + data.name;
-		toast.success(text);
+	const password = watch("password");
+	async function onSubmit(data) {
+		console.log(data);
+		reset("");
+		toast.success("Votre modification a bien reussi");
+	}
+	const handleMouseDownPassword = (event) => {
+		event.preventDefault();
 	};
+	const Fields = [
+		{ label: "Nom d'utilisateur", name: "username", type: "text" },
+		{ label: "Adresse Email", name: "email", type: "email" },
+		{ label: "Mot de passe", name: "password", type: "text" },
+		{ label: "Confirmer votre mot de passe", name: "confirmPassword", type: "password" },
+	];
 
 	return (
-		<>
+		<Box className="login-bg">
 			<Container
-				maxWidth="xs"
+				maxWidth="md"
 				sx={{
+					height: "100svh",
 					display: "flex",
 					justifyContent: "center",
 					alignItems: "center",
-					height: "97vh",
+					flexDirection: "column",
 				}}
 			>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<Box
 						sx={{
-							display: "flex",
-							justifyContent: "center",
-							flexDirection: "column",
-							alignItems: "center",
-							width: "350px",
 							bgcolor: "#fff",
-							p: 5,
+							p: 7,
 							borderRadius: "5px",
-							gap: 2,
 						}}
 					>
-						<Typography
-							sx={{
-								fontFamily: "Exo2-Medium",
-								color: "primary.test",
-								fontSize: "30px",
-								mb: 1,
-							}}
-						>
-							Lost Password ?
+						<img src={logo} width={100} alt="Logo" />
+						<Typography component="h2" fontSize={22} color="inherit" mt={2} mb={4}>
+							Mise a jour de mots de passe !
 						</Typography>
-
-						<TextField
-							label="Identifiant"
-							color="second"
-							fullWidth
-							{...register("identifiant", {
-								required: "Veuillez remplir ce champ",
-							})}
-							error={!!errors.identifiant}
-							helperText={errors.identifiant?.message}
-							sx={{
-								marginTop: "20px",
-								"& .MuiInputLabel-root": {
-									color: "primary.test",
-									fontFamily: "Exo2-Medium",
-								},
-								"& .MuiInputBase-input": {
-									color: "#191919",
-									fontFamily: "Exo2-Medium",
-								},
-								"& .MuiOutlinedInput-root": {
-									// Target the root element of the outlined input
-									"& fieldset": {
-										// Target the fieldset within the root element
-										borderColor: "primary",
-									},
-									"&:hover fieldset": {
-										// On hover, change the border color
-										borderColor: "primary.test",
-									},
-								},
-							}}
-						/>
-
-						<TextField
-							label="Nouveau mot de passe"
-							color="second"
-							fullWidth
-							{...register("newpassword", {
-								required: "Veuillez remplir ce champ",
-							})}
-							error={!!errors.newpassword}
-							helperText={errors.newpassword?.message}
-							sx={{
-								"& .MuiInputLabel-root": {
-									color: "primary.test",
-									fontFamily: "Exo2-Medium",
-								},
-								"& .MuiInputBase-input": {
-									color: "#191919",
-									fontFamily: "Exo2-Medium",
-								},
-								"& .MuiOutlinedInput-root": {
-									// Target the root element of the outlined input
-									"& fieldset": {
-										// Target the fieldset within the root element
-										borderColor: "primary",
-									},
-									"&:hover fieldset": {
-										// On hover, change the border color
-										borderColor: "primary.test",
-									},
-								},
-							}}
-						/>
-						<Toaster
-							position="top-center"
-							richColors
-							closeButton
-							toastOptions={{
-								style: {
-									background: "#4d4373",
-									color: "#fff",
-								},
-								className: "class",
-							}}
-						/>
-						<Button
-							type="submit"
-							sx={{
-								p: 1.5,
-								textTransform: "capitalize",
-								backgroundColor: "primary.test",
-								fontFamily: "Exo2-Medium",
-								fontSize: "18px",
-								color: "#fff",
-								"&:hover": {
-									backgroundColor: "second.main",
-								},
-								"&:active": {
-									backgroundColor: "second.main",
-									borderColor: "second.main",
-								},
-							}}
-							size="medium"
-							variant="contained"
-							disableElevation
-							fullWidth
-							endIcon={<ArrowRightTwoTone />}
+						<Stack
+							direction="row"
+							justifyContent="space-between"
+							alignItems="center"
+							flexWrap="wrap"
+							gap={2}
 						>
-							Modifier
-						</Button>
-						<Link
-							href="/login"
-							underline="always"
-							sx={{
-								color: "primary.test",
-								display: "block",
-								alignSelf: "center",
-							}}
-						>
-							Se connecter maintenant
-						</Link>
+							{Fields.map((field) =>
+								field.type === "text" || field.type === "email" ? (
+									<Box sx={{ width: "40%", flexGrow: 1 }} key={field.name}>
+										<TextField
+											label={field.label}
+											type={field.type}
+											color="primary"
+											fullWidth
+											{...register(field.name, {
+												required: "Veuillez remplir ce champ",
+											})}
+											error={!!errors[field.name]}
+											helperText={errors[field.name]?.message}
+										/>
+									</Box>
+								) : (
+									<Box sx={{ width: "40%", flexGrow: 1 }} key={field.name}>
+										<FormControl
+											fullWidth
+											variant="outlined"
+											color="primary"
+											error={!!errors[field.name]}
+										>
+											<InputLabel>{field.label}</InputLabel>
+											<OutlinedInput
+												type={showPassword ? "text" : "password"}
+												{...register(field.name, {
+													required: "Veuillez remplir ce champ",
+													validate:
+														field.name === "confirmPassword"
+															? (value) =>
+																	value === password ||
+																	"Les mots de passe ne correspondent pas"
+															: undefined,
+												})}
+												endAdornment={
+													<InputAdornment position="end">
+														<IconButton
+															onClick={handleClickShowPassword}
+															onMouseDown={handleMouseDownPassword}
+															edge="end"
+														>
+															{showPassword ? <VisibilityOff /> : <Visibility />}
+														</IconButton>
+													</InputAdornment>
+												}
+												label={field.label}
+											/>
+											<FormHelperText>{errors[field.name]?.message}</FormHelperText>
+										</FormControl>
+									</Box>
+								)
+							)}
+						</Stack>
+						<Stack direction="row" justifyContent="space-between" flexWrap="wrap" gap={2} mt={2}>
+							<Button
+								sx={{ width: "45%", flexGrow: 1, height: "55px" }}
+								type="submit"
+								text="Mettre à jour"
+								startIcon={<Save />}
+							/>
+							<Button
+								sx={{ width: "45%", flexGrow: 1, height: "55px" }}
+								color="inherit"
+								text="Se connecter maintenant"
+								startIcon={<Login />}
+								onClick={() => navigate("/")}
+							/>
+						</Stack>
+						<Toaster position="top-center" richColors closeButton />
 					</Box>
 				</form>
-
-				<DevTool control={control} />
 			</Container>
-		</>
+		</Box>
 	);
 };
 

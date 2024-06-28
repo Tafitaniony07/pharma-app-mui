@@ -1,12 +1,13 @@
+/* eslint-disable no-unused-vars */
 import { useState, useContext } from "react";
-import { Grid, TextField, InputAdornment, Stack, Box } from "@mui/material";
+import { TextField, InputAdornment, Stack, Box } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Toaster, toast } from "sonner";
 import { TransactionContext } from "./TransactionContext.jsx";
 import { useNavigate } from "react-router";
 import MedicamentTable from "../../components/MedicamentTable.jsx";
 import Panier from "../../components/Panier.jsx";
-import TransactionDialog from "../../components/TransitionDialog.jsx";
+import AchatDialog from "../../components/achatDialog.jsx";
 
 const ListMedicamentsVendeur = () => {
 	const { transactions, setTransactions } = useContext(TransactionContext);
@@ -14,7 +15,7 @@ const ListMedicamentsVendeur = () => {
 	const [sortColumn, setSortColumn] = useState("name");
 	const [sortDirection, setSortDirection] = useState("asc");
 	const [page, setPage] = useState(0);
-	const [rowsPerPage, setRowsPerPage] = useState(5);
+	const [rowsPerPage, setRowsPerPage] = useState(10);
 	const [addCart, setAddCart] = useState([]);
 	const [loadingState, setLoadingState] = useState({});
 	const [units, setUnits] = useState({});
@@ -26,6 +27,51 @@ const ListMedicamentsVendeur = () => {
 
 	// Sample medications data
 	const Medicaments = [
+		{
+			name: "AAMLA gelu /30",
+			classe: "comprimé",
+			marque: "Nivo SA",
+			quantityDetails: 0,
+			quantityBulk: 0,
+			unitPrice: 1500,
+			priceGros: 14000,
+		},
+		{
+			name: "Teste Grossesse",
+			classe: "consomable",
+			marque: "MEDA",
+			unitPrice: 3000,
+			quantityDetails: 0,
+			quantityBulk: 0,
+			priceGros: 28000,
+		},
+		{
+			name: "Paracetamol",
+			classe: "injectable",
+			marque: "cmc",
+			unitPrice: 1800,
+			priceGros: 16000,
+			quantityDetails: 0,
+			quantityBulk: 0,
+		},
+		{
+			name: "Parabufen",
+			classe: "comprimé",
+			marque: "Shifa",
+			unitPrice: 2800,
+			quantityDetails: 0,
+			quantityBulk: 0,
+			priceGros: 27000,
+		},
+		{
+			name: "ABUFENE 400mg cpr /30",
+			classe: "comprimé",
+			marque: "Nivo SA",
+			unitPrice: 1200,
+			priceGros: 10000,
+			quantityDetails: 0,
+			quantityBulk: 0,
+		},
 		{
 			name: "AAMLA gelu /30",
 			classe: "comprimé",
@@ -167,7 +213,6 @@ const ListMedicamentsVendeur = () => {
 	const clearCart = () => {
 		setAddCart([]);
 	};
-
 	const navigate = useNavigate();
 
 	// Save transaction
@@ -191,44 +236,6 @@ const ListMedicamentsVendeur = () => {
 
 	const calculateTotalPrice = () => {
 		return addCart.reduce((total, item) => total + item.price, 0);
-	};
-	const handlePrint = () => {
-		const printContent = `
-            <h1>Transaction</h1>
-            <p>Nom du client: ${clientName}</p>
-            <p>État du paiement: ${paymentStatus}</p>
-            <p>Date d'achat: ${new Date().toLocaleString()}</p>
-            <table border="1" style="border-collapse: collapse; width: 100%;">
-                <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Unité</th>
-                        <th>Quantité</th>
-                        <th>Prix</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${addCart
-						.map(
-							(item) => `
-                        <tr>
-                            <td>${item.name}</td>
-                            <td>${item.unit}</td>
-                            <td>${item.quantity}</td>
-                            <td>${item.price} Ar</td>
-                        </tr>
-                    `
-						)
-						.join("")}
-                </tbody>
-            </table>
-            <p>Total: ${calculateTotalPrice()} Ar</p>
-        `;
-
-		const printWindow = window.open("", "", "width=800,height=600");
-		printWindow.document.write(printContent);
-		printWindow.document.close();
-		printWindow.print();
 	};
 
 	return (
@@ -298,12 +305,7 @@ const ListMedicamentsVendeur = () => {
 			</Stack>
 			<Toaster position="top-center" richColors />
 
-			<TransactionDialog
-				dialogOpen={dialogOpen}
-				setDialogOpen={setDialogOpen}
-				navigate={navigate}
-				printInvoice={handlePrint}
-			/>
+			<AchatDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} navigate={navigate} />
 		</>
 	);
 };

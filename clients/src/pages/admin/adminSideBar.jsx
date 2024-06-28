@@ -17,10 +17,10 @@ export default function AdminSideBar() {
 		{ text: "DashBoard", icon: <DashboardIcon />, path: "/admin" },
 		{ text: "Ajout Produit", icon: <AddCircleIcon />, path: "/addproduct" },
 		{ text: "D. Peremption", icon: <DateRange />, path: "/expirydate" },
-		{ text: "Etat de Stock", icon: <ProductionQuantityLimitsOutlined />, path: "/leaststock" },
+		{ text: "Etat de Stock", icon: <ProductionQuantityLimitsOutlined />, path: "/least_stock" },
 		{ text: "Transactions", icon: <History />, path: "/transactions" },
 		{ text: "Nouveau Compte", icon: <Person />, path: "/create_account" },
-		{ text: "Trosa", icon: <MoneyOff />, path: "/list_transaction" },
+		{ text: "Trosa", icon: <MoneyOff />, path: "/list_trosa" },
 	];
 
 	return (

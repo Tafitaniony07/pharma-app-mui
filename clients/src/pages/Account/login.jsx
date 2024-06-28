@@ -1,5 +1,15 @@
 import { ArrowRightTwoTone, Visibility, VisibilityOff } from "@mui/icons-material";
-import { Container, FormControl, IconButton, InputAdornment, InputLabel, Link, OutlinedInput } from "@mui/material";
+import {
+	Container,
+	FormControl,
+	FormHelperText,
+	IconButton,
+	InputAdornment,
+	InputLabel,
+	Link,
+	OutlinedInput,
+	Stack,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -16,7 +26,7 @@ const Login = () => {
 	const [isResponse, setResponse] = useState(false);
 	const navigate = useNavigate();
 	const handleClickShowPassword = () => setShowPassword((show) => !show);
-	const {login, account} = useAuth()
+	const { login, account } = useAuth();
 	const {
 		register,
 		handleSubmit,
@@ -25,24 +35,19 @@ const Login = () => {
 	} = useForm({
 		mode: "onTouched",
 	});
-	const connect = (account)=>{
-		if (account.account_type === "gestionnaires")
-			navigate("/admin")
-		else navigate('/vendeur')
-	}
+	const connect = (account) => {
+		if (account.account_type === "gestionnaires") navigate("/admin");
+		else navigate("/vendeur");
+	};
 	useEffect(() => {
 		if (isResponse) {
-			connect(account)
+			connect(account);
 		}
 	}, [account]);
 	async function onSubmit(data) {
 		try {
-			// const response = await myAxios.post("account/login", {
-			// 	username: data.identifiant,
-			// 	password: data.password,
-			// });
 			console.log(data.username);
-			const response = await login(data.username, data.password)
+			const response = await login(data.username, data.password);
 			console.log(response);
 			if (response.status === 200) {
 				resetField("username");
@@ -65,93 +70,96 @@ const Login = () => {
 
 	return (
 		<>
-		{account == null ?
-			(<Box className="login-bg">
-				<Container
-					maxWidth="xs"
-					sx={{
-						height: "100svh",
-						paddingTop: 19,
-					}}
-				>
-					<form onSubmit={handleSubmit(onSubmit)}>
-						<Box
-							sx={{
-								display: "flex",
-								justifyContent: "center",
-								flexDirection: "column",
-								alignItems: "center",
-								bgcolor: "#fff",
-								p: 5,
-								borderRadius: "5px",
-								gap: 2,
-							}}
-						>
-							<img src={logo} width={220} />
-							<TextField
-								label="Nom d'utilisateur"
-								color="primary"
-								fullWidth
-								{...register("username", {
-									required: "Veuillez remplir ce champ",
-								})}
-								error={!!errors.username}
-								helperText={errors.username?.message}
+			{account == null ? (
+				<Box className="login-bg">
+					<Container
+						maxWidth="xs"
+						sx={{
+							height: "100svh",
+							paddingTop: 19,
+						}}
+					>
+						<form onSubmit={handleSubmit(onSubmit)}>
+							<Box
 								sx={{
-									marginTop: "20px",
-								}}
-							/>
-							<FormControl fullWidth variant="outlined" color="primary">
-								<InputLabel
-									sx={{
-										color: "primary.light",
-										fontFamily: "Exo2-Medium",
-									}}
-								>
-									Mot de passe
-								</InputLabel>
-								<OutlinedInput
-									type={showPassword ? "text" : "password"}
-									{...register("password", {
-										required: "Veuillez remplir ce champ",
-									})}
-									error={!!errors.password}
-									endAdornment={
-										<InputAdornment position="end">
-											<IconButton
-												aria-label="toggle password visibility"
-												onClick={handleClickShowPassword}
-												onMouseDown={handleMouseDownPassword}
-												edge="end"
-											>
-												{showPassword ? <VisibilityOff /> : <Visibility />}
-											</IconButton>
-										</InputAdornment>
-									}
-									label=" Mot de passe"
-								/>
-							</FormControl>
-							<Button type="submit" text="Se connecter" fullWidth endIcon={<ArrowRightTwoTone />} />
-							<Link
-								onClick={() => navigate("/dashboard")}
-								underline="always"
-								color="primary"
-								sx={{
-									color: "primary",
-									display: "block",
-									alignSelf: "center",
-									cursor: "pointer",
+									display: "flex",
+									justifyContent: "center",
+									flexDirection: "column",
+									alignItems: "center",
+									bgcolor: "#fff",
+									p: 5,
+									borderRadius: "5px",
+									gap: 2,
 								}}
 							>
-								Mot de passe oublié ?
-							</Link>
-							<Toaster position="top-center" richColors closeButton />
-						</Box>
-					</form>
-				</Container>
-			</Box>)
-			: <LoaderMain account={account} />
-		}
+								<img src={logo} width={220} />
+								<TextField
+									label="Nom d'utilisateur"
+									color="primary"
+									fullWidth
+									{...register("username", {
+										required: "Veuillez remplir ce champ",
+									})}
+									error={!!errors.username}
+									helperText={errors.username?.message}
+									sx={{
+										marginTop: "20px",
+									}}
+								/>
+								<FormControl fullWidth variant="outlined" color="primary" error={!!errors.password}>
+									<InputLabel
+										sx={{
+											color: "primary.light",
+											fontFamily: "Exo2-Medium",
+										}}
+									>
+										Mot de passe
+									</InputLabel>
+									<OutlinedInput
+										color="primary"
+										type={showPassword ? "text" : "password"}
+										{...register("password", {
+											required: "Veuillez remplir ce champ",
+										})}
+										endAdornment={
+											<InputAdornment position="end">
+												<IconButton
+													aria-label="toggle password visibility"
+													onClick={handleClickShowPassword}
+													onMouseDown={handleMouseDownPassword}
+													edge="end"
+												>
+													{showPassword ? <VisibilityOff /> : <Visibility />}
+												</IconButton>
+											</InputAdornment>
+										}
+										label=" Mot de passe"
+									/>
+									<FormHelperText>{errors.password?.message}</FormHelperText>
+								</FormControl>
+								<Button type="submit" text="Se connecter" fullWidth endIcon={<ArrowRightTwoTone />} />
+
+								<Link
+									onClick={() => navigate("/update_password")}
+									underline="always"
+									color="primary"
+									sx={{
+										color: "primary",
+										display: "block",
+										alignSelf: "center",
+										cursor: "pointer",
+									}}
+								>
+									Mots de passe oublié ?
+								</Link>
+							</Box>
+						</form>
+						<Toaster position="top-center" richColors closeButton />
+					</Container>
+				</Box>
+			) : (
+				<LoaderMain account={account} />
+			)}
 		</>
 	);
 };
