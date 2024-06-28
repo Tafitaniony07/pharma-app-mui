@@ -12,8 +12,10 @@ export default function LoaderMain({account}) {
   useEffect(()=>{
     console.log("Isaccount", account);
     setTimeout(()=>{
-        if (account === null )
-            navigate('/')
+        if (account === null ){
+          navigate('/')
+          return
+        }
         if (account.account_type === "gestionnaires")
             navigate("/admin")
     }, 1000)

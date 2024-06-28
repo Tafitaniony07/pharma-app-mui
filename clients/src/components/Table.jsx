@@ -16,6 +16,9 @@ export default function StickyHeadTable() {
 	const [sortDirection, setSortDirection] = useState("asc");
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(5);
+	const [sortedData, setSortedData] = useState([])
+	const [filteredData, setFilteredData] = useState([])
+	const [paginatedData, setPaginatedData] = useState([])
 	const columns = [
 		{ filter: "family", label: "Famille" },
 		{ filter: "designation", label: "Designation" },
@@ -28,14 +31,31 @@ export default function StickyHeadTable() {
 		const medicaments = async ()=>{
 			const res = await stockInExpired()
 			console.log(res.data);
+			setSortedData(()=>{
+				const sort =  res.data.sort((a, b) => {
+						if (a[sortColumn] < b[sortColumn]) return sortDirection === "asc" ? -1 : 1;
+						if (a[sortColumn] > b[sortColumn]) return sortDirection === "asc" ? 1 : -1;
+						return 0;
+				})
+				return sort
+			})
 		}
 		medicaments()
 	}, [])
-	const sortedData = Medicaments.sort((a, b) => {
-		if (a[sortColumn] < b[sortColumn]) return sortDirection === "asc" ? -1 : 1;
-		if (a[sortColumn] > b[sortColumn]) return sortDirection === "asc" ? 1 : -1;
-		return 0;
-	});
+
+	useEffect(()=>{
+		setFilteredData(()=>sortedData.filter((item) => isExpiringSoon(item.date_peremption)))
+	}, [sortedData])
+
+	useEffect(()=>{
+		setPaginatedData(()=>filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage))
+	}, [filteredData])
+
+	// const sortedData = Medicaments.sort((a, b) => {
+	// 	if (a[sortColumn] < b[sortColumn]) return sortDirection === "asc" ? -1 : 1;
+	// 	if (a[sortColumn] > b[sortColumn]) return sortDirection === "asc" ? 1 : -1;
+	// 	return 0;
+	// });
 
 	const handleSort = (column) => {
 		if (column === sortColumn) {
@@ -59,8 +79,8 @@ export default function StickyHeadTable() {
 		const threeMonthsLater = addMonths(today, 3);
 		return isBefore(date_peremption, threeMonthsLater);
 	};
-	const filteredData = sortedData.filter((item) => isExpiringSoon(item.date_peremption));
-	const paginatedData = filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+	// const filteredData = sortedData.filter((item) => isExpiringSoon(item.date_peremption));
+	// const paginatedData = filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 	return (
 		<Box sx={{ width: "100%", overflow: "hidden" }}>
 			<TableContainer>
@@ -81,13 +101,13 @@ export default function StickyHeadTable() {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{paginatedData.map((item, index) => (
+						{paginatedData.length > 0 && paginatedData.map((item, index) => (
 							<TableRow key={index}>
-								<TableCell>{item.family}</TableCell>
-								<TableCell>{item.designation}</TableCell>
-								<TableCell>{item.classe}</TableCell>
-								<TableCell>{item.marque}</TableCell>
-								<TableCell>{item.quantity} (bte)</TableCell>
+								<TableCell>{item.detail_product.famille}</TableCell>
+								<TableCell>{item.detail_product.designation}</TableCell>
+								<TableCell>{item.detail_product.classe}</TableCell>
+								<TableCell>{item.marque_product}</TableCell>
+								<TableCell>{item.qte_gros} (bte)</TableCell>
 								<TableCell>
 									<Typography
 										component="div"
