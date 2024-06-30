@@ -1,4 +1,4 @@
-import { Box, Stack, accordionActionsClasses } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import NavBar from "../../components/header.jsx";
 import AdminSideBar from "./adminSideBar.jsx";
 import AdminListProducts from "./adminListProducts.jsx";
@@ -9,34 +9,35 @@ import useAuth from "../../hooks/useAuth.js";
 import LoaderMain from "../../components/loader.jsx";
 import { useState } from "react";
 const AdminDashboard = () => {
-	const {account} = useAuth()
+	const { account } = useAuth();
 	const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        console.log("Rendu", account);
-        if (account !== null) {
-            setIsLoading(false);
-        } else {
-            setIsLoading(true);
-        }
-    }, [account])
+	useEffect(() => {
+		console.log("Rendu", account);
+		if (account !== null) {
+			setIsLoading(false);
+		} else {
+			setIsLoading(true);
+		}
+	}, [account]);
 
 	return (
 		<>
-		{isLoading ? 
-		<LoaderMain account={account}/>
-		: 
-		<Box mt={12}>
-			<NavBar />
-			<Stack direction="row" justifyContent="space-between" alignItems="stretch">
-				<Box flex={1}>
-					<AdminSideBar />
+			{isLoading ? (
+				<LoaderMain account={account} />
+			) : (
+				<Box mt={12}>
+					<NavBar />
+					<Stack direction="row" justifyContent="space-between" alignItems="stretch">
+						<Box flex={1}>
+							<AdminSideBar />
+						</Box>
+						<Box bgcolor="white" borderRadius={5} p={3} mr={3} flex={4}>
+							<AdminListProducts />
+						</Box>
+					</Stack>
 				</Box>
-				<Box bgcolor="white" minHeight="85vh" borderRadius={5} p={3} mb={3} mr={3} flex={4}>
-					<AdminListProducts />
-				</Box>
-			</Stack>
-		</Box>}
+			)}
 		</>
 	);
 };

@@ -35,7 +35,7 @@ export default function SideBarVendeur() {
 		},
 	];
 	return (
-		<Box sx={{ display: "flex", bgcolor: "white", borderRadius: 5, position: "fixed", height: "100vh" }}>
+		<Box sx={{ display: "flex", bgcolor: "white", borderRadius: 5, position: "fixed", minHeight: "100vh" }}>
 			<List sx={{ width: "100%", my: 3 }}>
 				{items.map((item, index) => (
 					<ListItem
