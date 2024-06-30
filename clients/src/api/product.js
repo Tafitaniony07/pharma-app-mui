@@ -116,10 +116,9 @@ export async function UpdateProduct(id, data){
 
 /**
  * @param {*} id
- * @param {*} data objet à modifier inclus id produit 
  * @returns produit modifier
  */
-export async function DeleteProduct(id, data){
+export async function DeleteProduct(id){
     const {access} = useTokenStore.getState()
     try {
         const res = await myAxiosPrivate.delete(
@@ -145,7 +144,7 @@ export async function SellProduct(data){
     try {
         const res = await myAxiosPrivate.post(
             `stock/sell-product`,
-            {data},
+            data,
             {
                 headers : {
                     Authorization : `Bearer ${access}`

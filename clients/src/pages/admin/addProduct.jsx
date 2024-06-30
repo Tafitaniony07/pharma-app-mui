@@ -4,6 +4,8 @@ import { Box, Stack } from "@mui/material";
 import SideBar from "../admin/adminSideBar.jsx";
 import NavBar from "../../components/header.jsx";
 import AddProductForm from "../../components/addProductForm.jsx";
+import useAuth from "../../hooks/useAuth.js";
+import LoaderMain from "../../components/loader.jsx";
 
 const AddProduct = () => {
 	return (

@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Grid, TextField, InputAdornment, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router";
 import { Medicaments } from "../../data/listmedicaments.jsx";
-import { DeleteProduct, UpdateProduct, stock, stockInExpired } from "../../api/product.js";
+import { DeleteProduct, UpdateProduct, createStock, stock, stockInExpired } from "../../api/product.js";
 
 import ViewProductDialog from "../../components/viewProductDialog.jsx";
 import EditProductDialog from "../../components/editProductDialog.jsx";
@@ -17,17 +17,25 @@ import { useForm } from "react-hook-form";
 const AdminListProducts = () => {
 	const navigate = useNavigate();
 	const [filterText, setFilterText] = useState("");
-	const [stockData, setStockData] = useState(Medicaments);
+	const [stockData, setStockData] = useState([]);
 	const [selectedItem, setSelectedItem] = useState(null);
 	const [openViewDialog, setOpenViewDialog] = useState(false);
 	const [openEditDialog, setOpenEditDialog] = useState(false);
 	const [filteredData, setFilteredData] = useState([]);
-	const [sortedData, setsortedData] = useState([]);
+	// const [sortedData, setsortedData] = useState([]);
 	// const [paginatedData, setpaginatedData] = useState([]);
 
-	const data = Medicaments.filter((item) => item.designation.toLowerCase().includes(filterText.toLowerCase()));
+	useEffect(()=>{
+		const fetch = async()=>{
+			const res = await stock()
+			setStockData(()=>(res.data).filter((item) => item.detail_product.designation.toLowerCase().includes(filterText.toLowerCase())))
+		}
+		fetch()
+	}, [])
+
+	// const data = stockData.filter((item) => item.designation.toLowerCase().includes(filterText.toLowerCase()));
 	const {
-		sortedData: paginatedData,
+		sortedData,
 		sortColumn,
 		sortDirection,
 		page,
@@ -35,13 +43,14 @@ const AdminListProducts = () => {
 		handleSort,
 		handleChangePage,
 		handleChangeRowsPerPage,
-	} = useSortDataTable(data);
+		setSortData,
+	} = useSortDataTable(stockData);
 
 	const columns = [
 		{ filter: "famille", label: "Famille" },
 		{ filter: "designation", label: "Désignation" },
 		{ filter: "classe", label: "Classe" },
-		{ filter: "marque", label: "Marque" },
+		{ filter: "marque_product", label: "Marque" },
 		{ filter: "prix_uniter", label: "P.U" },
 		{ filter: "prix_gros", label: "P.G" },
 		{ filter: "qte_gros", label: "Quantité" },
@@ -126,7 +135,7 @@ const AdminListProducts = () => {
 				</Grid>
 			</Grid>
 			<ProductTable
-				data={paginatedData}
+				data={stockData}
 				columns={columns}
 				sortColumn={sortColumn}
 				sortDirection={sortDirection}

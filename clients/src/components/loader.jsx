@@ -3,24 +3,14 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
 import { useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useTokenStore } from '../tokenStore';
+import { useAccountStore } from '../accountStore';
+import useAuth from '../hooks/useAuth';
 
 export default function LoaderMain({account}) {
   const [open, setOpen] = React.useState(true);
-  const navigate = useNavigate();
-
-  useEffect(()=>{
-    console.log("Isaccount", account);
-    setTimeout(()=>{
-        if (account === null ){
-          navigate('/')
-          return
-        }
-        if (account.account_type === "gestionnaires")
-            navigate("/admin")
-    }, 1000)
-  }, [account])
-
+  const {access} = useTokenStore()
+  const {setAccount} = useAccountStore()
   return (
     <div>
       <Backdrop

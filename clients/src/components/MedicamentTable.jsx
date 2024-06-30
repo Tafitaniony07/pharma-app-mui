@@ -47,14 +47,14 @@ const MedicamentTable = ({ sortColumn, sortDirection, handleSort, paginatedData,
 					<TableBody>
 						{paginatedData.map((item, index) => (
 							<TableRow key={index}>
-								<TableCell>{TruncateText(item.name, 15)}</TableCell>
-								<TableCell>{item.marque}</TableCell>
-								<TableCell>{item.classe}</TableCell>
-								<TableCell>{item.unitPrice} Ar</TableCell>
-								<TableCell>{item.priceGros} Ar</TableCell>
+								<TableCell>{TruncateText(item.detail_product.designation, 15)}</TableCell>
+								<TableCell>{item.marque_product}</TableCell>
+								<TableCell>{item.detail_product.classe}</TableCell>
+								<TableCell>{item.prix_uniter} Ar</TableCell>
+								<TableCell>{item.prix_gros} Ar</TableCell>
 								<TableCell style={{ whiteSpace: "nowrap" }}>
 									<Stack direction="row" gap={2}>
-										{loadingState[item.name] ? (
+										{loadingState[item.pk] ? (
 											<Fab
 												size="small"
 												aria-label="loading"

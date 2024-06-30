@@ -3,8 +3,12 @@ import Box from "@mui/material/Box";
 import FormNewAccount from "../../components/formNewAccount.jsx";
 import AdminSideBar from "../admin/adminSideBar.jsx";
 import NavBar from "../../components/header.jsx";
+import useAuth from "../../hooks/useAuth.js";
+import LoaderMain from "../../components/loader.jsx";
 
 const CreateAccount = () => {
+	const {account} = useAuth()
+
 	return (
 		<Box mt={12}>
 			<NavBar />

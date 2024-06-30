@@ -15,7 +15,7 @@ export default function SideBarVendeur() {
 	const items = [
 		{
 			icon: <DashboardIcon />,
-			path: "/vendeur",
+			path: "/",
 		},
 		{
 			icon: <DateRange />,

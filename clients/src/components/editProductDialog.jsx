@@ -7,6 +7,7 @@ import { Toaster, toast } from "sonner";
 import Button from "../components/btn/MuiButton.jsx";
 import { formatDate } from "./formatDate.js";
 import axios from "axios";
+import { UpdateProduct } from "../api/product.js";
 
 const EditProductDialog = ({ open, onClose, selectedItem }) => {
 	const {
@@ -31,21 +32,16 @@ const EditProductDialog = ({ open, onClose, selectedItem }) => {
 		toast.success("Produit mis à jour avec succès !");
 		onClose();
 		try {
-			const response = await axios.post("/editproduct", {
-				famille: data.famille,
-				designation: data.designation,
-				classe: data.classe,
-				marque: data.marque,
-				type_uniter: data.type_uniter,
-				type_gros: data.type_gros,
-				prix_uniter: data.prix_uniter,
-				prix_gros: data.prix_gros,
-				qte_uniter: data.qte_uniter,
-				qte_gros: data.qte_gros,
-				qte_max: data.qte_max,
-				date_peremption: data.date_peremption,
-				fournisseur: [data.fournisseur, data.adresse, data.contact],
-			});
+			console.log("Aupdate", data);
+			const response = await UpdateProduct(data.pk, 
+				{
+					pk : data.pk,
+					qte_uniter : data.qte_uniter,
+					qte_gros : data.qte_gros,
+					prix_uniter : data.prix_uniter,
+					prix_gros : data.prix_gros
+				}
+			)
 
 			if (response.status === 200) {
 				toast.success("Produit mis à jour avec succès !");

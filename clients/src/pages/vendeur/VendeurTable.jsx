@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { TextField, InputAdornment, Stack, Box } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Toaster, toast } from "sonner";
@@ -8,6 +8,8 @@ import { useNavigate } from "react-router";
 import MedicamentTable from "../../components/MedicamentTable.jsx";
 import Panier from "../../components/Panier.jsx";
 import AchatDialog from "../../components/achatDialog.jsx";
+import { stock } from "../../api/product.js";
+import { SellProduct } from "../../api/product.js";
 
 const ListMedicamentsVendeur = () => {
 	const { transactions, setTransactions } = useContext(TransactionContext);
@@ -24,7 +26,10 @@ const ListMedicamentsVendeur = () => {
 	const [paymentStatus, setPaymentStatus] = useState("Payé");
 	const [remainingAmount, setRemainingAmount] = useState(0);
 	const [dialogOpen, setDialogOpen] = useState(false);
-
+	const [medic, setMedic] = useState([])
+	const[filteredData, setFilteredData] = useState([])
+	const[sortedData, setSortData] = useState([])
+	const[paginatedData, setpaginatedData] = useState([])
 	// Sample medications data
 	const Medicaments = [
 		{
@@ -118,14 +123,39 @@ const ListMedicamentsVendeur = () => {
 			quantityBulk: 0,
 		},
 	];
+	useEffect(()=>{
+		const fetch = async()=>{
+			const res = await stock()
+			setMedic(()=>(res.data).filter((item) => item.detail_product.designation.toLowerCase().includes(filterText.toLowerCase())))
+		}
+		fetch()
+	}, [])
+
+	useEffect(()=>{
+		setFilteredData(medic.filter((item) => item.detail_product.designation.toLowerCase().includes(filterText.toLowerCase())))
+	}, [medic])
+
+	useEffect(()=>{
+		setSortData(()=>{
+			return filteredData.sort((a, b) => {
+				if (a[sortColumn] < b[sortColumn]) return sortDirection === "asc" ? -1 : 1;
+				if (a[sortColumn] > b[sortColumn]) return sortDirection === "asc" ? 1 : -1;
+				return 0
+			})
+		})
+	}, [filteredData])
+	// const paginatedData = sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+	useEffect(()=>{
+		setpaginatedData(sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage))
+	}, [sortedData])
 
 	// Filter and sort the medications
-	const filteredData = Medicaments.filter((item) => item.name.toLowerCase().includes(filterText.toLowerCase()));
-	const sortedData = filteredData.sort((a, b) => {
-		if (a[sortColumn] < b[sortColumn]) return sortDirection === "asc" ? -1 : 1;
-		if (a[sortColumn] > b[sortColumn]) return sortDirection === "asc" ? 1 : -1;
-		return 0;
-	});
+	// const filteredData = medic.filter((item) => item.name.toLowerCase().includes(filterText.toLowerCase()));
+	// const sortedData = filteredData.sort((a, b) => {
+	// 	if (a[sortColumn] < b[sortColumn]) return sortDirection === "asc" ? -1 : 1;
+	// 	if (a[sortColumn] > b[sortColumn]) return sortDirection === "asc" ? 1 : -1;
+	// 	return 0;
+	// });
 
 	// Handle sorting
 	const handleSort = (column) => {
@@ -146,16 +176,16 @@ const ListMedicamentsVendeur = () => {
 		setPage(0);
 	};
 
-	const paginatedData = sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+	
 	const addToCart = (item) => {
-		const detailQty = quantities[item.name]?.detail || 0;
-		const grosQty = quantities[item.name]?.gros || 0;
+		const detailQty = quantities[item.detail_product.designation]?.detail || 0;
+		const grosQty = quantities[item.detail_product.designation]?.gros || 0;
 
 		const quantityDetails = detailQty > 0 ? detailQty : 0;
 		const quantityBulk = grosQty > 0 ? grosQty : 0;
 
-		const itemPriceDetails = item.unitPrice * quantityDetails;
-		const itemPriceBulk = item.priceGros * quantityBulk;
+		const itemPriceDetails = item.prix_uniter * quantityDetails;
+		const itemPriceBulk = item.prix_gros * quantityBulk;
 		const totalItemPrice = itemPriceDetails + itemPriceBulk;
 
 		const cartItem = {
@@ -165,34 +195,32 @@ const ListMedicamentsVendeur = () => {
 			quantityBulk: quantityBulk,
 		};
 
-		if (addCart.some((cartItem) => cartItem.name === item.name)) {
+		if (addCart.some((cartItem) => cartItem.pk === item.pk)) {
 			toast.warning("L'article est déjà ajouté au panier");
 			return;
 		}
-
-		setLoadingState({ ...loadingState, [item.name]: true });
+		setLoadingState({ ...loadingState, [item.pk]: true });
 		setTimeout(() => {
 			setAddCart((prev) => [...prev, cartItem]);
-			setLoadingState({ ...loadingState, [item.name]: false });
+			setLoadingState({ ...loadingState, [item.detail_product.designation]: false });
 		}, 500);
 	};
 
 	// Update cart quantity
-	const updateCartQuantity = (name, type, quantity) => {
+	const updateCartQuantity = (pk, type, quantity) => {
 		setAddCart((prevCart) =>
 			prevCart.map((item) => {
-				if (item.name === name) {
-					let newQuantityDetails = item.quantityDetails;
-					let newQuantityBulk = item.quantityBulk;
-
+				if (item.pk === pk) {
+					let newQuantityDetails = item.quantityDetails
+					let newQuantityBulk = item.quantityBulk
+					
 					if (type === "details") {
 						newQuantityDetails = quantity;
 					} else if (type === "bulk") {
 						newQuantityBulk = quantity;
 					}
-
-					const newPriceDetails = item.unitPrice * newQuantityDetails;
-					const newPriceBulk = item.priceGros * newQuantityBulk;
+					const newPriceDetails = parseInt(item.prix_uniter) * newQuantityDetails;
+					const newPriceBulk = parseInt(item.prix_gros) * newQuantityBulk;
 					const newTotalPrice = newPriceDetails + newPriceBulk;
 
 					return {
@@ -206,8 +234,8 @@ const ListMedicamentsVendeur = () => {
 			})
 		);
 	};
-	const removeFromCart = (name) => {
-		setAddCart((prevCart) => prevCart.filter((item) => item.name !== name));
+	const removeFromCart = (pk) => {
+		setAddCart((prevCart) => prevCart.filter((item) => item.pk !== pk));
 		toast.warning("L'article a été retiré du panier");
 	};
 	const clearCart = () => {
@@ -216,7 +244,7 @@ const ListMedicamentsVendeur = () => {
 	const navigate = useNavigate();
 
 	// Save transaction
-	const saveTransaction = () => {
+	const saveTransaction = async() => {
 		const totalAmount = calculateTotalPrice();
 		const newTransaction = {
 			date: new Date(),
@@ -226,6 +254,23 @@ const ListMedicamentsVendeur = () => {
 			totalPaid: paymentStatus === "Payé" ? totalAmount : totalAmount - remainingAmount,
 			items: [...addCart],
 		};
+		try {
+			const datas = newTransaction.items.map((item)=>{
+				return {
+					product_id : item.pk,
+					qte_uniter_transaction : item.quantityDetails,
+					qte_gros_transaction : item.quantityBulk,
+				}
+			})
+			console.log("DATAS", datas);
+			datas.push({prix_restant : newTransaction.remainingAmount})
+			datas.push({client : newTransaction.clientName})
+			const res = await SellProduct(datas)
+			console.log(res);
+		} catch (error) {
+			throw error
+		}
+
 		setTransactions((prevTransactions) => [...prevTransactions, newTransaction]);
 		setAddCart([]);
 		setClientName("");
@@ -273,7 +318,7 @@ const ListMedicamentsVendeur = () => {
 						addToCart={addToCart}
 						page={page}
 						rowsPerPage={rowsPerPage}
-						Medicaments={Medicaments}
+						Medicaments={medic}
 						handleChangePage={handleChangePage}
 						handleChangeRowsPerPage={handleChangeRowsPerPage}
 					/>

@@ -9,10 +9,12 @@ import { Medicaments } from "../data/listmedicaments.jsx";
 import { format } from "date-fns";
 import PaginationTable from "./paginationTable.jsx";
 import useSortDataTable from "./sortDataTable.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { rowStyle } from "./rowStyle.js";
+import { stockInExpired } from "../api/product.js";
 
 export default function ListMedicamentExpiryDate() {
+	const [medic, setMedic] = useState([])
 	const columns = [
 		{ filter: "family", label: "Famille" },
 		{ filter: "designation", label: "Designation" },
@@ -21,8 +23,15 @@ export default function ListMedicamentExpiryDate() {
 		{ filter: "quantity", label: "Quantité" },
 		{ filter: "date_peremption", label: "Date de péremption" },
 	];
+	useEffect(()=>{
+		const fetch = async()=>{
+			const res = await stockInExpired()
+			setMedic(res.data)
+		}
+		fetch()
+	}, [])
 
-	const { sortedData, sortColumn, sortDirection, handleSort } = useSortDataTable(Medicaments);
+	const { sortedData, sortColumn, sortDirection, handleSort } = useSortDataTable(medic);
 
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -60,10 +69,10 @@ export default function ListMedicamentExpiryDate() {
 					<TableBody>
 						{paginatedData.map((item, index) => (
 							<TableRow key={index} sx={rowStyle} style={{ whiteSpace: "nowrap" }}>
-								<TableCell>{item.famille}</TableCell>
-								<TableCell>{item.designation}</TableCell>
-								<TableCell>{item.classe}</TableCell>
-								<TableCell>{item.marque}</TableCell>
+								<TableCell>{item.detail_product.famille}</TableCell>
+								<TableCell>{item.detail_product.designation}</TableCell>
+								<TableCell>{item.detail_product.classe}</TableCell>
+								<TableCell>{item.marque_product}</TableCell>
 								<TableCell>{item.qte_gros} (bte)</TableCell>
 								<TableCell>
 									<Typography

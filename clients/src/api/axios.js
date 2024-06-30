@@ -28,13 +28,13 @@ myAxiosPrivate.interceptors.response.use(
             const prevRequest = error?.config
             prevRequest.sent = true
             const {setAccount} = useAccountStore.getState()
+            const {setAccessToken, setRefreshToken} = useTokenStore.getState()
             // console.log(prevRequest?.sent);
             try {
                 const res = await useRefreshToken()
                 console.log("NEW TOKEN", res.status);
     
                 if (res.statusText === "OK"){
-                    const {setAccessToken} = useTokenStore.getState()
                     prevRequest.headers['Authorization'] = `Bearer ${res.data['access']}`
                     setAccessToken(res.data['access'])
                     setAccount(res.data['access'])
@@ -42,8 +42,11 @@ myAxiosPrivate.interceptors.response.use(
                     return myAxiosPrivate(prevRequest);  
                 }
             } catch (error) {
-                if(error.response.status === 401)
+                if(error.response.status === 401){
+                    setAccessToken("")
+                    setRefreshToken("")
                     setAccount(null)
+                }
             }
         }
 

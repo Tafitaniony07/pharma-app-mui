@@ -23,9 +23,6 @@ const AdminDashboard = () => {
 
 	return (
 		<>
-		{isLoading ? 
-		<LoaderMain account={account}/>
-		: 
 		<Box mt={12}>
 			<NavBar />
 			<Stack direction="row" justifyContent="space-between" alignItems="stretch">
@@ -36,7 +33,7 @@ const AdminDashboard = () => {
 					<AdminListProducts />
 				</Box>
 			</Stack>
-		</Box>}
+		</Box>
 		</>
 	);
 };

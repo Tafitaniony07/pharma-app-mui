@@ -44,7 +44,8 @@ const AddProductForm = () => {
 
 			createProduct(datas)
 				.then((response) => {
-					if (response.status === 201 && isSubmitSuccessful == true) {
+					console.log(response);
+					if (response.statusText === "OK" || response.statusText === "Created") {
 						// Réinitialiser les champs du formulaire après une soumission réussie
 						console.log("AToo");
 						resetField()
@@ -53,9 +54,8 @@ const AddProductForm = () => {
 					}
 				})
 				.catch((err) => {
-					if (err.response.status === 422) {
+					console.log("errr", err);
 						toast.error(err);
-					}
 				});
 		} catch (error) {
 			toast.error(error);

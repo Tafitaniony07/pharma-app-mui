@@ -10,80 +10,90 @@ import {
 	TableRow,
 	Typography,
 } from "@mui/material";
+import { useEffect, useState } from "react";
+import { ListFacture } from "../api/facture";
 
 const TransactionItem = () => {
-	const listTransactions = [
-		{
-			id: 1,
-			client: "John Doe",
-			date_transaction: "12-08-24",
-			total: 15000,
-			state: "payé",
-			listeMedicaments: [
-				{
-					NomMedicament: "paracetamol 500mg",
-					marque: "DESKA",
-					qte_uniter: 5,
-					qte_gros: 10,
-					totalprix: 1200,
-				},
-				{
-					NomMedicament: "ibuprofen 200mg",
-					marque: "Advil",
-					qte_uniter: 3,
-					qte_gros: 8,
-					totalprix: 800,
-				},
-			],
-		},
-		{
-			id: 2,
-			client: "Jane Smith",
-			date_transaction: "14-09-24",
-			total: 20000,
-			state: "non payé",
-			listeMedicaments: [
-				{
-					NomMedicament: "amoxicillin 500mg",
-					marque: "Moxatag",
-					qte_uniter: 10,
-					qte_gros: 5,
-					totalprix: 3000,
-				},
-				{
-					NomMedicament: "cetirizine 10mg",
-					marque: "Zyrtec",
-					qte_uniter: 7,
-					qte_gros: 3,
-					totalprix: 1500,
-				},
-			],
-		},
-		{
-			id: 3,
-			client: "Alice Johnson",
-			date_transaction: "15-10-24",
-			total: 18000,
-			state: "payé",
-			listeMedicaments: [
-				{
-					NomMedicament: "metformin 500mg",
-					marque: "Glucophage",
-					qte_uniter: 8,
-					qte_gros: 6,
-					totalprix: 2500,
-				},
-				{
-					NomMedicament: "lisinopril 10mg",
-					marque: "Prinivil",
-					qte_uniter: 9,
-					qte_gros: 4,
-					totalprix: 2100,
-				},
-			],
-		},
-	];
-
+	const [listTransactions, setListTransaction] = useState([])
+	// const listTransactions = [
+	// 	{
+	// 		id: 1,
+	// 		client: "John Doe",
+	// 		date_transaction: "12-08-24",
+	// 		total: 15000,
+	// 		state: "payé",
+	// 		listeMedicaments: [
+	// 			{
+	// 				NomMedicament: "paracetamol 500mg",
+	// 				marque: "DESKA",
+	// 				qte_uniter: 5,
+	// 				qte_gros: 10,
+	// 				totalprix: 1200,
+	// 			},
+	// 			{
+	// 				NomMedicament: "ibuprofen 200mg",
+	// 				marque: "Advil",
+	// 				qte_uniter: 3,
+	// 				qte_gros: 8,
+	// 				totalprix: 800,
+	// 			},
+	// 		],
+	// 	},
+	// 	{
+	// 		id: 2,
+	// 		client: "Jane Smith",
+	// 		date_transaction: "14-09-24",
+	// 		total: 20000,
+	// 		state: "non payé",
+	// 		listeMedicaments: [
+	// 			{
+	// 				NomMedicament: "amoxicillin 500mg",
+	// 				marque: "Moxatag",
+	// 				qte_uniter: 10,
+	// 				qte_gros: 5,
+	// 				totalprix: 3000,
+	// 			},
+	// 			{
+	// 				NomMedicament: "cetirizine 10mg",
+	// 				marque: "Zyrtec",
+	// 				qte_uniter: 7,
+	// 				qte_gros: 3,
+	// 				totalprix: 1500,
+	// 			},
+	// 		],
+	// 	},
+	// 	{
+	// 		id: 3,
+	// 		client: "Alice Johnson",
+	// 		date_transaction: "15-10-24",
+	// 		total: 18000,
+	// 		state: "payé",
+	// 		listeMedicaments: [
+	// 			{
+	// 				NomMedicament: "metformin 500mg",
+	// 				marque: "Glucophage",
+	// 				qte_uniter: 8,
+	// 				qte_gros: 6,
+	// 				totalprix: 2500,
+	// 			},
+	// 			{
+	// 				NomMedicament: "lisinopril 10mg",
+	// 				marque: "Prinivil",
+	// 				qte_uniter: 9,
+	// 				qte_gros: 4,
+	// 				totalprix: 2100,
+	// 			},
+	// 		],
+	// 	},
+	// ];
+	useEffect(()=>{
+		const fetch = async()=>{
+			const res = await ListFacture()
+			console.log(res.data);
+			setListTransaction(res.data)
+		}
+		fetch()
+	}, [])
 	return (
 		<>
 			<Stack spacing={3} direction="row" alignItems="center" justifyContent="space-between">
@@ -126,8 +136,8 @@ const TransactionItem = () => {
 							<ChevronRight />
 							<Typography component="h4">{item.client}</Typography>
 						</Box>
-						<Typography component="div">Montant total à payer : {item.total} Ar</Typography>
-						<Typography component="div">Etat : {item.state}</Typography>
+						<Typography component="div">Montant total à payer : {item.prix_total} Ar</Typography>
+						<Typography component="div">Etat : {item.type_transaction}</Typography>
 
 						<Typography
 							component="div"
@@ -137,7 +147,7 @@ const TransactionItem = () => {
 							py={0.5}
 							borderRadius={10}
 						>
-							Date {item.date_transaction}
+							Date {item.date}
 						</Typography>
 					</Stack>
 					<TableContainer sx={{ mt: 2, overflow: "hidden", borderRadius: 3 }}>
@@ -152,13 +162,13 @@ const TransactionItem = () => {
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{item.listeMedicaments.map((medicament, index) => (
+								{item.produits.map((medicament, index) => (
 									<TableRow key={index}>
-										<TableCell>{medicament.NomMedicament}</TableCell>
+										<TableCell>{medicament.product}</TableCell>
 										<TableCell>{medicament.marque}</TableCell>
-										<TableCell>{medicament.qte_uniter}</TableCell>
-										<TableCell>{medicament.qte_gros}</TableCell>
-										<TableCell>{medicament.totalprix}</TableCell>
+										<TableCell>{medicament.qte_uniter_transaction}</TableCell>
+										<TableCell>{medicament.qte_gros_transaction}</TableCell>
+										<TableCell>{medicament.prix_total}</TableCell>
 									</TableRow>
 								))}
 							</TableBody>
