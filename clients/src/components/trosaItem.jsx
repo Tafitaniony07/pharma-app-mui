@@ -1,10 +1,10 @@
 import { Add, ArrowRightTwoTone, Delete, Edit, ExpandLess, ExpandMore } from "@mui/icons-material";
 import { Box, Button, ListItemText, Stack, Typography, Menu, MenuItem, Fab } from "@mui/material";
 import { useState } from "react";
-import AddTrosaDialog from "./addTrosaDialog.jsx";
-import EditTrosaDialog from "./editTrosaDialog.jsx";
-import DeleteTrosaDialog from "./deleteTrosaDialog.jsx";
+import AddTrosaDialog from "./dialog/addTrosaDialog.jsx";
+import EditTrosaDialog from "./dialog/editTrosaDialog.jsx";
 import { Toaster, toast } from "sonner";
+import DeleteDialog from "./dialog/deleteDialog.jsx";
 
 const TrosaItem = () => {
 	const [open, setOpen] = useState(false);
@@ -264,10 +264,10 @@ const TrosaItem = () => {
 
 			<AddTrosaDialog open={open} onClose={handleCloseDialog} />
 			<EditTrosaDialog open={openEditDialog} onClose={handleCloseDialog} selectedItem={selectedItem} />
-			<DeleteTrosaDialog
+			<DeleteDialog
 				open={openDeleteDialog}
 				onClose={handleCloseDialog}
-				deleteTrosa={deleteTrosa}
+				deleteItem={deleteTrosa}
 				selectedItem={selectedItem}
 			/>
 			<Toaster position="top-center" richColors />

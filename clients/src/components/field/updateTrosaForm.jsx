@@ -2,9 +2,9 @@
 import { Box, TextField } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { Toaster, toast } from "sonner";
-import Button from "./btn/MuiButton.jsx";
+import Button from "../btn/MuiButton.jsx";
 import { Save } from "@mui/icons-material";
-import { formatDate } from "./formatDate.js";
+import { formatDate } from "../formatDate.js";
 import axios from "axios";
 
 const UpdateTrosaForm = ({ selectedItem }) => {

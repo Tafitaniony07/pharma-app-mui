@@ -1,7 +1,9 @@
+/* eslint-disable no-unused-vars */
 import { Box, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import Button from "./btn/MuiButton.jsx";
 import { Close, Save } from "@mui/icons-material";
+import { useForm } from "react-hook-form";
 
 const UpdateTrosa = () => {
 	const [selectedItem, setSelectedItem] = useState(null);

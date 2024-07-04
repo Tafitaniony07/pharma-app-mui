@@ -1,7 +1,7 @@
 import { Box, Stack } from "@mui/material";
-import TransactionItem from "../components/transactionItem.jsx";
-import NavBar from "../components/header.jsx";
-import AdminSideBar from "./admin/adminSideBar.jsx";
+import AdminSideBar from "./adminSideBar.jsx";
+import TransactionItem from "../../components/transactionItem.jsx";
+import NavBar from "../../components/header.jsx";
 
 const ListTransactions = () => {
 	return (

@@ -18,6 +18,7 @@ export const myAxiosPrivate = axios.create({
 
 import useRefreshToken from "../hooks/useRefresh";
 import { useAccountStore } from "../accountStore";
+
 myAxiosPrivate.interceptors.response.use(
     res=>res,
     async error =>{
@@ -26,20 +27,29 @@ myAxiosPrivate.interceptors.response.use(
             console.log("config", error?.config);
             const prevRequest = error?.config
             prevRequest.sent = true
+            const {setAccount} = useAccountStore.getState()
+            const {setAccessToken, setRefreshToken} = useTokenStore.getState()
             // console.log(prevRequest?.sent);
-            const res = await useRefreshToken()
-            console.log("NEW TOKEN", res.data);
-            console.log(res.status)
-            if (res.status === 200){
-                const {setAccessToken} = useTokenStore.getState()
-                const {setAccount} = useAccountStore.getState()
-                prevRequest.headers['Authorization'] = `Bearer ${res.data['access']}`
-                setAccessToken(res.data['access'])
-                setAccount(res.data['access'])
-                console.log("prev request", prevRequest);     
-                return myAxiosPrivate(prevRequest);  
+            try {
+                const res = await useRefreshToken()
+                console.log("NEW TOKEN", res.status);
+    
+                if (res.statusText === "OK"){
+                    prevRequest.headers['Authorization'] = `Bearer ${res.data['access']}`
+                    setAccessToken(res.data['access'])
+                    setAccount(res.data['access'])
+                    console.log("prev request", prevRequest);     
+                    return myAxiosPrivate(prevRequest);  
+                }
+            } catch (error) {
+                if(error.response.status === 401){
+                    setAccessToken("")
+                    setRefreshToken("")
+                    setAccount(null)
+                }
             }
         }
+
         return Promise.reject(error)
     }
 )

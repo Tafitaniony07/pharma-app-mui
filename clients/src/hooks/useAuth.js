@@ -6,8 +6,6 @@ import { useTokenStore } from "../tokenStore";
 export default function useAuth(){
     const {account, setAccount} = useAccountStore()    
 	const {setAccessToken, setRefreshToken} = useTokenStore()
-
-
     const login = useCallback(async (username, password)=>{
         try {     
             const res = await Login(username, password)

@@ -3,8 +3,7 @@ import React from "react";
 import { Box, Stack } from "@mui/material";
 import SideBar from "../admin/adminSideBar.jsx";
 import NavBar from "../../components/header.jsx";
-import AddProductForm from "../../components/addProductForm.jsx";
-
+import AddProductForm from "../../components/field/addProductForm.jsx";
 const AddProduct = () => {
 	return (
 		<Box mt={12}>

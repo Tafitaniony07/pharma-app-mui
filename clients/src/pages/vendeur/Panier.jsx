@@ -14,8 +14,8 @@ import {
 	Stack,
 } from "@mui/material";
 import { Cancel, ClearAll, ShoppingBasket } from "@mui/icons-material";
-import { TruncateText } from "./TruncateText.jsx";
-import Button from "./btn/MuiButton.jsx";
+import { TruncateText } from "../../components/TruncateText.jsx";
+import Button from "../../components/btn/MuiButton.jsx";
 import { useForm } from "react-hook-form";
 
 const Panier = ({
@@ -38,16 +38,16 @@ const Panier = ({
 			paymentStatus,
 			remainingAmount,
 			cartItems: addCart.map((item) => ({
-				name: item.name,
-				quantityDetails: item.quantityDetails,
-				quantityBulk: item.quantityBulk,
+				name: item.detail_product.designation,
+				quantityDetails: item.qte_uniter,
+				quantityBulk: item.qte_gros,
 			})),
 		},
 	});
 
 	const onSubmit = (data) => {
 		console.log(data);
-		saveTransaction(data);
+		saveTransaction();
 	};
 
 	useEffect(() => {
@@ -57,7 +57,8 @@ const Panier = ({
 				paymentStatus: "Payé",
 				remainingAmount: "",
 				cartItems: addCart.map((item) => ({
-					name: item.name,
+					pk: item.pk,
+					name: item.detail_product.designation,
 					quantityDetails: 0,
 					quantityBulk: 0,
 				})),
@@ -81,7 +82,7 @@ const Panier = ({
 							<TableBody>
 								{addCart.map((item, index) => (
 									<TableRow key={index}>
-										<TableCell>{TruncateText(item.name, 12)}</TableCell>
+										<TableCell>{TruncateText(item.detail_product.designation, 12)}</TableCell>
 										<TableCell>
 											<TextField
 												type="number"
@@ -93,7 +94,7 @@ const Panier = ({
 														parseInt(e.target.value, 10)
 													);
 													updateCartQuantity(
-														item.name,
+														item.pk,
 														"details",
 														parseInt(e.target.value, 10)
 													);
@@ -117,7 +118,7 @@ const Panier = ({
 														`cartItems[${index}].quantityBulk`,
 														parseInt(e.target.value, 10)
 													);
-													updateCartQuantity(item.name, "bulk", parseInt(e.target.value, 10));
+													updateCartQuantity(item.pk, "bulk", parseInt(e.target.value, 10));
 												}}
 												size="small"
 												sx={{
@@ -133,7 +134,7 @@ const Panier = ({
 												{item.price} Ar
 												<Cancel
 													color="error"
-													onClick={() => removeFromCart(item.name)}
+													onClick={() => removeFromCart(item.pk)}
 													sx={{
 														"&: hover": {
 															cursor: "pointer",

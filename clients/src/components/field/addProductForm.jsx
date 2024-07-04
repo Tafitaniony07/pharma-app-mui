@@ -2,22 +2,26 @@ import { Box, Typography, TextField, MenuItem } from "@mui/material";
 import { Save } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { Toaster, toast } from "sonner";
-import Button from "../components/btn/MuiButton";
 import FieldAddProduct from "./fieldAddProduct.jsx";
 import AddProductExcel from "./addProductExcel.jsx";
-import { createProduct } from "../api/product.js";
+import { createProduct } from "../../api/product.js";
+import LoadingButton from "../btn/MuiLoadingButton.jsx";
+import { useState } from "react";
 
 const AddProductForm = () => {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors, isSubmitSuccessful },
+		formState: { errors },
 		reset,
+		resetField,
 	} = useForm({
 		mode: "onTouched",
 	});
+	const [loadingBtn, setLoadingBtn] = useState(false);
 
 	const handleRegister = (data) => {
+		setLoadingBtn(true);
 		try {
 			const datas = {
 				prix_uniter: data.prix_uniter,
@@ -43,18 +47,22 @@ const AddProductForm = () => {
 
 			createProduct(datas)
 				.then((response) => {
-					if (response.status === 201 && isSubmitSuccessful == true) {
+					console.log(response);
+					if (response.status === 201 || response.statusText === "Created") {
+						setLoadingBtn(false);
+						toast.success("Ajout du produit réussi !");
 						// Réinitialiser les champs du formulaire après une soumission réussie
+						resetField();
 						reset();
-						toast.success("Successfully !");
 					}
 				})
 				.catch((err) => {
-					if (err.response.status === 422) {
-						toast.error(err);
-					}
+					setLoadingBtn(false);
+					console.log("errr", err);
+					toast.error(err);
 				});
 		} catch (error) {
+			setLoadingBtn(false);
 			toast.error(error);
 		}
 	};
@@ -102,7 +110,15 @@ const AddProductForm = () => {
 					</Box>
 
 					<Box sx={{ width: "24%" }}>
-						<Button type="submit" text="Sauvegarder" fullWidth startIcon={<Save />} />
+						{/* <Button type="submit" text="Sauvegarder" fullWidth startIcon={<Save />} /> */}
+						<LoadingButton
+							type="submit"
+							text="Sauvegarder"
+							loadingPosition="start"
+							fullWidth
+							startIcon={<Save />}
+							loading={loadingBtn}
+						/>
 					</Box>
 				</Box>
 				<Toaster

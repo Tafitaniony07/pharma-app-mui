@@ -78,7 +78,6 @@ const UpdateProduct = () => {
 		},
 	];
 	const OnSubmit = (data) => {
-		console.log(data);
 		toast.success('Product add success !!!');
 
 	};

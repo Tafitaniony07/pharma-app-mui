@@ -4,34 +4,38 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-
 import { useLocation, useNavigate } from "react-router-dom";
 import { DateRange, History, Logout, ProductionQuantityLimitsSharp } from "@mui/icons-material";
+import useAuth from "../../hooks/useAuth.js";
 
 export default function SideBarVendeur() {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const isActive = (path) => location.pathname === path;
+	const { logout } = useAuth();
+	function handleClick() {
+		logout();
+	}
 	const items = [
 		{
 			icon: <DashboardIcon />,
-			path: "/vendeur",
+			path: "/",
 		},
 		{
 			icon: <DateRange />,
-			path: "/expirydate",
+			path: "/expiry_date_user",
 		},
 		{
 			icon: <ProductionQuantityLimitsSharp />,
-			path: "/least_stock",
+			path: "/stock_expired_quantity_user",
 		},
 		{
 			icon: <History />,
-			path: "/transactions",
+			path: "/transactions_user",
 		},
 		{
 			icon: <Logout />,
-			path: "/",
+			path: "/logout",
 		},
 	];
 	return (
@@ -43,7 +47,11 @@ export default function SideBarVendeur() {
 						disablePadding
 						sx={{ display: "block" }}
 						onClick={() => {
-							navigate(item.path);
+							if (item.path === "/logout") {
+								handleClick();
+							} else {
+								navigate(item.path);
+							}
 						}}
 					>
 						<ListItemButton

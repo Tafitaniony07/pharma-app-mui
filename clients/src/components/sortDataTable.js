@@ -5,7 +5,7 @@ import { useState, useMemo } from "react";
 const useSortDataTable = (data, defaultSortColumn = "designation") => {
 	const [sortColumn, setSortColumn] = useState(defaultSortColumn);
 	const [sortDirection, setSortDirection] = useState("asc");
-
+	console.log("sorted");
 	const sortedData = useMemo(() => {
 		return [...data].sort((a, b) => {
 			if (a[sortColumn] < b[sortColumn]) return sortDirection === "asc" ? -1 : 1;
