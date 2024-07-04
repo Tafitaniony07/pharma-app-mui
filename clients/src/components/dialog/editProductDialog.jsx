@@ -1,14 +1,14 @@
 /* eslint-disable react/prop-types */
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Box, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Fab } from "@mui/material";
 import { Save, Close } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { Toaster, toast } from "sonner";
-import Button from "../components/btn/MuiButton.jsx";
-import { formatDate } from "./formatDate.js";
-import axios from "axios";
+import { formatDate } from "../formatDate.js";
+import { UpdateProduct } from "../../api/product.js";
+import LoadingButton from "../btn/MuiLoadingButton.jsx";
 
-const EditProductDialog = ({ open, onClose, selectedItem }) => {
+const EditProductDialog = ({ open, onClose, selectedItem, onProductUpdated }) => {
 	const {
 		register,
 		handleSubmit,
@@ -17,44 +17,46 @@ const EditProductDialog = ({ open, onClose, selectedItem }) => {
 	} = useForm({
 		mode: "onTouched",
 	});
+	const [loadingBtn, setLoadingBtn] = useState(false);
 
 	useEffect(() => {
 		if (open && selectedItem) {
 			const formattedItem = {
+				...selectedItem.detail_product,
 				...selectedItem,
+				marque: selectedItem.marque_product,
 				date_peremption: formatDate(selectedItem.date_peremption),
+				qte_uniter: 0,
+				qte_gros: 0,
 			};
 			reset(formattedItem); // Réinitialiser le formulaire avec les valeurs de l'élément sélectionné
 		}
 	}, [selectedItem, open, reset]);
+
 	const handleEdit = async (data) => {
-		toast.success("Produit mis à jour avec succès !");
-		onClose();
+		setLoadingBtn(true);
 		try {
-			const response = await axios.post("/editproduct", {
-				famille: data.famille,
-				designation: data.designation,
-				classe: data.classe,
-				marque: data.marque,
-				type_uniter: data.type_uniter,
-				type_gros: data.type_gros,
-				prix_uniter: data.prix_uniter,
-				prix_gros: data.prix_gros,
+			const response = await UpdateProduct(data.pk, {
+				pk: data.pk,
 				qte_uniter: data.qte_uniter,
 				qte_gros: data.qte_gros,
-				qte_max: data.qte_max,
-				date_peremption: data.date_peremption,
-				fournisseur: [data.fournisseur, data.adresse, data.contact],
+				prix_uniter: data.prix_uniter,
+				prix_gros: data.prix_gros,
 			});
 
 			if (response.status === 200) {
+				onProductUpdated(response.data); // Utilisez la fonction de rappel pour mettre à jour le produit
 				toast.success("Produit mis à jour avec succès !");
+				setLoadingBtn(false);
+
 				onClose();
 			}
 		} catch (err) {
 			if (err.response?.status === 422) {
+				setLoadingBtn(false);
 				toast.error("Erreur de validation des données");
 			} else {
+				setLoadingBtn(false);
 				toast.error("Erreur lors de la mise à jour du produit");
 			}
 		}
@@ -67,8 +69,8 @@ const EditProductDialog = ({ open, onClose, selectedItem }) => {
 		{ label: "Prix de gros", name: "prix_gros", type: "number" },
 		{ label: "Quantité unitaire", name: "qte_uniter", type: "number" },
 		{ label: "Quantité de gros", name: "qte_gros", type: "number" },
-		{ label: "Quantité max", name: "qte_max", type: "number", disabled: true },
 		{ label: "Date de péremption", name: "date_peremption", type: "date", autoFocus: true },
+		{ label: "Quantité max", name: "qte_max", type: "number", disabled: true },
 	];
 
 	return (
@@ -84,7 +86,9 @@ const EditProductDialog = ({ open, onClose, selectedItem }) => {
 										label={field.label}
 										color="primary"
 										fullWidth
-										{...register(field.name, {})}
+										{...register(field.name, {
+											required: "Veuillez remplir ce champ",
+										})}
 										error={!!errors[field.name]}
 										helperText={errors[field.name]?.message}
 										type={field.type}
@@ -93,7 +97,15 @@ const EditProductDialog = ({ open, onClose, selectedItem }) => {
 									/>
 								</Box>
 							))}
-							<Button type="submit" text="Mettre à jour" color="secondary" startIcon={<Save />} />
+							{/* <Button type="submit" text="Mettre à jour" color="secondary" startIcon={<Save />} /> */}
+							<LoadingButton
+								type="submit"
+								color="secondary"
+								text="Sauvegarder"
+								loadingPosition="start"
+								startIcon={<Save />}
+								loading={loadingBtn}
+							/>
 						</Box>
 					</form>
 				</DialogContent>

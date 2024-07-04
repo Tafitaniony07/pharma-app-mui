@@ -9,10 +9,10 @@ const ViewProductDialog = ({ open, onClose, selectedItem }) => {
 	if (!selectedItem) return null;
 
 	const details = [
-		{ label: "Famille", value: selectedItem.famille },
-		{ label: "Classe", value: selectedItem.classe },
-		{ label: "Désignation", value: selectedItem.designation },
-		{ label: "Marque", value: selectedItem.marque },
+		{ label: "Famille", value: selectedItem.detail_product.famille },
+		{ label: "Classe", value: selectedItem.detail_product.classe },
+		{ label: "Désignation", value: selectedItem.detail_product.designation },
+		{ label: "Marque", value: selectedItem.marque_product },
 		{ label: "Prix unitaire", value: `${selectedItem.prix_uniter} Ar` },
 		{ label: "Prix de gros", value: `${selectedItem.prix_gros} Ar` },
 		{ label: "Quantité", value: `${selectedItem.qte_gros} bte` },

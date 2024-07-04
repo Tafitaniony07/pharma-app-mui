@@ -14,10 +14,10 @@ export default function AdminSideBar() {
 	const location = useLocation();
 	const isActive = (path) => location.pathname === path;
 	const menuItems = [
-		{ text: "DashBoard", icon: <DashboardIcon />, path: "/admin" },
+		{ text: "DashBoard", icon: <DashboardIcon />, path: "/" },
 		{ text: "Ajout Produit", icon: <AddCircleIcon />, path: "/addproduct" },
-		{ text: "D. Peremption", icon: <DateRange />, path: "/expirydate" },
-		{ text: "Etat de Stock", icon: <ProductionQuantityLimitsOutlined />, path: "/least_stock" },
+		{ text: "D. Peremption", icon: <DateRange />, path: "/expiry_date_admin" },
+		{ text: "Etat de Stock", icon: <ProductionQuantityLimitsOutlined />, path: "/stock_expired_quantity" },
 		{ text: "Transactions", icon: <History />, path: "/transactions" },
 		{ text: "Nouveau Compte", icon: <Person />, path: "/create_account" },
 		{ text: "Trosa", icon: <MoneyOff />, path: "/list_trosa" },

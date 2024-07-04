@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 import { Dialog, DialogTitle, DialogContent, DialogActions, Typography } from "@mui/material";
-import Button from "./btn/MuiButton.jsx";
+import Button from "../btn/MuiButton.jsx";
 
 const AchatDialog = ({ dialogOpen, setDialogOpen, navigate, printInvoice }) => {
 	return (

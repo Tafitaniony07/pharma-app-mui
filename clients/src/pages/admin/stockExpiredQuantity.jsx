@@ -1,11 +1,11 @@
 import { Box, Stack } from "@mui/material";
 // eslint-disable-next-line no-unused-vars
 import React from "react";
-import NavBar from "../components/header.jsx";
-import AdminSideBar from "./admin/adminSideBar.jsx";
-import ListRuptureStock from "../components/listRuptureStock.jsx";
+import NavBar from "../../components/header.jsx";
+import AdminSideBar from "./adminSideBar.jsx";
+import ListRuptureStock from "../../components/listRuptureStock.jsx";
 
-const RuptureStock = () => {
+const RuptureStockAdmin = () => {
 	return (
 		<Box mt={12}>
 			<NavBar />
@@ -21,4 +21,4 @@ const RuptureStock = () => {
 	);
 };
 
-export default RuptureStock;
+export default RuptureStockAdmin;

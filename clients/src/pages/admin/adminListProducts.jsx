@@ -1,69 +1,27 @@
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Grid, TextField, InputAdornment, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router";
-import { Medicaments } from "../../data/listmedicaments.jsx";
-import { UpdateProduct, stock, stockInExpired } from "../../api/product.js";
-
-import ViewProductDialog from "../../components/viewProductDialog.jsx";
-import EditProductDialog from "../../components/editProductDialog.jsx";
-import ProductTable from "../../components/productTable.jsx";
+import { DeleteProduct, UpdateProduct, createStock, stock, stockInExpired } from "../../api/product.js";
+import ViewProductDialog from "../../components/dialog/viewProductDialog.jsx";
+import EditProductDialog from "../../components/dialog/editProductDialog.jsx";
+import ProductTable from "./productTable.jsx";
 import Button from "../../components/btn/MuiButton.jsx";
 import useSortDataTable from "../../components/sortDataTable.js";
 import { useForm } from "react-hook-form";
+import DeleteDialog from "../../components/dialog/deleteDialog.jsx";
 
 const AdminListProducts = () => {
 	const navigate = useNavigate();
 	const [filterText, setFilterText] = useState("");
-	const [stockData, setStockData] = useState(Medicaments);
+	const [stockData, setStockData] = useState([]);
 	const [selectedItem, setSelectedItem] = useState(null);
 	const [openViewDialog, setOpenViewDialog] = useState(false);
+	const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 	const [openEditDialog, setOpenEditDialog] = useState(false);
-	const [filteredData, setFilteredData] = useState([]);
-	const [sortedData, setsortedData] = useState([]);
-	// const [paginatedData, setpaginatedData] = useState([]);
-
-	const data = Medicaments.filter((item) => item.designation.toLowerCase().includes(filterText.toLowerCase()));
-	const {
-		sortedData: paginatedData,
-		sortColumn,
-		sortDirection,
-		page,
-		rowsPerPage,
-		handleSort,
-		handleChangePage,
-		handleChangeRowsPerPage,
-	} = useSortDataTable(data);
-
-	const columns = [
-		{ filter: "famille", label: "Famille" },
-		{ filter: "designation", label: "Désignation" },
-		{ filter: "classe", label: "Classe" },
-		{ filter: "marque", label: "Marque" },
-		{ filter: "prix_uniter", label: "P.U" },
-		{ filter: "prix_gros", label: "P.G" },
-		{ filter: "qte_gros", label: "Quantité" },
-		{ filter: "date_peremption", label: "Date " },
-	];
-	const handleView = (item) => {
-		setSelectedItem(item);
-		setOpenViewDialog(true);
-	};
-	const handleCloseViewDialog = () => {
-		setOpenViewDialog(false);
-	};
-	const handleEdit = (item) => {
-		setSelectedItem(item);
-		setOpenEditDialog(true);
-	};
-	const handleCloseEditDialog = () => {
-		setOpenEditDialog(false);
-	};
-	const handleDelete = (item) => {
-		setStockData(stockData.filter((data) => data !== item));
-	};
+	const [itemToDelete, setItemToDelete] = useState(null);
 
 	const {
 		register,
@@ -74,18 +32,97 @@ const AdminListProducts = () => {
 		mode: "onTouched",
 	});
 
+	useEffect(() => {
+		const fetch = async () => {
+			const res = await stock();
+			setStockData(() =>
+				res.data.filter((item) =>
+					item.detail_product.designation.toLowerCase().includes(filterText.toLowerCase())
+				)
+			);
+		};
+		fetch();
+	}, [filterText]);
+
+	useEffect(() => {
+		const deleteItem = async () => {
+			if (itemToDelete) {
+				try {
+					await DeleteProduct(itemToDelete.pk);
+					setStockData((prevData) => prevData.filter((data) => data !== itemToDelete));
+					setOpenDeleteDialog(false);
+				} catch (error) {
+					console.error("Error deleting item:", error);
+				} finally {
+					setItemToDelete(null);
+				}
+			}
+		};
+
+		deleteItem();
+	}, [itemToDelete]);
+
+	const {
+		sortedData,
+		sortColumn,
+		sortDirection,
+		page,
+		rowsPerPage,
+		handleSort,
+		handleChangePage,
+		handleChangeRowsPerPage,
+		setSortData,
+	} = useSortDataTable(stockData);
+
+	const handleView = (item) => {
+		setSelectedItem(item);
+		setOpenViewDialog(true);
+	};
+
+	const handleCloseDialog = () => {
+		setOpenViewDialog(false);
+		setOpenEditDialog(false);
+		setOpenDeleteDialog(false);
+	};
+
+	const handleEdit = (item) => {
+		setSelectedItem(item);
+		setOpenEditDialog(true);
+	};
+
+	const handleDeleteProduct = (item) => {
+		setSelectedItem(item);
+		setOpenDeleteDialog(true);
+	};
+
+	const handleDelete = () => {
+		setItemToDelete(selectedItem);
+	};
+
+	const handleProductUpdated = (updatedProduct) => {
+		setStockData((prevData) => prevData.map((item) => (item.pk === updatedProduct.pk ? updatedProduct : item)));
+	};
+
 	const onSubmitEdit = async (data) => {
 		data.pk = selectedItem.pk;
-		console.log("Data", data);
 		const datas = await UpdateProduct(selectedItem.pk, data);
 		const updatedStockData = stockData.map((item) =>
 			item.detail_product.designation === selectedItem.detail_product.designation ? { ...item, ...data } : item
 		);
-		console.log(datas);
 		setStockData(updatedStockData);
-
 		reset();
 	};
+
+	const columns = [
+		{ filter: "famille", label: "Famille" },
+		{ filter: "designation", label: "Désignation" },
+		{ filter: "classe", label: "Classe" },
+		{ filter: "marque_product", label: "Marque" },
+		{ filter: "prix_uniter", label: "P.U" },
+		{ filter: "prix_gros", label: "P.G" },
+		{ filter: "qte_gros", label: "Quantité" },
+		{ filter: "date_peremption", label: "Date " },
+	];
 
 	return (
 		<>
@@ -119,7 +156,7 @@ const AdminListProducts = () => {
 				</Grid>
 			</Grid>
 			<ProductTable
-				data={paginatedData}
+				data={stockData}
 				columns={columns}
 				sortColumn={sortColumn}
 				sortDirection={sortDirection}
@@ -128,16 +165,23 @@ const AdminListProducts = () => {
 				handleChangeRowsPerPage={handleChangeRowsPerPage}
 				handleView={handleView}
 				handleEdit={handleEdit}
-				handleDelete={handleDelete}
+				handleDelete={handleDeleteProduct}
 				page={page}
 				rowsPerPage={rowsPerPage}
 			/>
-			<ViewProductDialog open={openViewDialog} onClose={handleCloseViewDialog} selectedItem={selectedItem} />
+			<ViewProductDialog open={openViewDialog} onClose={handleCloseDialog} selectedItem={selectedItem} />
+			<DeleteDialog
+				open={openDeleteDialog}
+				onClose={handleCloseDialog}
+				selectedItem={selectedItem}
+				deleteItem={handleDelete}
+			/>
 			<EditProductDialog
 				open={openEditDialog}
-				onClose={handleCloseEditDialog}
+				onClose={handleCloseDialog}
 				selectedItem={selectedItem}
 				onSubmitEdit={onSubmitEdit}
+				onProductUpdated={handleProductUpdated}
 			/>
 		</>
 	);

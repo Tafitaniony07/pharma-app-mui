@@ -3,17 +3,19 @@ import { MenuItem, TextField, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import { Toaster, toast } from "sonner";
 import { useForm } from "react-hook-form";
-import logo from "../assets/logo.png";
-import Button from "../components/btn/MuiButton.jsx";
+import logo from "../../assets/logo.png";
+import Button from "../btn/MuiButton.jsx";
 
 const FormNewAccount = () => {
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
+		watch,
 	} = useForm({
 		mode: "onTouched",
 	});
+	const password = watch("password");
 	const onSubmit = () => {
 		let text = "Le compte a été créé avec succès !";
 		toast.success(text);
@@ -55,7 +57,7 @@ const FormNewAccount = () => {
 		},
 
 		{
-			name: "confirm_password",
+			name: "confirmPassword",
 			label: "Confirmation",
 			type: "password",
 		},
@@ -77,6 +79,11 @@ const FormNewAccount = () => {
 									fullWidth
 									{...register(field.name, {
 										required: "Veuillez remplir ce champ",
+										validate:
+											field.name === "confirmPassword"
+												? (value) =>
+														value === password || "Les mots de passe ne correspondent pas"
+												: undefined,
 									})}
 									error={!!errors[field.name]}
 									helperText={errors[field.name]?.message}

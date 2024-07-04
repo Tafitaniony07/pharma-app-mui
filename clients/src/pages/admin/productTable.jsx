@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable react/prop-types */
 import {
 	Table,
@@ -14,29 +15,29 @@ import {
 } from "@mui/material";
 import { format } from "date-fns";
 import { Visibility, Edit, Delete } from "@mui/icons-material";
-import { isExpiringSoon } from "./isExpiredSoon";
+import { isExpiringSoon } from "../../components/isExpiredSoon.js";
 import { useState } from "react";
-import useSortDataTable from "./sortDataTable.js";
-import PaginationTable from "./paginationTable.jsx";
-import { rowStyle } from "./rowStyle.js";
+import useSortDataTable from "../../components/sortDataTable.js";
+import PaginationTable from "../../components/paginationTable.jsx";
+import { rowStyle } from "../../components/rowStyle.js";
 
 const ProductTable = ({ columns, data, handleView, handleEdit, handleDelete }) => {
 	const { sortedData, sortColumn, sortDirection, handleSort } = useSortDataTable(data);
 
 	const [page, setPage] = useState(0);
-	const [rowsPerPage, setRowsPerPage] = useState(10);
+	const [rowsPerPage, setRowsPerPage] = useState(5);
 
 	const handleChangePage = (event, newPage) => {
 		setPage(newPage);
 	};
 
 	const handleChangeRowsPerPage = (event) => {
-		setRowsPerPage(parseInt(event.target.value, 10));
+		setRowsPerPage(parseInt(event.target.value, 5));
 		setPage(0);
 	};
 
 	const paginatedData = sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
+	console.log(paginatedData);
 	return (
 		<Box sx={{ height: "100%", width: "100%" }}>
 			<TableContainer sx={{ maxHeight: "70vh", borderRadius: 3 }}>
@@ -78,9 +79,14 @@ const ProductTable = ({ columns, data, handleView, handleEdit, handleDelete }) =
 											>
 												{format(item.date_peremption, "dd/MM/yyyy")}
 											</Typography>
+										) : column.filter === "designation" ||
+										  column.filter === "famille" ||
+										  column.filter === "classe" ? (
+											item.detail_product[column.filter]
 										) : (
 											item[column.filter]
 										)}
+										{column.filter === "qte_gros" ? "  " + item.detail_product.type_gros : ""}
 									</TableCell>
 								))}
 								<TableCell style={{ whiteSpace: "nowrap" }}>
