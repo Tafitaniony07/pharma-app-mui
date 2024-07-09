@@ -66,7 +66,13 @@ const AddProductExcel = () => {
 					/>
 				</Box>
 				<Box sx={{ width: "25%" }}>
-					<Button onClick={OnSubmitExcel} text="Sauvegarder" fullWidth startIcon={<Save />} />
+					<Button
+						onClick={OnSubmitExcel}
+						text="Sauvegarder"
+						fullWidth
+						startIcon={<Save />}
+						color="secondary"
+					/>
 				</Box>
 			</Box>
 		</Box>

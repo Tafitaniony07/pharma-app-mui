@@ -8,12 +8,12 @@ import Avatar from "@mui/material/Avatar";
 import logo from "../assets/logo.png";
 import { Button, Stack, Typography } from "@mui/material";
 import { LogoutRounded } from "@mui/icons-material";
-import useAuth from "../hooks/useAuth";
+import ExitDialog from "./dialog/exitDialog.jsx";
 
 function NavBar() {
-	const { logout } = useAuth();
+	const [openDialog, setOpenDialog] = React.useState(false);
 	function handleClick() {
-		logout();
+		setOpenDialog(true);
 	}
 	return (
 		<AppBar
@@ -72,6 +72,7 @@ function NavBar() {
 					</Box>
 				</Toolbar>
 			</Container>
+			<ExitDialog open={openDialog} onClose={() => setOpenDialog(false)} />
 		</AppBar>
 	);
 }

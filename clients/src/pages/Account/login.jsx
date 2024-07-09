@@ -17,13 +17,11 @@ import logo from "../../assets/logo.png";
 import { useForm } from "react-hook-form";
 import { Toaster, toast } from "sonner";
 import useAuth from "../../hooks/useAuth.js";
-
 import LoadingButton from "../../components/btn/MuiLoadingButton.jsx";
-import { useNavigate } from "react-router-dom";
 import LoaderMain from "../../components/loader.jsx";
+import EditPasswordDialog from "../../components/dialog/editPasswordDialog.jsx";
 
 const Login = () => {
-	// const navigate = useNavigate();
 	const [showPassword, setShowPassword] = useState(false);
 	const [isResponse, setResponse] = useState(false);
 	const [loadingBtn, setLoadingBtn] = useState(false);
@@ -68,8 +66,12 @@ const Login = () => {
 		}, 1000);
 	});
 	if (Loading) return <LoaderMain />;
-	const handleEditPassword = () => {
+	const handleEditPassword = (event) => {
+		event.preventDefault();
 		setOpenEditPassword(true);
+	};
+	const handleCloseEditPassword = () => {
+		setOpenEditPassword(false);
 	};
 	const handleMouseDownPassword = (event) => {
 		event.preventDefault();
@@ -165,6 +167,7 @@ const Login = () => {
 						</Link>
 					</Box>
 				</form>
+				<EditPasswordDialog open={openEditPassword} onClose={handleCloseEditPassword} />
 				<Toaster position="top-center" richColors closeButton />
 			</Container>
 		</Box>

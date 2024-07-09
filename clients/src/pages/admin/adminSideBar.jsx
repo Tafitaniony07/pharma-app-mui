@@ -7,7 +7,15 @@ import ListItemText from "@mui/material/ListItemText";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { useNavigate, useLocation } from "react-router-dom";
-import { DateRange, History, MoneyOff, Person, ProductionQuantityLimitsOutlined } from "@mui/icons-material";
+import {
+	DateRange,
+	Functions,
+	History,
+	MoneyOff,
+	Password,
+	Person,
+	ProductionQuantityLimitsOutlined,
+} from "@mui/icons-material";
 
 export default function AdminSideBar() {
 	const navigate = useNavigate();
@@ -19,7 +27,9 @@ export default function AdminSideBar() {
 		{ text: "D. Peremption", icon: <DateRange />, path: "/expiry_date_admin" },
 		{ text: "Etat de Stock", icon: <ProductionQuantityLimitsOutlined />, path: "/stock_expired_quantity" },
 		{ text: "Transactions", icon: <History />, path: "/transactions" },
-		{ text: "Nouveau Compte", icon: <Person />, path: "/create_account" },
+		{ text: "Total Transactions", icon: <Functions />, path: "/total_transactions" },
+		{ text: "Compte", icon: <Person />, path: "/create_account" },
+		{ text: "Update Password", icon: <Password />, path: "/update_password" },
 		{ text: "Trosa", icon: <MoneyOff />, path: "/list_trosa" },
 	];
 

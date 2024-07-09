@@ -35,10 +35,10 @@ const TrosaItem = () => {
 			fournisseur: "Jensen Walker",
 			date_trosa: "02-11-24",
 			total: 80000,
-			state: "en cours",
-			bgcolor: "#fff",
-			color: "orange",
-			border: "1px solid orange",
+			state: "non payé",
+			bgcolor: "rgba(0, 128, 0, 0.105) ",
+			color: "secondary.main",
+			border: "1px solid rgba(0, 128, 0, 0.145)",
 		},
 		{
 			id: 3,
@@ -55,10 +55,10 @@ const TrosaItem = () => {
 			fournisseur: "Paul Dayron",
 			date_trosa: "12-03-23",
 			total: 330000,
-			state: "en cours",
-			bgcolor: "#fff",
-			color: "orange",
-			border: "1px solid orange",
+			state: "non payé",
+			bgcolor: "rgba(0, 128, 0, 0.105) ",
+			color: "secondary.main",
+			border: "1px solid rgba(0, 128, 0, 0.145)",
 		},
 		{
 			id: 5,
@@ -75,10 +75,10 @@ const TrosaItem = () => {
 			fournisseur: "Paul Dayron",
 			date_trosa: "12-03-23",
 			total: 330000,
-			state: "en cours",
-			bgcolor: "#fff",
-			color: "orange",
-			border: "1px solid orange",
+			state: "non payé",
+			bgcolor: "rgba(0, 128, 0, 0.105) ",
+			color: "secondary.main",
+			border: "1px solid rgba(0, 128, 0, 0.145)",
 		},
 	]);
 
@@ -154,7 +154,7 @@ const TrosaItem = () => {
 						<MenuItem sx={{ width: 175 }} onClick={() => handleFilterChange("payé")}>
 							Payé
 						</MenuItem>
-						<MenuItem onClick={() => handleFilterChange("en cours")}>En cours</MenuItem>
+						<MenuItem onClick={() => handleFilterChange("non payé")}>non payé</MenuItem>
 						<MenuItem onClick={() => handleFilterChange("")}>Tout</MenuItem>
 					</Menu>
 				</Box>
@@ -216,6 +216,7 @@ const TrosaItem = () => {
 								borderRadius: "50px",
 								background: `${item.bgcolor}`,
 								color: `${item.color}`,
+								border: `${item.border}`,
 								textTransform: "capitalize",
 								px: 3,
 								"&:hover": {

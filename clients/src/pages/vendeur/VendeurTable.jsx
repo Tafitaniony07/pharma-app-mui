@@ -43,13 +43,13 @@ const ListMedicamentsVendeur = () => {
 			);
 		};
 		fetch();
-	}, []);
+	}, [filterText]);
 
 	useEffect(() => {
 		setFilteredData(
 			medic.filter((item) => item.detail_product.designation.toLowerCase().includes(filterText.toLowerCase()))
 		);
-	}, [medic]);
+	}, [filterText, medic]);
 
 	useEffect(() => {
 		setSortData(() => {
@@ -59,11 +59,11 @@ const ListMedicamentsVendeur = () => {
 				return 0;
 			});
 		});
-	}, [filteredData]);
+	}, [filteredData, sortColumn, sortDirection]);
 	// const paginatedData = sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 	useEffect(() => {
 		setpaginatedData(sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage));
-	}, [sortedData]);
+	}, [page, rowsPerPage, sortedData]);
 
 	// Filter and sort the medications
 	// const filteredData = medic.filter((item) => item.name.toLowerCase().includes(filterText.toLowerCase()));

@@ -60,13 +60,11 @@ const AddTrosaForm = () => {
 							rules={{ required: "Veuillez remplir ce champ" }}
 							render={({ field }) => (
 								<TextField
-									{...field}
 									label={field.label}
 									color="primary"
 									fullWidth
 									type={field.type}
 									error={!!errors[field.name]}
-									defaultValue={field.defaultValue}
 									autoFocus={field.autoFocus}
 									helperText={errors[field.name]?.message}
 								/>
@@ -75,13 +73,7 @@ const AddTrosaForm = () => {
 					</Box>
 				))}
 				<Box sx={{ width: "45%", flexGrow: 1 }}>
-					<Button
-						fullWidth
-						type="submit"
-						text="Enregistrer le Trosa"
-						color="secondary"
-						startIcon={<Save />}
-					/>
+					<Button fullWidth type="submit" text="Enregistrer" color="secondary" startIcon={<Save />} />
 				</Box>
 			</Box>
 

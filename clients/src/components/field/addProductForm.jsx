@@ -2,7 +2,7 @@ import { Box, Typography, TextField, MenuItem } from "@mui/material";
 import { Save } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { Toaster, toast } from "sonner";
-import FieldAddProduct from "./fieldAddProduct.jsx";
+import FieldAddProduct from "./labelAddProduct.jsx";
 import AddProductExcel from "./addProductExcel.jsx";
 import { createProduct } from "../../api/product.js";
 import LoadingButton from "../btn/MuiLoadingButton.jsx";
@@ -107,10 +107,7 @@ const AddProductForm = () => {
 								</TextField>
 							</Box>
 						))}
-					</Box>
-
-					<Box sx={{ width: "24%" }}>
-						{/* <Button type="submit" text="Sauvegarder" fullWidth startIcon={<Save />} /> */}
+							<Box sx={{ width: "24%" }}>
 						<LoadingButton
 							type="submit"
 							text="Sauvegarder"
@@ -120,6 +117,9 @@ const AddProductForm = () => {
 							loading={loadingBtn}
 						/>
 					</Box>
+					</Box>
+
+				
 				</Box>
 				<Toaster
 					position="top-center"

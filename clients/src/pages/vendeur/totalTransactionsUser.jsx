@@ -1,9 +1,9 @@
 import { Box, Stack } from "@mui/material";
 import NavBar from "../../components/header.jsx";
-import TransactionItem from "../../components/transactionItem.jsx";
+import TransactionSummary from "../../components/transactionSummaryAdmin.jsx";
 import SideBarVendeur from "./sideBarVendeur.jsx";
 
-const ListTransactionsUser = () => {
+const TotalTransactionUser = () => {
 	return (
 		<Box mt={12}>
 			<NavBar />
@@ -20,11 +20,11 @@ const ListTransactionsUser = () => {
 					}}
 					flex={9}
 				>
-					<TransactionItem />
+					<TransactionSummary />
 				</Box>
 			</Stack>
 		</Box>
 	);
 };
 
-export default ListTransactionsUser;
+export default TotalTransactionUser;

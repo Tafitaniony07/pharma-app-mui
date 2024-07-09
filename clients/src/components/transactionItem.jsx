@@ -1,4 +1,4 @@
-import { ChevronRight } from "@mui/icons-material";
+import { ChevronRight, Delete, ExpandLess, ExpandMore } from "@mui/icons-material";
 import {
 	Box,
 	Stack,
@@ -7,104 +7,131 @@ import {
 	TableCell,
 	TableContainer,
 	TableHead,
+	Fab,
 	TableRow,
 	Typography,
+	Button,
+	Menu,
+	MenuItem,
+	ListItemText,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ListFacture } from "../api/facture";
+import DeleteDialog from "./dialog/deleteDialog.jsx";
+import { isToday, isThisWeek, isThisMonth } from "date-fns";
 
 const TransactionItem = () => {
 	const [listTransactions, setListTransaction] = useState([]);
+	const [filteredTransactions, setFilteredTransactions] = useState([]);
+	const [selectedItem, setSelectedItem] = useState(null);
+	const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+	const [itemToDelete, setItemToDelete] = useState(null);
+	const [anchorEl, setAnchorEl] = useState(null);
 
-	// 	{
-	// 		id: 1,
-	// 		client: "John Doe",
-	// 		date_transaction: "12-08-24",
-	// 		total: 15000,
-	// 		state: "payé",
-	// 		listeMedicaments: [
-	// 			{
-	// 				NomMedicament: "paracetamol 500mg",
-	// 				marque: "DESKA",
-	// 				qte_uniter: 5,
-	// 				qte_gros: 10,
-	// 				totalprix: 1200,
-	// 			},
-	// 			{
-	// 				NomMedicament: "ibuprofen 200mg",
-	// 				marque: "Advil",
-	// 				qte_uniter: 3,
-	// 				qte_gros: 8,
-	// 				totalprix: 800,
-	// 			},
-	// 		],
-	// 	},
-	// 	{
-	// 		id: 2,
-	// 		client: "Jane Smith",
-	// 		date_transaction: "14-09-24",
-	// 		total: 20000,
-	// 		state: "non payé",
-	// 		listeMedicaments: [
-	// 			{
-	// 				NomMedicament: "amoxicillin 500mg",
-	// 				marque: "Moxatag",
-	// 				qte_uniter: 10,
-	// 				qte_gros: 5,
-	// 				totalprix: 3000,
-	// 			},
-	// 			{
-	// 				NomMedicament: "cetirizine 10mg",
-	// 				marque: "Zyrtec",
-	// 				qte_uniter: 7,
-	// 				qte_gros: 3,
-	// 				totalprix: 1500,
-	// 			},
-	// 		],
-	// 	},
-	// 	{
-	// 		id: 3,
-	// 		client: "Alice Johnson",
-	// 		date_transaction: "15-10-24",
-	// 		total: 18000,
-	// 		state: "payé",
-	// 		listeMedicaments: [
-	// 			{
-	// 				NomMedicament: "metformin 500mg",
-	// 				marque: "Glucophage",
-	// 				qte_uniter: 8,
-	// 				qte_gros: 6,
-	// 				totalprix: 2500,
-	// 			},
-	// 			{
-	// 				NomMedicament: "lisinopril 10mg",
-	// 				marque: "Prinivil",
-	// 				qte_uniter: 9,
-	// 				qte_gros: 4,
-	// 				totalprix: 2100,
-	// 			},
-	// 		],
-	// 	},
-	// ];
+	const handleDeleteTransaction = (item) => {
+		setSelectedItem(item);
+		setOpenDeleteDialog(true);
+	};
+
+	const handleDelete = () => {
+		setItemToDelete(selectedItem);
+	};
+	const handleCloseDialog = () => {
+		setOpenDeleteDialog(false);
+	};
+
+	const handleClick = (event) => {
+		setAnchorEl(event.currentTarget);
+	};
+
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
+	const handleFilterChange = (filter) => {
+		let filtered = [];
+		switch (filter) {
+			case "today":
+				filtered = listTransactions.filter((transaction) =>
+					transaction.produits.some((product) => isToday(new Date(product.date)))
+				);
+				break;
+			case "thisWeek":
+				filtered = listTransactions.filter((transaction) =>
+					transaction.produits.some((product) => isThisWeek(new Date(product.date)))
+				);
+				break;
+			case "thisMonth":
+				filtered = listTransactions.filter((transaction) =>
+					transaction.produits.some((product) => isThisMonth(new Date(product.date)))
+				);
+				break;
+
+			default:
+				filtered = listTransactions;
+				break;
+		}
+		setFilteredTransactions(filtered);
+		handleClose();
+	};
+
 	useEffect(() => {
 		const fetch = async () => {
 			const res = await ListFacture();
 			setListTransaction(res.data);
+			setFilteredTransactions(res.data);
 			console.log(res.data);
 		};
 		fetch();
 	}, []);
+
 	return (
 		<>
 			<Stack spacing={3} direction="row" alignItems="center" justifyContent="space-between">
 				<Typography component="h2" sx={{ fontSize: "25px" }} color="primary">
 					Tous les Transactions
 					<Typography component="p" color="black">
-						Il y a {listTransactions.length} total de transactions
+						Il y a {filteredTransactions.length} total de transactions
 					</Typography>
 				</Typography>
+				<Box>
+					<Button
+						aria-controls="filter-menu"
+						aria-haspopup="true"
+						variant="outlined"
+						onClick={handleClick}
+						sx={{
+							minHeight: 48,
+							justifyContent: "initial",
+							color: "secondary.main",
+							px: 5,
+							borderRadius: "50px",
+						}}
+						endIcon={anchorEl ? <ExpandLess /> : <ExpandMore />}
+					>
+						<ListItemText primary="Filtrer par" sx={{ textTransform: "capitalize" }} />
+					</Button>
+					<Menu
+						id="filter-menu"
+						anchorEl={anchorEl}
+						keepMounted
+						open={Boolean(anchorEl)}
+						onClose={handleClose}
+						sx={{
+							"& .MuiPaper-root": {
+								boxShadow: "none",
+								width: "150px",
+							},
+						}}
+					>
+						<MenuItem onClick={() => handleFilterChange("today")}>Aujourd'hui</MenuItem>
+						<MenuItem onClick={() => handleFilterChange("thisWeek")}>Cette semaine</MenuItem>
+						<MenuItem onClick={() => handleFilterChange("thisMonth")}>Ce mois-ci</MenuItem>
+						<MenuItem onClick={() => handleFilterChange("")}>Tout</MenuItem>
+					</Menu>
+				</Box>
 			</Stack>
-			{listTransactions.map((item) => (
+			{filteredTransactions.map((item) => (
 				<Box
 					display="flex"
 					flexDirection="column"
@@ -138,7 +165,6 @@ const TransactionItem = () => {
 						</Box>
 						<Typography component="div">Montant total à payer : {item.prix_total} Ar</Typography>
 						<Typography component="div">Etat : {item.type_transaction}</Typography>
-
 						<Typography
 							component="div"
 							color="white"
@@ -149,6 +175,23 @@ const TransactionItem = () => {
 						>
 							Date {item.date}
 						</Typography>
+						<Fab
+							size="small"
+							aria-label="delete"
+							onClick={() => handleDeleteTransaction(item)}
+							sx={{
+								background: "rgba(255, 0, 0, 0.105)",
+								boxShadow: "0",
+								border: "1px solid rgba(255, 0, 0, 0.145)",
+								"&:hover": {
+									background: "rgba(255, 0, 0, 0.245)",
+									color: "red",
+								},
+								zIndex: 0,
+							}}
+						>
+							<Delete />
+						</Fab>
 					</Stack>
 					<TableContainer sx={{ mt: 2, overflow: "hidden", borderRadius: 3 }}>
 						<Table>
@@ -176,6 +219,12 @@ const TransactionItem = () => {
 					</TableContainer>
 				</Box>
 			))}
+			<DeleteDialog
+				open={openDeleteDialog}
+				onClose={handleCloseDialog}
+				selectedItem={selectedItem}
+				deleteItem={handleDelete}
+			/>
 		</>
 	);
 };

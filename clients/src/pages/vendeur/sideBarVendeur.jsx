@@ -5,16 +5,17 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import { useLocation, useNavigate } from "react-router-dom";
-import { DateRange, History, Logout, ProductionQuantityLimitsSharp } from "@mui/icons-material";
-import useAuth from "../../hooks/useAuth.js";
+import { DateRange, Functions, History, Logout, ProductionQuantityLimitsSharp } from "@mui/icons-material";
+import { useState } from "react";
+import ExitDialog from "../../components/dialog/exitDialog.jsx";
 
 export default function SideBarVendeur() {
+	const [openDialog, setOpenDialog] = useState(false);
 	const navigate = useNavigate();
 	const location = useLocation();
 	const isActive = (path) => location.pathname === path;
-	const { logout } = useAuth();
 	function handleClick() {
-		logout();
+		setOpenDialog(true);
 	}
 	const items = [
 		{
@@ -33,6 +34,8 @@ export default function SideBarVendeur() {
 			icon: <History />,
 			path: "/transactions_user",
 		},
+		{ icon: <Functions />, path: "/total_transaction_user" },
+
 		{
 			icon: <Logout />,
 			path: "/logout",
@@ -87,6 +90,7 @@ export default function SideBarVendeur() {
 					</ListItem>
 				))}
 			</List>
+			<ExitDialog open={openDialog} onClose={() => setOpenDialog(false)} />
 		</Box>
 	);
 }
