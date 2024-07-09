@@ -1,4 +1,4 @@
-import { ChevronRight, Delete, ExpandLess, ExpandMore } from "@mui/icons-material";
+import { ChevronRight, Delete, ExpandLess, ExpandMore, Print } from "@mui/icons-material";
 import {
 	Box,
 	Stack,
@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import { ListFacture } from "../api/facture";
 import DeleteDialog from "./dialog/deleteDialog.jsx";
 import { isToday, isThisWeek, isThisMonth } from "date-fns";
+import { handlePrint } from "./facture.jsx";
 
 const TransactionItem = () => {
 	const [listTransactions, setListTransaction] = useState([]);
@@ -133,6 +134,7 @@ const TransactionItem = () => {
 			</Stack>
 			{filteredTransactions.map((item) => (
 				<Box
+					id={`transaction-${item.pk}`}
 					display="flex"
 					flexDirection="column"
 					key={item.pk}
@@ -163,35 +165,47 @@ const TransactionItem = () => {
 							<ChevronRight />
 							<Typography component="h4">{item.client}</Typography>
 						</Box>
-						<Typography component="div">Montant total à payer : {item.prix_total} Ar</Typography>
-						<Typography component="div">Etat : {item.type_transaction}</Typography>
-						<Typography
-							component="div"
-							color="white"
-							bgcolor="secondary.main"
-							px={3}
-							py={0.5}
-							borderRadius={10}
-						>
-							Date {item.date}
+						<Typography component="h4">Montant total : {item.prix_total} Ar</Typography>
+						<Typography component="h4">Etat : {item.prix_restant === "0" ? "Payé" : "Non payé"}</Typography>
+						<Typography component="h4">
+							{item.produits.length > 0 ? new Date(item.produits[0].date).toLocaleDateString() : "N/A"}
 						</Typography>
-						<Fab
-							size="small"
-							aria-label="delete"
-							onClick={() => handleDeleteTransaction(item)}
-							sx={{
-								background: "rgba(255, 0, 0, 0.105)",
-								boxShadow: "0",
-								border: "1px solid rgba(255, 0, 0, 0.145)",
-								"&:hover": {
-									background: "rgba(255, 0, 0, 0.245)",
-									color: "red",
-								},
-								zIndex: 0,
-							}}
-						>
-							<Delete />
-						</Fab>
+						<Stack direction="row" spacing={2} sx={{ mt: 3 }}>
+							<Fab
+								size="small"
+								aria-label="delete"
+								onClick={() => handleDeleteTransaction(item)}
+								sx={{
+									background: "rgba(255, 0, 0, 0.105)",
+									boxShadow: "0",
+									border: "1px solid rgba(255, 0, 0, 0.145)",
+									"&:hover": {
+										background: "rgba(255, 0, 0, 0.245)",
+										color: "red",
+									},
+									zIndex: 0,
+								}}
+							>
+								<Delete />
+							</Fab>
+							<Fab
+								size="small"
+								aria-label="print"
+								onClick={() => handlePrint(item)}
+								sx={{
+									background: "rgba(0, 128, 0, 0.105)",
+									boxShadow: "0",
+									border: "1px solid rgba(0, 128, 0, 0.145)",
+									"&:hover": {
+										background: "rgba(0, 128, 0, 0.145)",
+										color: "secondary.main",
+									},
+									zIndex: 0,
+								}}
+							>
+								<Print />
+							</Fab>
+						</Stack>
 					</Stack>
 					<TableContainer sx={{ mt: 2, overflow: "hidden", borderRadius: 3 }}>
 						<Table>
