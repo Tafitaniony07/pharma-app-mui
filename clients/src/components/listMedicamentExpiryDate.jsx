@@ -11,6 +11,7 @@ import useSortDataTable from "./sortDataTable.js";
 import { useEffect, useState } from "react";
 import { rowStyle } from "./rowStyle.js";
 import { stockInExpired } from "../api/product.js";
+import { formatDate } from "./formatDate.js";
 
 export default function ListMedicamentExpiryDate() {
 	const [medic, setMedic] = useState([]);
@@ -87,7 +88,7 @@ export default function ListMedicamentExpiryDate() {
 											fontSize: "14px",
 										}}
 									>
-										{format(new Date(item.date_peremption), "dd/MM/yyyy")}
+										{formatDate(item.date_peremption)}
 									</Typography>
 								</TableCell>
 							</TableRow>

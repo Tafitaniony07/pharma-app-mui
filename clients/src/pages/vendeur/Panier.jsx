@@ -32,7 +32,14 @@ const Panier = ({
 	clearCart,
 	removeFromCart,
 }) => {
-	const { register, handleSubmit, setValue, reset, formState } = useForm({
+	const {
+		register,
+		handleSubmit,
+		setValue,
+		reset,
+		formState,
+		formState: { errors },
+	} = useForm({
 		defaultValues: {
 			clientName,
 			paymentStatus,
@@ -86,7 +93,9 @@ const Panier = ({
 										<TableCell>
 											<TextField
 												type="number"
+												required
 												{...register(`cartItems[${index}].quantityDetails`)}
+												helperText={errors.clientName?.message}
 												defaultValue={item.quantityDetails}
 												onChange={(e) => {
 													setValue(
@@ -150,8 +159,11 @@ const Panier = ({
 						</Table>
 						<TextField
 							label="Nom du client"
-							{...register("clientName")}
+							required
 							defaultValue={clientName}
+							{...register("clientName", {})}
+							error={!!errors.clientName}
+							helperText={errors.clientName?.message}
 							sx={{
 								mt: 2,
 							}}
@@ -190,13 +202,13 @@ const Panier = ({
 						<Stack direction="row" spacing={2} sx={{ mt: 2 }}>
 							<Button
 								type="submit"
-								text="Valider la commande"
+								text="Valider "
 								sx={{ py: 1 }}
 								color="secondary"
 								startIcon={<ShoppingBasket />}
 							/>
 							<Button
-								text="Vider le panier"
+								text="Vider "
 								sx={{ py: 1 }}
 								color="inherit"
 								onClick={clearCart}

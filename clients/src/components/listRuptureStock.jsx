@@ -10,7 +10,7 @@ import PaginationTable from "./paginationTable.jsx";
 import useSortDataTable from "./sortDataTable.js";
 import { useEffect, useState } from "react";
 import { rowStyle } from "./rowStyle.js";
-import { stockInExpired } from "../api/product.js";
+import { stockInExpired, stockInRupte } from "../api/product.js";
 
 export default function ListRuptureStock() {
 	const columns = [
@@ -24,7 +24,7 @@ export default function ListRuptureStock() {
 	const [data, setData] = useState([]);
 	useEffect(() => {
 		const fetch = async () => {
-			const res = await stockInExpired();
+			const res = await stockInRupte();
 			setData(res.data);
 		};
 		fetch();

@@ -12,6 +12,8 @@ import ExpiryDateAdmin from "../pages/admin/expiryDateAdmin.jsx";
 import ExpiryDateUser from "../pages/vendeur/expiryDateUser.jsx";
 import RuptureStockUser from "../pages/vendeur/stockExpiredQuantityUser.jsx";
 import RuptureStockAdmin from "../pages/admin/stockExpiredQuantity.jsx";
+import TotalTransaction from "../pages/admin/totalTransaction.jsx";
+import TotalTransactionUser from "../pages/vendeur/totalTransactionsUser.jsx";
 export default function Router() {
 	return (
 		<>
@@ -30,6 +32,8 @@ export default function Router() {
 							<Route path="/stock_expired_quantity" element={<RuptureStockAdmin />}></Route>
 							<Route path="/stock_expired_quantity_user" element={<RuptureStockUser />}></Route>
 							<Route path="/update_password" element={<LostPassword />}></Route>
+							<Route path="/total_transactions" element={<TotalTransaction />}></Route>
+							<Route path="/total_transaction_user" element={<TotalTransactionUser />}></Route>
 						</Routes>
 					</BrowserRouter>
 				</TransactionProvider>

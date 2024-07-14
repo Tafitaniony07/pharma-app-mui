@@ -25,7 +25,7 @@ export async function Login(username, password) {
  * @param {*} account
  * @returns objects with data
  */
-export async function createAccount(username, password, account_type) {
+export async function createAccount({username, password, account_type}) {
 	try {
 		const res = await myAxios.post("account/register", { username, password, account_type });
 		console.log("Account REs", res);

@@ -12,16 +12,31 @@ import {
 	Box,
 	Stack,
 } from "@mui/material";
-import { ArrowRightAlt } from "@mui/icons-material";
+import { ArrowRightAlt, Visibility } from "@mui/icons-material";
 import { TruncateText } from "../../components/TruncateText.jsx";
+import { useState } from "react";
+import ViewProductDialog from "../../components/dialog/viewProductDialog.jsx";
 
 const MedicamentTable = ({ sortColumn, sortDirection, handleSort, paginatedData, loadingState, addToCart }) => {
+	const [selectedItem, setSelectedItem] = useState(null);
+	const [openViewDialog, setOpenViewDialog] = useState(false);
+
+	const handleView = (item) => {
+		setSelectedItem(item);
+		setOpenViewDialog(true);
+	};
+
+	const handleCloseDialog = () => {
+		setOpenViewDialog(false);
+	};
+
 	const columns = [
 		{ minWidth: 100, label: "Designation", filter: "name" },
 		{ minWidth: 85, label: "Marque", filter: "brand" },
 		{ minWidth: 85, label: "Classe", filter: "class" },
+		{ minWidth: 85, label: "Quantité", filter: "quantity" },
 		{ minWidth: 85, label: "Prix Détail", filter: "price" },
-		{ minWidth: 85, label: "Prix Gros", filter: "price" },
+		{ minWidth: 85, label: "Prix Gros", filter: "price_gros" },
 		{ minWidth: 50, label: "Actions" },
 	];
 
@@ -50,10 +65,22 @@ const MedicamentTable = ({ sortColumn, sortDirection, handleSort, paginatedData,
 								<TableCell>{TruncateText(item.detail_product.designation, 15)}</TableCell>
 								<TableCell>{item.marque_product}</TableCell>
 								<TableCell>{item.detail_product.classe}</TableCell>
+								<TableCell>
+									{item.qte_gros}
+									{item.detail_product.type_gros}
+								</TableCell>
 								<TableCell>{item.prix_uniter} Ar</TableCell>
 								<TableCell>{item.prix_gros} Ar</TableCell>
 								<TableCell style={{ whiteSpace: "nowrap" }}>
 									<Stack direction="row" gap={2}>
+										<Fab
+											size="small"
+											aria-label="view"
+											onClick={() => handleView(item)}
+											sx={{ background: "rgba(58, 0, 128, 0.055)", boxShadow: "0", zIndex: 0 }}
+										>
+											<Visibility />
+										</Fab>
 										{loadingState[item.pk] ? (
 											<Fab
 												size="small"
@@ -88,6 +115,7 @@ const MedicamentTable = ({ sortColumn, sortDirection, handleSort, paginatedData,
 					</TableBody>
 				</Table>
 			</TableContainer>
+			<ViewProductDialog open={openViewDialog} onClose={handleCloseDialog} selectedItem={selectedItem} />
 		</Box>
 	);
 };

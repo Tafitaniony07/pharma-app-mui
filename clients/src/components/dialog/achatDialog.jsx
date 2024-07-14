@@ -2,8 +2,10 @@
 
 import { Dialog, DialogTitle, DialogContent, DialogActions, Typography } from "@mui/material";
 import Button from "../btn/MuiButton.jsx";
+import { handlePrint } from "../facture.jsx";
 
-const AchatDialog = ({ dialogOpen, setDialogOpen, navigate, printInvoice }) => {
+const AchatDialog = ({ dialogOpen, setDialogOpen, navigate, transaction }) => {
+	console.log(transaction);
 	return (
 		<Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
 			<DialogTitle
@@ -37,7 +39,7 @@ const AchatDialog = ({ dialogOpen, setDialogOpen, navigate, printInvoice }) => {
 					fullWidth
 					onClick={() => {
 						setDialogOpen(false);
-						navigate("/transactions");
+						navigate("/transactions_user");
 					}}
 				></Button>
 				<Button
@@ -46,7 +48,7 @@ const AchatDialog = ({ dialogOpen, setDialogOpen, navigate, printInvoice }) => {
 					color="inherit"
 					onClick={() => {
 						setDialogOpen(false);
-						printInvoice();
+						handlePrint(transaction);
 					}}
 				></Button>
 			</DialogActions>

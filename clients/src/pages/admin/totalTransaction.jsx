@@ -1,30 +1,30 @@
 import { Box, Stack } from "@mui/material";
 import NavBar from "../../components/header.jsx";
-import TransactionItem from "../../components/transactionItem.jsx";
-import SideBarVendeur from "./sideBarVendeur.jsx";
+import AdminSideBar from "./adminSideBar.jsx";
+import TransactionSummary from "../../components/transactionSummaryAdmin.jsx";
 
-const ListTransactionsUser = () => {
+const TotalTransactionAdmin = () => {
 	return (
 		<Box mt={12}>
 			<NavBar />
 			<Stack direction="row" justifyContent="space-between" alignItems="start">
 				<Box flex={1}>
-					<SideBarVendeur />
+					<AdminSideBar />
 				</Box>
 				<Box
 					sx={{
 						bgcolor: "white",
 						borderRadius: 5,
 						p: 5,
-						mx: 3,
+						mr: 3,
 					}}
-					flex={9}
+					flex={4}
 				>
-					<TransactionItem />
+					<TransactionSummary />
 				</Box>
 			</Stack>
 		</Box>
 	);
 };
 
-export default ListTransactionsUser;
+export default TotalTransactionAdmin;

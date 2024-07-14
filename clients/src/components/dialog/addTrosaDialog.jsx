@@ -9,7 +9,7 @@ const AddTrosaDialog = ({ open, onClose }) => {
 		<Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
 			<DialogTitle sx={{ borderBottom: "2px solid #f9f9f9" }}>Ajout d'une nouvelle Trosa</DialogTitle>
 			<DialogContent sx={{ my: "10px" }}>
-				<AddTrosaForm />
+				<AddTrosaForm closeDialog = {onClose} />
 			</DialogContent>
 			<DialogActions sx={{ position: "absolute", right: "0", top: "0" }}>
 				<Fab size="small" aria-label="view" onClick={onClose} sx={{ boxShadow: "0" }}>

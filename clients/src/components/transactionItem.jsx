@@ -1,183 +1,288 @@
-import { ChevronRight } from "@mui/icons-material";
 import {
-	Box,
-	Stack,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-	Typography,
+  ChevronRight,
+  Delete,
+  ExpandLess,
+  ExpandMore,
+  Print,
+} from "@mui/icons-material";
+import {
+  Box,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  Fab,
+  TableRow,
+  Typography,
+  Button,
+  Menu,
+  MenuItem,
+  ListItemText,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { ListFacture } from "../api/facture";
+import { deleteFacture, ListFacture } from "../api/facture";
+import DeleteDialog from "./dialog/deleteDialog.jsx";
+import { isToday, isThisWeek, isThisMonth } from "date-fns";
+import { handlePrint } from "./facture.jsx";
 
 const TransactionItem = () => {
-	const [listTransactions, setListTransaction] = useState([]);
+  const [listTransactions, setListTransaction] = useState([]);
+  const [filteredTransactions, setFilteredTransactions] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [stateFacture, setStateFacture] = useState(false)
+  //   const [itemToDelete, setItemToDelete] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
-	// 	{
-	// 		id: 1,
-	// 		client: "John Doe",
-	// 		date_transaction: "12-08-24",
-	// 		total: 15000,
-	// 		state: "payé",
-	// 		listeMedicaments: [
-	// 			{
-	// 				NomMedicament: "paracetamol 500mg",
-	// 				marque: "DESKA",
-	// 				qte_uniter: 5,
-	// 				qte_gros: 10,
-	// 				totalprix: 1200,
-	// 			},
-	// 			{
-	// 				NomMedicament: "ibuprofen 200mg",
-	// 				marque: "Advil",
-	// 				qte_uniter: 3,
-	// 				qte_gros: 8,
-	// 				totalprix: 800,
-	// 			},
-	// 		],
-	// 	},
-	// 	{
-	// 		id: 2,
-	// 		client: "Jane Smith",
-	// 		date_transaction: "14-09-24",
-	// 		total: 20000,
-	// 		state: "non payé",
-	// 		listeMedicaments: [
-	// 			{
-	// 				NomMedicament: "amoxicillin 500mg",
-	// 				marque: "Moxatag",
-	// 				qte_uniter: 10,
-	// 				qte_gros: 5,
-	// 				totalprix: 3000,
-	// 			},
-	// 			{
-	// 				NomMedicament: "cetirizine 10mg",
-	// 				marque: "Zyrtec",
-	// 				qte_uniter: 7,
-	// 				qte_gros: 3,
-	// 				totalprix: 1500,
-	// 			},
-	// 		],
-	// 	},
-	// 	{
-	// 		id: 3,
-	// 		client: "Alice Johnson",
-	// 		date_transaction: "15-10-24",
-	// 		total: 18000,
-	// 		state: "payé",
-	// 		listeMedicaments: [
-	// 			{
-	// 				NomMedicament: "metformin 500mg",
-	// 				marque: "Glucophage",
-	// 				qte_uniter: 8,
-	// 				qte_gros: 6,
-	// 				totalprix: 2500,
-	// 			},
-	// 			{
-	// 				NomMedicament: "lisinopril 10mg",
-	// 				marque: "Prinivil",
-	// 				qte_uniter: 9,
-	// 				qte_gros: 4,
-	// 				totalprix: 2100,
-	// 			},
-	// 		],
-	// 	},
-	// ];
-	useEffect(() => {
-		const fetch = async () => {
-			const res = await ListFacture();
-			setListTransaction(res.data);
-			console.log(res.data);
-		};
-		fetch();
-	}, []);
-	return (
-		<>
-			<Stack spacing={3} direction="row" alignItems="center" justifyContent="space-between">
-				<Typography component="h2" sx={{ fontSize: "25px" }} color="primary">
-					Tous les Transactions
-					<Typography component="p" color="black">
-						Il y a {listTransactions.length} total de transactions
-					</Typography>
-				</Typography>
-			</Stack>
-			{listTransactions.map((item) => (
-				<Box
-					display="flex"
-					flexDirection="column"
-					key={item.pk}
-					p={2}
-					sx={{
-						background: "#045D5D03",
-						borderRadius: 3,
-						border: "1px solid transparent",
-					}}
-					my={2}
-				>
-					<Stack spacing={3} direction="row" alignItems="center" justifyContent="space-between">
-						<Box display={"flex"} alignItems={"center"}>
-							<Typography
-								component="div"
-								sx={{
-									borderRadius: "0px 20px 20px 0px",
-									color: "#fff",
-									mr: 2,
-									ml: "-20px",
-									bgcolor: "primary.main",
-									px: 3,
-									py: 0.5,
-								}}
-							>
-								# {item.pk}
-							</Typography>
-							<ChevronRight />
-							<Typography component="h4">{item.client}</Typography>
-						</Box>
-						<Typography component="div">Montant total à payer : {item.prix_total} Ar</Typography>
-						<Typography component="div">Montant restant à payer : {item.prix_restant}</Typography>
+  const handleDeleteTransaction = (item) => {
+    setSelectedItem(item);
+    setOpenDeleteDialog(true);
+  };
 
-						<Typography
-							component="div"
-							color="white"
-							bgcolor="secondary.main"
-							px={3}
-							py={0.5}
-							borderRadius={10}
-						>
-							Date {item.date}
-						</Typography>
-					</Stack>
-					<TableContainer sx={{ mt: 2, overflow: "hidden", borderRadius: 3 }}>
-						<Table>
-							<TableHead>
-								<TableRow>
-									<TableCell>Nom Medicament</TableCell>
-									<TableCell>Marque</TableCell>
-									<TableCell>Quantité (unité)</TableCell>
-									<TableCell>Quantité (gros)</TableCell>
-									<TableCell>Prix (Ar)</TableCell>
-								</TableRow>
-							</TableHead>
-							<TableBody>
-								{item.produits.map((medicament, index) => (
-									<TableRow key={index}>
-										<TableCell>{medicament.product}</TableCell>
-										<TableCell>{medicament.marque}</TableCell>
-										<TableCell>{medicament.qte_uniter_transaction}</TableCell>
-										<TableCell>{medicament.qte_gros_transaction}</TableCell>
-										<TableCell>{medicament.prix_total}</TableCell>
-									</TableRow>
-								))}
-							</TableBody>
-						</Table>
-					</TableContainer>
-				</Box>
-			))}
-		</>
-	);
+  const handleDelete = async (s) => {
+    try {
+      await deleteFacture(s);
+	  setStateFacture(s=>!s)
+    } catch (error) {
+      console.log(error);
+    }
+    // setItemToDelete(selectedItem);
+  };
+  const handleCloseDialog = () => {
+    setOpenDeleteDialog(false);
+  };
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleFilterChange = (filter) => {
+    let filtered = [];
+    switch (filter) {
+      case "today":
+        filtered = listTransactions.filter((transaction) =>
+          transaction.produits.some((product) =>
+            isToday(new Date(product.date))
+          )
+        );
+        break;
+      case "thisWeek":
+        filtered = listTransactions.filter((transaction) =>
+          transaction.produits.some((product) =>
+            isThisWeek(new Date(product.date))
+          )
+        );
+        break;
+      case "thisMonth":
+        filtered = listTransactions.filter((transaction) =>
+          transaction.produits.some((product) =>
+            isThisMonth(new Date(product.date))
+          )
+        );
+        break;
+
+      default:
+        filtered = listTransactions;
+        break;
+    }
+    setFilteredTransactions(filtered);
+    handleClose();
+  };
+
+  useEffect(() => {
+    const fetch = async () => {
+      const res = await ListFacture();
+      setListTransaction(res.data);
+      setFilteredTransactions(res.data);
+    };
+    fetch();
+  }, [stateFacture]);
+  return (
+    <>
+      <Stack
+        spacing={3}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <Typography component="h2" sx={{ fontSize: "25px" }} color="primary">
+          Tous les Transactions
+          <Typography component="p" color="black">
+            Il y a {filteredTransactions.length} total de transactions
+          </Typography>
+        </Typography>
+        <Box>
+          <Button
+            aria-controls="filter-menu"
+            aria-haspopup="true"
+            variant="outlined"
+            onClick={handleClick}
+            sx={{
+              minHeight: 48,
+              justifyContent: "initial",
+              color: "secondary.main",
+              px: 5,
+              borderRadius: "50px",
+            }}
+            endIcon={anchorEl ? <ExpandLess /> : <ExpandMore />}
+          >
+            <ListItemText
+              primary="Filtrer par"
+              sx={{ textTransform: "capitalize" }}
+            />
+          </Button>
+          <Menu
+            id="filter-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            sx={{
+              "& .MuiPaper-root": {
+                boxShadow: "none",
+                width: "150px",
+              },
+            }}
+          >
+            <MenuItem onClick={() => handleFilterChange("today")}>
+              Aujourd'hui
+            </MenuItem>
+            <MenuItem onClick={() => handleFilterChange("thisWeek")}>
+              Cette semaine
+            </MenuItem>
+            <MenuItem onClick={() => handleFilterChange("thisMonth")}>
+              Ce mois-ci
+            </MenuItem>
+            <MenuItem onClick={() => handleFilterChange("")}>Tout</MenuItem>
+          </Menu>
+        </Box>
+      </Stack>
+      {filteredTransactions.map((item, i) => (
+        <Box
+          id={`transaction-${i}`}
+          display="flex"
+          flexDirection="column"
+          key={i}
+          p={2}
+          sx={{
+            background: "#045D5D03",
+            borderRadius: 3,
+            border: "1px solid transparent",
+          }}
+          my={2}
+        >
+          <Stack
+            spacing={3}
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Box display={"flex"} alignItems={"center"}>
+              <Typography
+                component="div"
+                sx={{
+                  borderRadius: "0px 20px 20px 0px",
+                  color: "#fff",
+                  mr: 2,
+                  ml: "-20px",
+                  bgcolor: "primary.main",
+                  px: 3,
+                  py: 0.5,
+                }}
+              >
+                # {i + 1}
+              </Typography>
+              <ChevronRight />
+              <Typography component="h4">{item.client}</Typography>
+            </Box>
+            <Typography component="h4">
+              Montant total : {item.prix_total} Ar
+            </Typography>
+            <Typography component="h4">
+              {parseInt(item.prix_restant) > 0 ? `Montant restant : ${item.prix_restant}` : "tout payé"}
+            </Typography>
+            <Typography component="h4">
+              {item.produits.length > 0
+                ? new Date(item.date).toLocaleString()
+                : "N/A"}
+            </Typography>
+            <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
+              <Fab
+                size="small"
+                aria-label="delete"
+                onClick={() => handleDeleteTransaction(item)}
+                sx={{
+                  background: "rgba(255, 0, 0, 0.105)",
+                  boxShadow: "0",
+                  border: "1px solid rgba(255, 0, 0, 0.145)",
+                  "&:hover": {
+                    background: "rgba(255, 0, 0, 0.245)",
+                    color: "red",
+                  },
+                  zIndex: 0,
+                }}
+              >
+                <Delete />
+              </Fab>
+              <Fab
+                size="small"
+                aria-label="print"
+                onClick={() => handlePrint(item)}
+                sx={{
+                  background: "rgba(0, 128, 0, 0.105)",
+                  boxShadow: "0",
+                  border: "1px solid rgba(0, 128, 0, 0.145)",
+                  "&:hover": {
+                    background: "rgba(0, 128, 0, 0.145)",
+                    color: "secondary.main",
+                  },
+                  zIndex: 0,
+                }}
+              >
+                <Print />
+              </Fab>
+            </Stack>
+          </Stack>
+          <TableContainer sx={{ mt: 2, overflow: "hidden", borderRadius: 3 }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Nom Medicament</TableCell>
+                  <TableCell>Marque</TableCell>
+                  <TableCell>Quantité (unité)</TableCell>
+                  <TableCell>Quantité (gros)</TableCell>
+                  <TableCell>Prix (Ar)</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {item.produits.map((medicament, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{medicament.product}</TableCell>
+                    <TableCell>{medicament.marque}</TableCell>
+                    <TableCell>{medicament.qte_uniter_transaction}</TableCell>
+                    <TableCell>{medicament.qte_gros_transaction}</TableCell>
+                    <TableCell>{medicament.prix_total}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+      ))}
+      <DeleteDialog
+        open={openDeleteDialog}
+        onClose={handleCloseDialog}
+        selectedItem={selectedItem}
+        deleteItem={handleDelete}
+      />
+    </>
+  );
 };
 
 export default TransactionItem;

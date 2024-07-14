@@ -6,8 +6,11 @@ import Button from "../btn/MuiButton.jsx";
 import { Save } from "@mui/icons-material";
 import { formatDate } from "../formatDate.js";
 import axios from "axios";
+import { UpdateTrosa } from "../../api/trosa.js";
+import { useRefreshTrosa } from "../trosaItem.jsx";
 
 const UpdateTrosaForm = ({ selectedItem }) => {
+	const {setRefreshTrosa} = useRefreshTrosa()
 	const {
 		control,
 		handleSubmit,
@@ -15,35 +18,29 @@ const UpdateTrosaForm = ({ selectedItem }) => {
 	} = useForm({
 		mode: "onTouched",
 		defaultValues: {
-			fournisseur: selectedItem?.fournisseur || "",
-			adresse: selectedItem?.adresse || "",
-			phone_number: selectedItem?.phone_number || "",
+			owner: selectedItem?.owner || "",
+			adress: selectedItem?.adress || "",
+			contact: selectedItem?.contact || "",
 			montant_restant: selectedItem?.montant_restant || "",
-			date_trosa: formatDate(selectedItem?.date_trosa) || "",
+			date: selectedItem?.date || "",
 		},
 	});
-
 	const items = [
-		{ label: "Fournisseur", name: "fournisseur" },
-		{ label: "Adresse", name: "adresse" },
-		{ label: "Numero de téléphone", name: "phone_number", type: "tel" },
+		{ label: "Fournisseur", name: "owner" },
+		{ label: "Adresse", name: "adress" },
+		{ label: "Numero de téléphone", name: "contact", type: "tel" },
 		{ label: "Montant Restant", name: "montant_restant", type: "number" },
-		{ label: "Date du trosa", name: "date_trosa", type: "date", autoFocus: true },
+		{ label: "Date du trosa", name: "date", type: "date", autoFocus: true },
 	];
 
 	const handleUpdate = async (data) => {
-		console.log(data);
+		let newData = {...data, pk : selectedItem.pk}
+		console.log(newData);
 		try {
-			const response = await axios.post("/addtrosa", {
-				fournisseur: data.fournisseur,
-				adresse: data.adresse,
-				contact: data.phone_number,
-				montant_restant: data.montant_restant,
-				date_trosa: data.date_trosa,
-			});
-
+			const response = await UpdateTrosa(newData)
 			if (response.status === 200) {
-				toast.success("Trosa ajoutée avec succès !");
+				toast.success("Trosa mise a jour avec succès !");
+				setRefreshTrosa()
 			}
 		} catch (err) {
 			if (err.response?.status === 422) {

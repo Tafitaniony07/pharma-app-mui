@@ -25,7 +25,7 @@ const EditProductDialog = ({ open, onClose, selectedItem, onProductUpdated }) =>
 				...selectedItem.detail_product,
 				...selectedItem,
 				marque: selectedItem.marque_product,
-				date_peremption: formatDate(selectedItem.date_peremption),
+				date_peremption: selectedItem.date_peremption,
 				qte_uniter: 0,
 				qte_gros: 0,
 			};
@@ -35,7 +35,6 @@ const EditProductDialog = ({ open, onClose, selectedItem, onProductUpdated }) =>
 
 	const handleEdit = async (data) => {
 		setLoadingBtn(true);
-		console.log("Submited", data);
 		try {
 			const response = await UpdateProduct(data.pk, {
 				pk: data.pk,
@@ -94,7 +93,7 @@ const EditProductDialog = ({ open, onClose, selectedItem, onProductUpdated }) =>
 										error={!!errors[field.name]}
 										helperText={errors[field.name]?.message}
 										type={field.type}
-										autoFocus={field.autoFocus}
+										autoFocus={field?.autoFocus}
 										disabled={field.disabled}
 									/>
 								</Box>

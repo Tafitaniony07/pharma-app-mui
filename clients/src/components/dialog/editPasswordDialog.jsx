@@ -6,12 +6,12 @@ import { Toaster } from "sonner";
 
 import LostPassword from "../../pages/Account/lostPassword.jsx";
 
-const EditPasswordDialog = ({ open, onClose, selectedItem, onProductUpdated }) => {
+const EditPasswordDialog = ({ open, onClose }) => {
 	return (
 		<>
-			<Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+			<Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
 				{/* <DialogTitle>Modifier les détails du produit</DialogTitle> */}
-				<DialogContent>
+				<DialogContent sx={{ py: 5 }}>
 					<LostPassword />
 				</DialogContent>
 				<DialogActions sx={{ position: "absolute", right: "0", top: "0" }}>

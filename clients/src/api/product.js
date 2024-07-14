@@ -52,7 +52,7 @@ export async function createStock(stockList) {
 	try {
 		const res = await myAxiosPrivate.post(
 			"stock/create-stock",
-			{ stockList },
+			stockList,
 			{
 				headers: {
 					Authorization: `Bearer ${access}`,
@@ -72,6 +72,22 @@ export async function stockInExpired() {
 	const { access } = useTokenStore.getState();
 	try {
 		const res = await myAxiosPrivate.get("stock/list/expired", {
+			headers: {
+				Authorization: `Bearer ${access}`,
+			},
+		});
+		return res;
+	} catch (error) {
+		throw error;
+	}
+}
+/***
+ * @returns list product expiré en 3 mois
+ */
+export async function stockInRupte() {
+	const { access } = useTokenStore.getState();
+	try {
+		const res = await myAxiosPrivate.get("stock/list/rupture", {
 			headers: {
 				Authorization: `Bearer ${access}`,
 			},

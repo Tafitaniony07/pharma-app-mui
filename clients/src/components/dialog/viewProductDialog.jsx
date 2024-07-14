@@ -15,7 +15,7 @@ const ViewProductDialog = ({ open, onClose, selectedItem }) => {
 		{ label: "Marque", value: selectedItem.marque_product },
 		{ label: "Prix unitaire", value: `${selectedItem.prix_uniter} Ar` },
 		{ label: "Prix de gros", value: `${selectedItem.prix_gros} Ar` },
-		{ label: "Quantité", value: `${selectedItem.qte_gros} bte` },
+		{ label: "Quantité", value: `${selectedItem.qte_gros} ${selectedItem.detail_product.type_gros}` },
 		{ label: "Date de péremption", value: format(selectedItem.date_peremption, "dd/MM/yyyy") },
 	];
 

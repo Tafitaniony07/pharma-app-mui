@@ -20,3 +20,23 @@ export async function ListFacture(){
         throw error
     }   
 }
+
+/**
+ * @returns list facture
+ */
+export async function deleteFacture({pk}){
+    const {access} = useTokenStore.getState()
+    try {
+        const res = await myAxiosPrivate.delete(
+            `stock/delete-facture/${pk}`,
+            {
+                headers : {
+                    Authorization : `Bearer ${access}`
+                }
+            }
+        )
+        return res
+    } catch (error) {
+        throw error
+    }   
+}

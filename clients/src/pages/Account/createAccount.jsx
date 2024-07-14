@@ -4,7 +4,6 @@ import Box from "@mui/material/Box";
 import AdminSideBar from "../admin/adminSideBar.jsx";
 import NavBar from "../../components/header.jsx";
 import useAuth from "../../hooks/useAuth.js";
-import LoaderMain from "../../components/loader.jsx";
 import FormNewAccount from "../../components/field/formNewAccount.jsx";
 
 const CreateAccount = () => {
@@ -13,11 +12,11 @@ const CreateAccount = () => {
 	return (
 		<Box mt={12}>
 			<NavBar />
-			<Stack direction="row" justifyContent="space-between" alignItems="stretch">
+			<Stack direction="row" justifyContent="space-between">
 				<Box flex={1}>
 					<AdminSideBar />
 				</Box>
-				<Box bgcolor="white" height="85vh" borderRadius={5} p={5} mb={3} mr={3} flex={4}>
+				<Box bgcolor="white" borderRadius={5} p={5} mb={3} mr={3} flex={4}>
 					<FormNewAccount />
 				</Box>
 			</Stack>

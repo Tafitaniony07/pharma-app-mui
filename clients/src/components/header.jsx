@@ -8,12 +8,14 @@ import Avatar from "@mui/material/Avatar";
 import logo from "../assets/logo.png";
 import { Button, Stack, Typography } from "@mui/material";
 import { LogoutRounded } from "@mui/icons-material";
-import useAuth from "../hooks/useAuth";
+import ExitDialog from "./dialog/exitDialog.jsx";
+import { useAccountStore } from "../accountStore.js";
 
 function NavBar() {
-	const { logout } = useAuth();
+	const {account} = useAccountStore()
+	const [openDialog, setOpenDialog] = React.useState(false);
 	function handleClick() {
-		logout();
+		setOpenDialog(true);
 	}
 	return (
 		<AppBar
@@ -38,7 +40,7 @@ function NavBar() {
 					>
 						<Stack direction="row" spacing={2} alignItems="center">
 							<Avatar
-								alt="Jensen Walker"
+								alt={account.username}
 								src="/"
 								sx={{ p: 0, bgcolor: "primary.light", width: 35, height: 35 }}
 							/>
@@ -49,7 +51,7 @@ function NavBar() {
 									color: "primary.main",
 								}}
 							>
-								Jensen Walker
+								{account.username}
 							</Typography>
 						</Stack>
 
@@ -72,6 +74,7 @@ function NavBar() {
 					</Box>
 				</Toolbar>
 			</Container>
+			<ExitDialog open={openDialog} onClose={() => setOpenDialog(false)} />
 		</AppBar>
 	);
 }

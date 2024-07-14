@@ -13,7 +13,7 @@ const RuptureStockUser = () => {
 				<Box flex={1}>
 					<SideBarVendeur />
 				</Box>
-				<Box bgcolor="white" minHeight="80vh" borderRadius={5} p={5} mb={3} mr={3} flex={4}>
+				<Box bgcolor="white" minHeight="80vh" borderRadius={5} p={5} mb={3} mx={3} flex={9}>
 					<ListRuptureStock />
 				</Box>
 			</Stack>

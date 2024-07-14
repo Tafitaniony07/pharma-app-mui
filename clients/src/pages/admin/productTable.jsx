@@ -32,12 +32,11 @@ const ProductTable = ({ columns, data, handleView, handleEdit, handleDelete }) =
 	};
 
 	const handleChangeRowsPerPage = (event) => {
-		setRowsPerPage(parseInt(event.target.value, 5));
+		setRowsPerPage(parseInt(event.target.value));
 		setPage(0);
 	};
 
 	const paginatedData = sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-	console.log(paginatedData);
 	return (
 		<Box sx={{ height: "100%", width: "100%" }}>
 			<TableContainer sx={{ maxHeight: "70vh", borderRadius: 3 }}>

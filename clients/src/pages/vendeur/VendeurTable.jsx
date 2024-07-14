@@ -13,17 +13,18 @@ import { SellProduct } from "../../api/product.js";
 import AchatDialog from "../../components/dialog/achatDialog.jsx";
 
 const ListMedicamentsVendeur = () => {
+	const navigate = useNavigate();
 	const { transactions, setTransactions } = useContext(TransactionContext);
 	const [filterText, setFilterText] = useState("");
 	const [sortColumn, setSortColumn] = useState("name");
 	const [sortDirection, setSortDirection] = useState("asc");
 	const [page, setPage] = useState(0);
-	const [rowsPerPage, setRowsPerPage] = useState(10);
+	const [rowsPerPage, setRowsPerPage] = useState(100);
 	const [addCart, setAddCart] = useState([]);
 	const [loadingState, setLoadingState] = useState({});
 	const [units, setUnits] = useState({});
 	const [quantities, setQuantities] = useState({});
-	const [clientName, setClientName] = useState(""); // Champ pour le nom du client
+	const [clientName, setClientName] = useState("");
 	const [paymentStatus, setPaymentStatus] = useState("Payé");
 	const [remainingAmount, setRemainingAmount] = useState(0);
 	const [dialogOpen, setDialogOpen] = useState(false);
@@ -31,7 +32,7 @@ const ListMedicamentsVendeur = () => {
 	const [filteredData, setFilteredData] = useState([]);
 	const [sortedData, setSortData] = useState([]);
 	const [paginatedData, setpaginatedData] = useState([]);
-	// Sample medications data
+	const [currentTransaction, setCurrentTransaction] = useState(null);
 
 	useEffect(() => {
 		const fetch = async () => {
@@ -49,7 +50,7 @@ const ListMedicamentsVendeur = () => {
 		setFilteredData(
 			medic.filter((item) => item.detail_product.designation.toLowerCase().includes(filterText.toLowerCase()))
 		);
-	}, [medic]);
+	}, [filterText, medic]);
 
 	useEffect(() => {
 		setSortData(() => {
@@ -59,19 +60,11 @@ const ListMedicamentsVendeur = () => {
 				return 0;
 			});
 		});
-	}, [filteredData]);
+	}, [filteredData, sortColumn, sortDirection]);
 	// const paginatedData = sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 	useEffect(() => {
 		setpaginatedData(sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage));
-	}, [sortedData]);
-
-	// Filter and sort the medications
-	// const filteredData = medic.filter((item) => item.name.toLowerCase().includes(filterText.toLowerCase()));
-	// const sortedData = filteredData.sort((a, b) => {
-	// 	if (a[sortColumn] < b[sortColumn]) return sortDirection === "asc" ? -1 : 1;
-	// 	if (a[sortColumn] > b[sortColumn]) return sortDirection === "asc" ? 1 : -1;
-	// 	return 0;
-	// });
+	}, [page, rowsPerPage, sortedData]);
 
 	// Handle sorting
 	const handleSort = (column) => {
@@ -95,10 +88,8 @@ const ListMedicamentsVendeur = () => {
 	const addToCart = (item) => {
 		const detailQty = quantities[item.detail_product.designation]?.detail || 0;
 		const grosQty = quantities[item.detail_product.designation]?.gros || 0;
-
 		const quantityDetails = detailQty > 0 ? detailQty : 0;
 		const quantityBulk = grosQty > 0 ? grosQty : 0;
-
 		const itemPriceDetails = item.prix_uniter * quantityDetails;
 		const itemPriceBulk = item.prix_gros * quantityBulk;
 		const totalItemPrice = itemPriceDetails + itemPriceBulk;
@@ -156,7 +147,6 @@ const ListMedicamentsVendeur = () => {
 	const clearCart = () => {
 		setAddCart([]);
 	};
-	const navigate = useNavigate();
 
 	// Save transaction
 	const saveTransaction = async () => {
@@ -180,6 +170,8 @@ const ListMedicamentsVendeur = () => {
 			datas.push({ prix_restant: newTransaction.remainingAmount });
 			datas.push({ client: newTransaction.clientName });
 			const res = await SellProduct(datas);
+			setCurrentTransaction(res.data)
+			console.log("Produit Vendus", res)
 		} catch (error) {
 			throw error;
 		}
@@ -189,6 +181,7 @@ const ListMedicamentsVendeur = () => {
 		setClientName("");
 		setPaymentStatus("Payé");
 		setRemainingAmount(0);
+		// setCurrentTransaction(newTransaction); // Stocker la transaction courante
 		setDialogOpen(true); // Ouvrir la boîte de dialogue après enregistrement de la transaction
 	};
 
@@ -263,7 +256,12 @@ const ListMedicamentsVendeur = () => {
 			</Stack>
 			<Toaster position="top-center" richColors />
 
-			<AchatDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} navigate={navigate} />
+			<AchatDialog
+				dialogOpen={dialogOpen}
+				setDialogOpen={setDialogOpen}
+				navigate={navigate}
+				transaction={currentTransaction}
+			/>
 		</>
 	);
 };
