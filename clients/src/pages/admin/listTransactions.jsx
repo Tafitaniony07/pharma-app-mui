@@ -2,14 +2,17 @@ import { Box, Stack } from "@mui/material";
 import AdminSideBar from "./adminSideBar.jsx";
 import TransactionItem from "../../components/transactionItem.jsx";
 import NavBar from "../../components/header.jsx";
+import ProprioSideBar from "../proprio/pSideBar.jsx";
+import useAuth from "../../hooks/useAuth.js";
 
 const ListTransactions = () => {
+	const {account} = useAuth()
 	return (
 		<Box mt={12}>
 			<NavBar />
 			<Stack direction="row" justifyContent="space-between" alignItems="start">
 				<Box flex={1}>
-					<AdminSideBar />
+				{account.account_type === 'gestionnaires'? <AdminSideBar /> : <ProprioSideBar />} 
 				</Box>
 				<Box
 					sx={{

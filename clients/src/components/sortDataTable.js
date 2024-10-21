@@ -7,6 +7,7 @@ const useSortDataTable = (data, defaultSortColumn = "designation") => {
 	const [sortDirection, setSortDirection] = useState("asc");
 	console.log("sorted");
 	const sortedData = useMemo(() => {
+		if (data)
 		return [...data].sort((a, b) => {
 			if (a[sortColumn] < b[sortColumn]) return sortDirection === "asc" ? -1 : 1;
 			if (a[sortColumn] > b[sortColumn]) return sortDirection === "asc" ? 1 : -1;

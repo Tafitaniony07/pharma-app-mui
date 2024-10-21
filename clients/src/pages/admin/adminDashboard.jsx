@@ -6,6 +6,7 @@ import AdminListProducts from "./adminListProducts.jsx";
 import { useEffect } from "react";
 import useAuth from "../../hooks/useAuth.js";
 import { useState } from "react";
+import ProprioSideBar from "../proprio/pSideBar.jsx";
 const AdminDashboard = () => {
 	const { account } = useAuth();
 	const [isLoading, setIsLoading] = useState(true);
@@ -24,10 +25,10 @@ const AdminDashboard = () => {
 				<NavBar />
 				<Stack direction="row" justifyContent="space-between" alignItems="stretch">
 					<Box flex={1}>
-						<AdminSideBar />
+					{account.account_type === 'gestionnaires'? <AdminSideBar /> : <ProprioSideBar />} 
 					</Box>
 					<Box bgcolor="white" minHeight="85vh" borderRadius={5} p={3} mb={3} mr={3} flex={4}>
-						<AdminListProducts />
+						<AdminListProducts  />
 					</Box>
 				</Stack>
 			</Box>

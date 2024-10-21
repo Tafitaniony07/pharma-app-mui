@@ -76,8 +76,8 @@ const AddProductForm = () => {
             setLoadingBtn(false);
             toast.success("Ajout du produit réussi !");
             // Réinitialiser les champs du formulaire après une soumission réussie
-            resetField();
             reset();
+            resetField();
           }
         })
         .catch((err) => {
@@ -138,6 +138,7 @@ const AddProductForm = () => {
                         field={field}
                         errors={errors}
                         control={control}
+                        setValue = {setValue}
                       />
                     )}
                   />

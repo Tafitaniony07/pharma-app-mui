@@ -26,6 +26,7 @@ import { deleteFacture, ListFacture } from "../api/facture";
 import DeleteDialog from "./dialog/deleteDialog.jsx";
 import { isToday, isThisWeek, isThisMonth } from "date-fns";
 import { handlePrint } from "./facture.jsx";
+import useAuth from "../hooks/useAuth.js";
 
 const TransactionItem = () => {
   const [listTransactions, setListTransaction] = useState([]);
@@ -35,7 +36,7 @@ const TransactionItem = () => {
   const [stateFacture, setStateFacture] = useState(false)
   //   const [itemToDelete, setItemToDelete] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
-
+  const {account} = useAuth()
   const handleDeleteTransaction = (item) => {
     setSelectedItem(item);
     setOpenDeleteDialog(true);
@@ -209,13 +210,14 @@ const TransactionItem = () => {
             </Typography>
             <Typography component="h4">
               {item.produits.length > 0
-                ? new Date(item.date).toLocaleString()
+                ? item.date
                 : "N/A"}
             </Typography>
             <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
               <Fab
                 size="small"
                 aria-label="delete"
+                disabled = {account.account_type === "proprios" ? true : false}
                 onClick={() => handleDeleteTransaction(item)}
                 sx={{
                   background: "rgba(255, 0, 0, 0.105)",

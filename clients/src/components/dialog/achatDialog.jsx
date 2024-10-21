@@ -39,7 +39,7 @@ const AchatDialog = ({ dialogOpen, setDialogOpen, navigate, transaction }) => {
 					fullWidth
 					onClick={() => {
 						setDialogOpen(false);
-						navigate("/transactions_user");
+						navigate("/transactions_user")
 					}}
 				></Button>
 				<Button

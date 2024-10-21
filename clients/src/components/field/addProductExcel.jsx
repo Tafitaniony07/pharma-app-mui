@@ -5,9 +5,11 @@ import * as XLSX from "xlsx";
 import { addDays } from "date-fns";
 import { useState } from "react";
 import { createStock } from "../../api/product.js";
+import LoadingButton from "../btn/MuiLoadingButton.jsx";
 
 const AddProductExcel = () => {
   const [stockData, setStockData] = useState([]);
+  const [loadingBtn, setLoadingBtn] = useState(false);
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -19,8 +21,10 @@ const AddProductExcel = () => {
       const jsonData = XLSX.utils.sheet_to_json(worksheet, { raw: true });
       // Convertir les valeurs de date en objets Date JavaScript
       const formattedData = jsonData
-      .map((item) => {
-          console.log(typeof item.type_unite === "string" + " " + item.type_unite);
+        .map((item) => {
+          console.log(
+            typeof item.type_unite === "string" + " " + item.type_unite
+          );
           if (
             typeof item.date_peremption === "number" &&
             typeof item.type_unite === "string" &&
@@ -64,13 +68,21 @@ const AddProductExcel = () => {
   };
 
   const OnSubmitExcel = async () => {
+    setLoadingBtn(true);
     try {
-      const res = await createStock(stockData);
-      console.log(res);
+      setTimeout(async () => {
+        console.log(stockData.length);
+        if (stockData.length <= 0) {
+          setLoadingBtn(false)
+          throw new Error("No data");
+        }
+        const res = await createStock(stockData)
+        if (res.status == 200 || res.status == 201) setLoadingBtn(false)
+      }, 1000);
     } catch (error) {
+      setLoadingBtn(false)
       throw error;
     }
-    console.log(stockData);
   };
   return (
     <Box
@@ -105,10 +117,11 @@ const AddProductExcel = () => {
           />
         </Box>
         <Box sx={{ width: "25%" }}>
-          <Button
+          <LoadingButton
             onClick={OnSubmitExcel}
             text="Sauvegarder"
             fullWidth
+            loading={loadingBtn}
             startIcon={<Save />}
             color="secondary"
           />

@@ -24,6 +24,7 @@ import DeleteDialog from "./dialog/deleteDialog.jsx";
 import { ListTrosa, DeleteTrosa } from "../api/trosa.js";
 import { formatDate } from "./formatDate.js";
 import { create } from "zustand";
+import useAuth from "../hooks/useAuth.js";
 
 export const useRefreshTrosa = create((set) => ({
 	isRefresh: false,
@@ -31,6 +32,7 @@ export const useRefreshTrosa = create((set) => ({
 }))
 
 const TrosaItem = () => {
+  const {account} = useAuth()
   const { isRefresh } = useRefreshTrosa();
   const [open, setOpen] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
@@ -281,37 +283,40 @@ const TrosaItem = () => {
             >
               {parseInt(item.montant_restant) === 0 ? "payé" : "non payé"}
             </Button>
-            {parseInt(item.montant_restant) === 0 ? (
-              <Fab
-                size="small"
-                aria-label="delete"
-                onClick={() => handleDeleteTrosa(item)}
-                sx={{
-                  background: "rgba(255, 0, 0, 0.105)",
-                  boxShadow: "0",
-                  border: "1px solid rgba(255, 0, 0, 0.145)",
-                  "&:hover": {
-                    background: "rgba(255, 0, 0, 0.245)",
-                    color: "red",
-                  },
-                }}
-              >
-                <Delete />
-              </Fab>
-            ) : (
-              <Fab
-                size="small"
-                aria-label="edit"
-                onClick={() => handleEditTrosa(item)}
-                sx={{
-                  background: "rgba(0, 128, 0, 0.105)",
-                  boxShadow: "0",
-                  border: "1px solid rgba(0, 128, 0, 0.145)",
-                }}
-              >
-                <Edit />
-              </Fab>
-            )}
+            {account.account_type === "proprios" ? null : 
+              parseInt(item.montant_restant) === 0 ? (
+                <Fab
+                  size="small"
+                  aria-label="delete"
+                  onClick={() => handleDeleteTrosa(item)}
+                  sx={{
+                    background: "rgba(255, 0, 0, 0.105)",
+                    boxShadow: "0",
+                    border: "1px solid rgba(255, 0, 0, 0.145)",
+                    "&:hover": {
+                      background: "rgba(255, 0, 0, 0.245)",
+                      color: "red",
+                    },
+                  }}
+                >
+                  <Delete />
+                </Fab>
+              ) : (
+                <Fab
+                  size="small"
+                  aria-label="edit"
+                  onClick={() => handleEditTrosa(item)}
+                  sx={{
+                    background: "rgba(0, 128, 0, 0.105)",
+                    boxShadow: "0",
+                    border: "1px solid rgba(0, 128, 0, 0.145)",
+                  }}
+                >
+                  <Edit />
+                </Fab>
+              )
+            }
+            
           </Stack>
         </Box>
       ))}

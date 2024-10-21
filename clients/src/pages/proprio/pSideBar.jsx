@@ -19,14 +19,13 @@ import {
 import { useEffect } from "react";
 import { useAccountStore } from "../../accountStore";
 
-export default function AdminSideBar() {
+export default function ProprioSideBar() {
   const { account } = useAccountStore();
   const navigate = useNavigate();
   const location = useLocation();
   const isActive = (path) => location.pathname === path;
   const menuItems = [
     { text: "DashBoard", icon: <DashboardIcon />, path: "/" },
-    { text: "Ajout Produit", icon: <AddCircleIcon />, path: "/addproduct" },
     {
       text: "D. Peremption",
       icon: <DateRange />,
@@ -42,12 +41,18 @@ export default function AdminSideBar() {
       icon: <History />,
       path: "/transactions",
     },
-    // { text: "Compte", icon: <Person />, path: "/create_account" },
+    {
+      text: "Total Transactions",
+      icon: <Functions />,
+      path: "/total_transactions",
+    },
+    { text: "Compte", icon: <Person />, path: "/create_account" },
     { text: "Update Password", icon: <Password />, path: "/update_password" },
     { text: "Trosa", icon: <MoneyOff />, path: "/list_trosa" },
   ];
   useEffect(() => {
-    if (account.account_type !== 'gestionnaires') navigate("/");
+	console.log(account.account_type);
+    if (account.account_type !== 'proprios') navigate("/")
   }, []);
   return (
     <Box

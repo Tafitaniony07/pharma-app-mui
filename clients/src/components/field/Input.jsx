@@ -13,12 +13,16 @@ export default function InputAddProduct({
   field,
   control,
   errors,
+  setValue
 }) {
+  if (params?.inputProps.ref.current?.value)
+    setValue('fournisseur', params?.inputProps.ref.current?.value)
   return (
     <Controller
       name={field.name}
       control={control}
       rules={{ required: "Veuillez remplir ce champ" }}
+      
       render={({field: {onChange, onBlur, value }}) => (
         <TextField
           {...params}

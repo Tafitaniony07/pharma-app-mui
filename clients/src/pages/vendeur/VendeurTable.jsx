@@ -19,7 +19,7 @@ const ListMedicamentsVendeur = () => {
 	const [sortColumn, setSortColumn] = useState("name");
 	const [sortDirection, setSortDirection] = useState("asc");
 	const [page, setPage] = useState(0);
-	const [rowsPerPage, setRowsPerPage] = useState(100);
+	const [rowsPerPage, setRowsPerPage] = useState(10);
 	const [addCart, setAddCart] = useState([]);
 	const [loadingState, setLoadingState] = useState({});
 	const [units, setUnits] = useState({});

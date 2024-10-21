@@ -20,10 +20,11 @@ import { useState } from "react";
 import useSortDataTable from "../../components/sortDataTable.js";
 import PaginationTable from "../../components/paginationTable.jsx";
 import { rowStyle } from "../../components/rowStyle.js";
+import useAuth from "../../hooks/useAuth.js";
 
 const ProductTable = ({ columns, data, handleView, handleEdit, handleDelete }) => {
 	const { sortedData, sortColumn, sortDirection, handleSort } = useSortDataTable(data);
-
+	const {account_type} = useAuth().account
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -92,6 +93,7 @@ const ProductTable = ({ columns, data, handleView, handleEdit, handleDelete }) =
 									<Stack direction="row" gap={1}>
 										<Fab
 											size="small"
+											// disabled = {account_type === "proprios" ?true:false}
 											aria-label="view"
 											onClick={() => handleView(item)}
 											sx={{ background: "rgba(58, 0, 128, 0.055)", boxShadow: "0", zIndex: 0 }}
@@ -102,6 +104,7 @@ const ProductTable = ({ columns, data, handleView, handleEdit, handleDelete }) =
 											size="small"
 											aria-label="edit"
 											onClick={() => handleEdit(item)}
+											disabled = {account_type === "proprios" ?true:false}
 											sx={{
 												background: "rgba(0, 128, 0, 0.105)",
 												boxShadow: "0",
@@ -115,6 +118,7 @@ const ProductTable = ({ columns, data, handleView, handleEdit, handleDelete }) =
 											size="small"
 											aria-label="delete"
 											onClick={() => handleDelete(item)}
+											disabled = {account_type === "proprios" ?true:false}
 											sx={{
 												background: "rgba(255, 0, 0, 0.105)",
 												boxShadow: "0",

@@ -5,16 +5,15 @@ import AdminSideBar from "../admin/adminSideBar.jsx";
 import NavBar from "../../components/header.jsx";
 import useAuth from "../../hooks/useAuth.js";
 import FormNewAccount from "../../components/field/formNewAccount.jsx";
+import ProprioSideBar from "../proprio/pSideBar.jsx";
 
 const CreateAccount = () => {
-	const { account } = useAuth();
-
 	return (
 		<Box mt={12}>
 			<NavBar />
 			<Stack direction="row" justifyContent="space-between">
 				<Box flex={1}>
-					<AdminSideBar />
+					<ProprioSideBar />
 				</Box>
 				<Box bgcolor="white" borderRadius={5} p={5} mb={3} mr={3} flex={4}>
 					<FormNewAccount />
