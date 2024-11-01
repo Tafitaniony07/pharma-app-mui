@@ -7,9 +7,16 @@ import ListMedicamentsVendeur from "./VendeurTable.jsx";
 
 const VendeurDashboard = () => {
 	return (
-		<Box mt={12}>
+		<>
 			<NavBar />
-			<Stack direction="row" justifyContent="space-between" alignItems="stretch">
+			<Stack
+				direction="row"
+				justifyContent="space-between"
+				alignItems="stretch"
+				gap={2}
+				mt={12}
+				overflow="-moz-hidden-unscrollable"
+			>
 				<Box flex={1}>
 					<SideBarVendeur />
 				</Box>
@@ -17,7 +24,7 @@ const VendeurDashboard = () => {
 					<ListMedicamentsVendeur />
 				</Box>
 			</Stack>
-		</Box>
+		</>
 	);
 };
 

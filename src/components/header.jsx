@@ -12,7 +12,7 @@ import ExitDialog from "./dialog/exitDialog.jsx";
 import { useAccountStore } from "../accountStore.js";
 
 function NavBar() {
-	const {account} = useAccountStore()
+	const { account } = useAccountStore();
 	const [openDialog, setOpenDialog] = React.useState(false);
 	function handleClick() {
 		setOpenDialog(true);

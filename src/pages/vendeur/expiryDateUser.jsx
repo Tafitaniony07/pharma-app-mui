@@ -6,17 +6,22 @@ import SideBarVendeur from "./sideBarVendeur.jsx";
 const ExpiryDateUser = () => {
 	return (
 		<>
-			<Box mt={12}>
-				<NavBar />
-				<Stack direction="row" justifyContent="space-between" alignItems="stretch">
-					<Box flex={1}>
-						<SideBarVendeur />
-					</Box>
-					<Box bgcolor="white" minHeight="80vh" borderRadius={5} p={5} mb={3} mx={3} flex={9}>
-						<ListMedicamentExpiryDate />
-					</Box>
-				</Stack>
-			</Box>
+			<NavBar />
+			<Stack
+				direction="row"
+				justifyContent="space-between"
+				alignItems="stretch"
+				gap={2}
+				mt={12}
+				overflow="-moz-hidden-unscrollable"
+			>
+				<Box flex={1}>
+					<SideBarVendeur />
+				</Box>
+				<Box bgcolor="white" minHeight="80vh" borderRadius={5} p={3} mr={2} flex={9}>
+					<ListMedicamentExpiryDate />
+				</Box>
+			</Stack>
 		</>
 	);
 };

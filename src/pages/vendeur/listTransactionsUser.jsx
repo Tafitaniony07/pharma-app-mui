@@ -5,9 +5,9 @@ import SideBarVendeur from "./sideBarVendeur.jsx";
 
 const ListTransactionsUser = () => {
 	return (
-		<Box mt={12}>
+		<Box>
 			<NavBar />
-			<Stack direction="row" justifyContent="space-between" alignItems="start">
+			<Stack direction="row" justifyContent="space-between" alignItems="stretch" mt={12}>
 				<Box flex={1}>
 					<SideBarVendeur />
 				</Box>

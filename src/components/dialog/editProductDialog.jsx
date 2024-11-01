@@ -4,7 +4,6 @@ import { Box, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Fab 
 import { Save, Close } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { Toaster, toast } from "sonner";
-import { formatDate } from "../formatDate.js";
 import { UpdateProduct } from "../../api/product.js";
 import LoadingButton from "../btn/MuiLoadingButton.jsx";
 
@@ -42,14 +41,13 @@ const EditProductDialog = ({ open, onClose, selectedItem, onProductUpdated }) =>
 				qte_gros: data.qte_gros,
 				prix_uniter: data.prix_uniter,
 				prix_gros: data.prix_gros,
-				date_peremption : data.date_peremption
+				date_peremption: data.date_peremption,
 			});
 
 			if (response.status === 200) {
 				onProductUpdated(response.data); // Utilisez la fonction de rappel pour mettre à jour le produit
 				toast.success("Produit mis à jour avec succès !");
 				setLoadingBtn(false);
-
 				onClose();
 			}
 		} catch (err) {

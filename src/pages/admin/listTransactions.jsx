@@ -6,20 +6,19 @@ import ProprioSideBar from "../proprio/pSideBar.jsx";
 import useAuth from "../../hooks/useAuth.js";
 
 const ListTransactions = () => {
-	const {account} = useAuth()
+	const { account } = useAuth();
 	return (
 		<Box mt={12}>
 			<NavBar />
-			<Stack direction="row" justifyContent="space-between" alignItems="start">
-				<Box flex={1}>
-				{account.account_type === 'gestionnaires'? <AdminSideBar /> : <ProprioSideBar />} 
-				</Box>
+			<Stack direction="row" justifyContent="space-between" alignItems="strech" gap={2}>
+				<Box flex={1}>{account.account_type === "gestionnaires" ? <AdminSideBar /> : <ProprioSideBar />}</Box>
 				<Box
 					sx={{
 						bgcolor: "white",
 						borderRadius: 5,
 						p: 5,
-						mr: 3,
+						mr: 2,
+						// Activer le défilement vertical
 					}}
 					flex={4}
 				>

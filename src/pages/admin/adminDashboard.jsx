@@ -21,14 +21,14 @@ const AdminDashboard = () => {
 
 	return (
 		<>
-			<Box mt={12}>
+			<Box>
 				<NavBar />
-				<Stack direction="row" justifyContent="space-between" alignItems="stretch">
+				<Stack direction="row" justifyContent="space-between" alignItems="stretch" gap={2} mt={12}>
 					<Box flex={1}>
-					{account.account_type === 'gestionnaires'? <AdminSideBar /> : <ProprioSideBar />} 
+						{account.account_type === "gestionnaires" ? <AdminSideBar /> : <ProprioSideBar />}
 					</Box>
-					<Box bgcolor="white" minHeight="85vh" borderRadius={5} p={3} mb={3} mr={3} flex={4}>
-						<AdminListProducts  />
+					<Box bgcolor="white" borderRadius={5} p={3} mr={2} flex={4}>
+						<AdminListProducts />
 					</Box>
 				</Stack>
 			</Box>

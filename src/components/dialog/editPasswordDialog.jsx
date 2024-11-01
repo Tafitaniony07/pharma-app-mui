@@ -5,14 +5,14 @@ import { Close } from "@mui/icons-material";
 import { Toaster } from "sonner";
 
 import LostPassword from "../../pages/Account/lostPassword.jsx";
+import UpdatePasswordForm from "../field/updatePasswordForm.jsx";
 
 const EditPasswordDialog = ({ open, onClose }) => {
 	return (
 		<>
-			<Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
-				{/* <DialogTitle>Modifier les détails du produit</DialogTitle> */}
+			<Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
 				<DialogContent sx={{ py: 5 }}>
-					<LostPassword />
+					<UpdatePasswordForm />
 				</DialogContent>
 				<DialogActions sx={{ position: "absolute", right: "0", top: "0" }}>
 					<Fab size="small" aria-label="view" onClick={onClose} sx={{ boxShadow: "0" }}>

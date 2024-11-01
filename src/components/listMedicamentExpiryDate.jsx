@@ -1,32 +1,28 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { Box, TableSortLabel, Typography } from "@mui/material";
-import { format } from "date-fns";
+import { Box, TableSortLabel, Typography, Skeleton } from "@mui/material"; // Importer Skeleton
 import PaginationTable from "./paginationTable.jsx";
 import useSortDataTable from "./sortDataTable.js";
 import { useEffect, useState } from "react";
 import { rowStyle } from "./rowStyle.js";
 import { stockInExpired } from "../api/product.js";
 import { formatDate } from "./formatDate.js";
+import { expiryColumn } from "./columns.js";
 
 export default function ListMedicamentExpiryDate() {
 	const [medic, setMedic] = useState([]);
-	const columns = [
-		{ filter: "family", label: "Famille" },
-		{ filter: "designation", label: "Designation" },
-		{ filter: "classe", label: "Classe" },
-		{ filter: "marque", label: "Marque" },
-		{ filter: "quantity", label: "Quantité" },
-		{ filter: "date_peremption", label: "Date de péremption" },
-	];
+	const [loading, setLoading] = useState(true); // État de chargement
+
 	useEffect(() => {
 		const fetch = async () => {
 			const res = await stockInExpired();
 			setMedic(res.data);
+			setLoading(false); // Fin du chargement
 		};
 
 		fetch();
@@ -53,8 +49,8 @@ export default function ListMedicamentExpiryDate() {
 				<Table stickyHeader>
 					<TableHead>
 						<TableRow>
-							{columns.map((column) => (
-								<TableCell key={column.filter}>
+							{expiryColumn.map((column) => (
+								<TableCell key={column.filter} style={{ minWidth: column.maxWidth }}>
 									<TableSortLabel
 										active={sortColumn === column.filter}
 										direction={sortDirection}
@@ -67,32 +63,54 @@ export default function ListMedicamentExpiryDate() {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{paginatedData.map((item, index) => (
-							<TableRow key={index} sx={rowStyle} style={{ whiteSpace: "nowrap" }}>
-								<TableCell>{item.detail_product.famille}</TableCell>
-								<TableCell>{item.detail_product.designation}</TableCell>
-								<TableCell>{item.detail_product.classe}</TableCell>
-								<TableCell>{item.marque_product}</TableCell>
-								<TableCell>
-									{item.qte_gros} {item.detail_product.type_gros}
-								</TableCell>
-								<TableCell>
-									<Typography
-										component="div"
-										sx={{
-											color: "red",
-											backgroundColor: "rgba(255, 0, 0, 0.145)",
-											display: "inline-block",
-											p: "3px 13px",
-											borderRadius: "50px",
-											fontSize: "14px",
-										}}
-									>
-										{formatDate(item.date_peremption)}
-									</Typography>
-								</TableCell>
-							</TableRow>
-						))}
+						{loading
+							? Array.from(new Array(10)).map(
+									(
+										_,
+										index // 10 lignes de skeleton
+									) => (
+										<TableRow key={index}>
+											{expiryColumn.map((_, colIndex) => (
+												<TableCell key={colIndex}>
+													<Skeleton variant="rounded" height={30} />{" "}
+													{/* Skeleton pour chaque cellule */}
+												</TableCell>
+											))}
+										</TableRow>
+									)
+							  )
+							: paginatedData.map((item, index) => (
+									<TableRow key={index} sx={rowStyle}>
+										<TableCell>{item.detail_product.famille}</TableCell>
+										<TableCell>{item.detail_product.designation}</TableCell>
+										<TableCell>{item.detail_product.classe}</TableCell>
+										<TableCell>{item.marque_product}</TableCell>
+										<TableCell>
+											{item.qte_gros + " "}
+											{item.qte_gros >= 5
+												? item.detail_product.type_gros.toLowerCase() + "s"
+												: item.detail_product.type_gros.toLowerCase()}
+										</TableCell>
+										<TableCell>{item.prix_uniter} Ar</TableCell>
+										<TableCell>{item.prix_gros} Ar</TableCell>
+										<TableCell>{item.fournisseur_product}</TableCell>
+										<TableCell>
+											<Typography
+												component="div"
+												sx={{
+													color: "red",
+													backgroundColor: "rgba(255, 0, 0, 0.145)",
+													display: "inline-block",
+													p: "3px 13px",
+													borderRadius: "50px",
+													fontSize: "14px",
+												}}
+											>
+												{formatDate(item.date_peremption)}
+											</Typography>
+										</TableCell>
+									</TableRow>
+							  ))}
 					</TableBody>
 					<PaginationTable
 						count={sortedData.length}

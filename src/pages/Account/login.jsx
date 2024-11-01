@@ -144,7 +144,6 @@ const Login = () => {
 							/>
 							<FormHelperText>{errors.password?.message}</FormHelperText>
 						</FormControl>
-
 						<LoadingButton
 							type="submit"
 							text="Se connecter"

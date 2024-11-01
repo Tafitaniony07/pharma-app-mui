@@ -6,23 +6,19 @@ import LoadingButton from "../btn/MuiLoadingButton.jsx";
 
 const DeleteDialog = ({ open, deleteItem, onClose, selectedItem }) => {
 	const [loading, setLoading] = useState(false);
-
 	const handleDelete = async () => {
 		setLoading(true);
-
 		try {
 			// Activer l'état de chargement pendant environ 1 seconde
 			await new Promise((resolve) => {
 				setTimeout(resolve, 1000);
 			});
-
 			// Effectuer l'opération de suppression
 			await deleteItem(selectedItem);
 		} finally {
 			// Remettre l'état de chargement à false, que l'opération ait réussi ou échoué
 			setLoading(false);
 		}
-
 		// Fermer la boîte de dialogue après la suppression
 		onClose();
 	};

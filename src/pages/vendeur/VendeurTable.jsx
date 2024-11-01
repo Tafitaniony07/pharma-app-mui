@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-catch */
-/* eslint-disable no-unused-vars */
+// /* eslint-disable no-unused-vars */
 import { useState, useContext, useEffect } from "react";
 import { TextField, InputAdornment, Stack, Box } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
@@ -16,24 +16,16 @@ const ListMedicamentsVendeur = () => {
 	const navigate = useNavigate();
 	const { transactions, setTransactions } = useContext(TransactionContext);
 	const [filterText, setFilterText] = useState("");
-	const [sortColumn, setSortColumn] = useState("name");
-	const [sortDirection, setSortDirection] = useState("asc");
-	const [page, setPage] = useState(0);
-	const [rowsPerPage, setRowsPerPage] = useState(10);
 	const [addCart, setAddCart] = useState([]);
 	const [loadingState, setLoadingState] = useState({});
-	const [units, setUnits] = useState({});
 	const [quantities, setQuantities] = useState({});
 	const [clientName, setClientName] = useState("");
 	const [paymentStatus, setPaymentStatus] = useState("Payé");
 	const [remainingAmount, setRemainingAmount] = useState(0);
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [medic, setMedic] = useState([]);
-	const [filteredData, setFilteredData] = useState([]);
-	const [sortedData, setSortData] = useState([]);
-	const [paginatedData, setpaginatedData] = useState([]);
-	const [currentTransaction, setCurrentTransaction] = useState(null);
 
+	const [currentTransaction, setCurrentTransaction] = useState(null);
 	useEffect(() => {
 		const fetch = async () => {
 			const res = await stock();
@@ -44,46 +36,7 @@ const ListMedicamentsVendeur = () => {
 			);
 		};
 		fetch();
-	}, []);
-
-	useEffect(() => {
-		setFilteredData(
-			medic.filter((item) => item.detail_product.designation.toLowerCase().includes(filterText.toLowerCase()))
-		);
-	}, [filterText, medic]);
-
-	useEffect(() => {
-		setSortData(() => {
-			return filteredData.sort((a, b) => {
-				if (a[sortColumn] < b[sortColumn]) return sortDirection === "asc" ? -1 : 1;
-				if (a[sortColumn] > b[sortColumn]) return sortDirection === "asc" ? 1 : -1;
-				return 0;
-			});
-		});
-	}, [filteredData, sortColumn, sortDirection]);
-	// const paginatedData = sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-	useEffect(() => {
-		setpaginatedData(sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage));
-	}, [page, rowsPerPage, sortedData]);
-
-	// Handle sorting
-	const handleSort = (column) => {
-		if (column === sortColumn) {
-			setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-		} else {
-			setSortColumn(column);
-			setSortDirection("asc");
-		}
-	};
-
-	// Handle pagination
-	const handleChangePage = (event, newPage) => {
-		setPage(newPage);
-	};
-	const handleChangeRowsPerPage = (event) => {
-		setRowsPerPage(parseInt(event.target.value, 10));
-		setPage(0);
-	};
+	}, [filterText]);
 
 	const addToCart = (item) => {
 		const detailQty = quantities[item.detail_product.designation]?.detail || 0;
@@ -109,9 +62,8 @@ const ListMedicamentsVendeur = () => {
 		setTimeout(() => {
 			setAddCart((prev) => [...prev, cartItem]);
 			setLoadingState({ ...loadingState, [item.detail_product.designation]: false });
-		}, 500);
+		}, 200);
 	};
-
 	// Update cart quantity
 	const updateCartQuantity = (pk, type, quantity) => {
 		setAddCart((prevCart) =>
@@ -147,7 +99,6 @@ const ListMedicamentsVendeur = () => {
 	const clearCart = () => {
 		setAddCart([]);
 	};
-
 	// Save transaction
 	const saveTransaction = async () => {
 		const totalAmount = calculateTotalPrice();
@@ -170,8 +121,8 @@ const ListMedicamentsVendeur = () => {
 			datas.push({ prix_restant: newTransaction.remainingAmount });
 			datas.push({ client: newTransaction.clientName });
 			const res = await SellProduct(datas);
-			setCurrentTransaction(res.data)
-			console.log("Produit Vendus", res)
+			setCurrentTransaction(res.data);
+			console.log("Produit Vendus", res);
 		} catch (error) {
 			throw error;
 		}
@@ -208,26 +159,7 @@ const ListMedicamentsVendeur = () => {
 							),
 						}}
 					/>
-					<MedicamentTable
-						filterText={filterText}
-						setFilterText={setFilterText}
-						sortColumn={sortColumn}
-						sortDirection={sortDirection}
-						handleSort={handleSort}
-						paginatedData={paginatedData}
-						loadingState={loadingState}
-						addCart={addCart}
-						units={units}
-						quantities={quantities}
-						setUnits={setUnits}
-						setQuantities={setQuantities}
-						addToCart={addToCart}
-						page={page}
-						rowsPerPage={rowsPerPage}
-						Medicaments={medic}
-						handleChangePage={handleChangePage}
-						handleChangeRowsPerPage={handleChangeRowsPerPage}
-					/>
+					<MedicamentTable loadingState={loadingState} addToCart={addToCart} Medicaments={medic} />
 				</Box>
 				<Box
 					sx={{

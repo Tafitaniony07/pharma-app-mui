@@ -41,7 +41,7 @@ const UpdatePasswordForm = () => {
 		event.preventDefault();
 	};
 	const Fields = [
-		{ label: "Nom d'utilisateur", name: "username", type: "text" },
+		// { label: "Nom d'utilisateur", name: "username", type: "text" },
 		{ label: "Adresse Email", name: "email", type: "email" },
 		{ label: "Mot de passe", name: "password", type: "text" },
 		{ label: "Confirmer votre mot de passe", name: "confirmPassword", type: "password" },
@@ -50,14 +50,17 @@ const UpdatePasswordForm = () => {
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
 			<Box>
-				<img src={logo} width={100} alt="Logo" />
-				<Typography component="h2" fontSize={22} color="inherit" mt={2} mb={4}>
+				<img src={logo} width={120} alt="Logo" />
+				<Typography component="h2" fontSize={20} color="inherit" mt={2} mb={1}>
 					Mise à jour du mot de passe !
+				</Typography>
+				<Typography component="p" mb={2}>
+					Veuillez vérifier votre boîte e-mail pour récupérer le code de confirmation.
 				</Typography>
 				<Stack direction="row" justifyContent="space-between" alignItems="center" flexWrap="wrap" gap={3}>
 					{Fields.map((field) =>
 						field.type === "text" || field.type === "email" ? (
-							<Box sx={{ width: "40%", flexGrow: 1 }} key={field.name}>
+							<Box sx={{ width: "100%", flexGrow: 1 }} key={field.name}>
 								<TextField
 									label={field.label}
 									type={field.type}
@@ -71,7 +74,7 @@ const UpdatePasswordForm = () => {
 								/>
 							</Box>
 						) : (
-							<Box sx={{ width: "40%", flexGrow: 1 }} key={field.name}>
+							<>
 								<FormControl fullWidth variant="outlined" color="primary" error={!!errors[field.name]}>
 									<InputLabel>{field.label}</InputLabel>
 									<OutlinedInput
@@ -100,18 +103,16 @@ const UpdatePasswordForm = () => {
 									/>
 									<FormHelperText>{errors[field.name]?.message}</FormHelperText>
 								</FormControl>
-							</Box>
+							</>
 						)
 					)}
-					<Box sx={{ width: "48.8%" }}>
-						<Button
-							fullWidth
-							sx={{ height: "55px" }}
-							type="submit"
-							text="Mettre à jour"
-							startIcon={<PasswordRounded />}
-						/>
-					</Box>
+					<Button
+						fullWidth
+						sx={{ height: "55px" }}
+						type="submit"
+						text="Mettre à jour"
+						startIcon={<PasswordRounded />}
+					/>
 				</Stack>
 
 				<Toaster position="top-center" richColors closeButton />

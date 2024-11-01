@@ -1,8 +1,7 @@
 export const handlePrint = (item) => {
 	const paymentStatus = item.prix_restant === "0" ? "Payé" : "Non payé";
 	const transactionDate = item.produits.length > 0 ? new Date(item.produits[0].date).toLocaleDateString() : "N/A";
-	const logoURL =
-		"https://www.kapilamangilatra.com/wp-content/uploads/2024/01/cropped-Kapila_mangilatra_logo-removebg-preview.png";
+	const logoURL = "/logo.png";
 
 	const printContent = `
 		<html>
@@ -42,11 +41,11 @@ export const handlePrint = (item) => {
 			<body>
 				<div class="header">
 					<img src="${logoURL}" alt="Logo de l'entreprise">
-					<h1>Transaction #${item.pk}</h1>
+					<h5>Transaction #${item.pk}</h5>
 				</div>
 				<p>Client: ${item.client}</p>
 				<p>Date: ${transactionDate}</p>
-				<p>Montant total à payer: ${item.prix_total} Ar</p>
+				
 				<table>
 					<thead>
 						<tr>
@@ -62,8 +61,8 @@ export const handlePrint = (item) => {
 							.map(
 								(medicament) => `
 							<tr>
-								<td>${medicament.product}</td>
-								<td>${medicament.marque || "N/A"}</td>
+								<td style="fontsize:12px">${medicament.product}</td>
+								<td>${medicament.marque_product || "N/A"}</td>
 								<td>${medicament.qte_uniter_transaction}</td>
 								<td>${medicament.qte_gros_transaction}</td>
 								<td>${medicament.prix_total}</td>
@@ -76,7 +75,8 @@ export const handlePrint = (item) => {
 						<tr>
 							<td>État</td>
 							<td>${paymentStatus}</td>
-							<td colspan="3">Total : ${item.prix_total} Ar</td>
+							<td colspan="2">Total : ${item.prix_total} Ar</td>
+							<td colspan="1">Restant : ${item.prix_restant} Ar</td>
 						</tr>
 					</tfoot>
 				</table>
@@ -84,7 +84,7 @@ export const handlePrint = (item) => {
 		</html>
 	`;
 
-	const printWindow = window.open("", "", "height=600,width=800");
+	const printWindow = window.open("", "", "height=600,width=500");
 	printWindow.document.write(printContent);
 	printWindow.document.close();
 	printWindow.print();

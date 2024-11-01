@@ -4,13 +4,11 @@ import { useForm, Controller } from "react-hook-form";
 import { Toaster, toast } from "sonner";
 import Button from "../btn/MuiButton.jsx";
 import { Save } from "@mui/icons-material";
-import { formatDate } from "../formatDate.js";
-import axios from "axios";
 import { UpdateTrosa } from "../../api/trosa.js";
 import { useRefreshTrosa } from "../trosaItem.jsx";
 
 const UpdateTrosaForm = ({ selectedItem }) => {
-	const {setRefreshTrosa} = useRefreshTrosa()
+	const { setRefreshTrosa } = useRefreshTrosa();
 	const {
 		control,
 		handleSubmit,
@@ -34,13 +32,13 @@ const UpdateTrosaForm = ({ selectedItem }) => {
 	];
 
 	const handleUpdate = async (data) => {
-		let newData = {...data, pk : selectedItem.pk}
+		let newData = { ...data, pk: selectedItem.pk };
 		console.log(newData);
 		try {
-			const response = await UpdateTrosa(newData)
+			const response = await UpdateTrosa(newData);
 			if (response.status === 200) {
 				toast.success("Trosa mise a jour avec succès !");
-				setRefreshTrosa()
+				setRefreshTrosa();
 			}
 		} catch (err) {
 			if (err.response?.status === 422) {

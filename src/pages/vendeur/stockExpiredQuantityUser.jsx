@@ -7,17 +7,24 @@ import SideBarVendeur from "./sideBarVendeur.jsx";
 
 const RuptureStockUser = () => {
 	return (
-		<Box mt={12}>
+		<>
 			<NavBar />
-			<Stack direction="row" justifyContent="space-between" alignItems="stretch">
+			<Stack
+				direction="row"
+				justifyContent="space-between"
+				alignItems="stretch"
+				gap={2}
+				mt={12}
+				overflow="-moz-hidden-unscrollable"
+			>
 				<Box flex={1}>
 					<SideBarVendeur />
 				</Box>
-				<Box bgcolor="white" minHeight="80vh" borderRadius={5} p={5} mb={3} mx={3} flex={9}>
+				<Box bgcolor="white" borderRadius={5} p={3} mr={3} flex={9}>
 					<ListRuptureStock />
 				</Box>
 			</Stack>
-		</Box>
+		</>
 	);
 };
 

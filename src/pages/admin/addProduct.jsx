@@ -8,11 +8,11 @@ const AddProduct = () => {
 	return (
 		<Box mt={12}>
 			<NavBar />
-			<Stack direction="row" justifyContent="space-between" alignItems="stretch">
+			<Stack direction="row" justifyContent="space-between" alignItems="stretch" gap={2}>
 				<Box flex={1}>
 					<SideBar />
 				</Box>
-				<Box mb={3} mr={3} flex={4}>
+				<Box mr={2} flex={4}>
 					<AddProductForm />
 				</Box>
 			</Stack>
