@@ -1,5 +1,5 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-useless-catch */
-// /* eslint-disable no-unused-vars */
 import { useState, useContext, useEffect } from "react";
 import { TextField, InputAdornment, Stack, Box } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
@@ -24,11 +24,13 @@ const ListMedicamentsVendeur = () => {
 	const [remainingAmount, setRemainingAmount] = useState(0);
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [medic, setMedic] = useState([]);
-
 	const [currentTransaction, setCurrentTransaction] = useState(null);
+	const [loading, setLoading] = useState(true); // État de chargement
+
 	useEffect(() => {
 		const fetch = async () => {
 			const res = await stock();
+			setLoading(false); // Fin du chargement
 			setMedic(() =>
 				res.data.filter((item) =>
 					item.detail_product.designation.toLowerCase().includes(filterText.toLowerCase())
@@ -122,7 +124,6 @@ const ListMedicamentsVendeur = () => {
 			datas.push({ client: newTransaction.clientName });
 			const res = await SellProduct(datas);
 			setCurrentTransaction(res.data);
-			console.log("Produit Vendus", res);
 		} catch (error) {
 			throw error;
 		}
@@ -132,7 +133,6 @@ const ListMedicamentsVendeur = () => {
 		setClientName("");
 		setPaymentStatus("Payé");
 		setRemainingAmount(0);
-		// setCurrentTransaction(newTransaction); // Stocker la transaction courante
 		setDialogOpen(true); // Ouvrir la boîte de dialogue après enregistrement de la transaction
 	};
 
@@ -159,7 +159,12 @@ const ListMedicamentsVendeur = () => {
 							),
 						}}
 					/>
-					<MedicamentTable loadingState={loadingState} addToCart={addToCart} Medicaments={medic} />
+					<MedicamentTable
+						loadingState={loadingState}
+						addToCart={addToCart}
+						Medicaments={medic}
+						loading={loading}
+					/>
 				</Box>
 				<Box
 					sx={{
@@ -186,14 +191,13 @@ const ListMedicamentsVendeur = () => {
 					/>
 				</Box>
 			</Stack>
-			<Toaster position="top-center" richColors />
-
 			<AchatDialog
 				dialogOpen={dialogOpen}
 				setDialogOpen={setDialogOpen}
 				navigate={navigate}
 				transaction={currentTransaction}
 			/>
+			<Toaster position="top-center" richColors />
 		</>
 	);
 };

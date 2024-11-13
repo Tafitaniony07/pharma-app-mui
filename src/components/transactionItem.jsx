@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
-import { ChevronRight, Delete, ExpandLess, ExpandMore, Print } from "@mui/icons-material";
+import { ChevronRight, Delete, Edit, ExpandLess, ExpandMore, Print } from "@mui/icons-material";
+import SearchIcon from "@mui/icons-material/Search";
 import {
 	Box,
 	Stack,
@@ -15,6 +16,8 @@ import {
 	Menu,
 	MenuItem,
 	ListItemText,
+	InputAdornment,
+	TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { deleteFacture, ListFacture } from "../api/facture";
@@ -25,12 +28,38 @@ import useAuth from "../hooks/useAuth.js";
 
 const TransactionItem = () => {
 	const [listTransactions, setListTransaction] = useState([]);
+	const [searchText, setSearchText] = useState(""); // État pour le texte de recherche
 	const [filteredTransactions, setFilteredTransactions] = useState([]);
 	const [selectedItem, setSelectedItem] = useState(null);
 	const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 	const [stateFacture, setStateFacture] = useState(false);
 	const [anchorEl, setAnchorEl] = useState(null);
 	const { account } = useAuth();
+
+	// Fonction de recherche pour filtrer les transactions par nom de client
+	const handleSearchChange = (event) => {
+		const value = event.target.value.toLowerCase();
+		setSearchText(value);
+		const filtered = listTransactions.filter((transaction) => transaction.client.toLowerCase().includes(value));
+		setFilteredTransactions(filtered);
+	};
+
+	// const [openPaymentDialog, setOpenPaymentDialog] = useState(false);
+	// const [selectedTransaction, setSelectedTransaction] = useState(null);
+
+	// const handleOpenPaymentDialog = (transaction) => {
+	// 	setSelectedTransaction(transaction);
+	// 	setOpenPaymentDialog(true);
+	// };
+
+	// const handlePaymentUpdated = (updatedTransaction) => {
+	// 	const updatedTransactions = listTransactions.map((trans) =>
+	// 		trans.pk === updatedTransaction.pk ? updatedTransaction : trans
+	// 	);
+	// 	setListTransaction(updatedTransactions);
+	// 	setFilteredTransactions(updatedTransactions);
+	// };
+
 	const handleDeleteTransaction = (item) => {
 		setSelectedItem(item);
 		setOpenDeleteDialog(true);
@@ -74,7 +103,12 @@ const TransactionItem = () => {
 					transaction.produits.some((product) => isThisMonth(new Date(product.date)))
 				);
 				break;
-
+			case "paye":
+				filtered = listTransactions.filter((transaction) => parseInt(transaction.prix_restant) === 0);
+				break;
+			case "nonPaye":
+				filtered = listTransactions.filter((transaction) => parseInt(transaction.prix_restant) > 0);
+				break;
 			default:
 				filtered = listTransactions;
 				break;
@@ -82,25 +116,40 @@ const TransactionItem = () => {
 		setFilteredTransactions(filtered);
 		handleClose();
 	};
-
 	useEffect(() => {
 		const fetch = async () => {
 			const res = await ListFacture();
+			console.log(res.data);
 			setListTransaction(res.data);
-			console.log("data =>", res.data);
 			setFilteredTransactions(res.data);
 		};
 		fetch();
 	}, [stateFacture]);
 	return (
 		<>
-			<Stack spacing={3} direction="row" alignItems="center" justifyContent="space-between">
+			<Stack spacing={15} direction="row" alignItems="center" justifyContent="space-between">
 				<Typography component="h2" sx={{ fontSize: "25px" }} color="primary">
 					Tous les Transactions
 					<Typography component="p" color="black">
 						Il y a {filteredTransactions.length} total de transactions
 					</Typography>
 				</Typography>
+				<Box flexGrow={1}>
+					<TextField
+						label="Rechercher"
+						fullWidth
+						size="medium"
+						value={searchText} // Ajoutez la valeur ici
+						onChange={handleSearchChange} // Appelez handleSearchChange lors du changement
+						InputProps={{
+							startAdornment: (
+								<InputAdornment position="start">
+									<SearchIcon />
+								</InputAdornment>
+							),
+						}}
+					/>
+				</Box>
 				<Box>
 					<Button
 						aria-controls="filter-menu"
@@ -134,6 +183,8 @@ const TransactionItem = () => {
 						<MenuItem onClick={() => handleFilterChange("today")}>Aujourd'hui</MenuItem>
 						<MenuItem onClick={() => handleFilterChange("thisWeek")}>Cette semaine</MenuItem>
 						<MenuItem onClick={() => handleFilterChange("thisMonth")}>Ce mois-ci</MenuItem>
+						<MenuItem onClick={() => handleFilterChange("paye")}>Payé</MenuItem>
+						<MenuItem onClick={() => handleFilterChange("nonPaye")}>Non payé</MenuItem>
 						<MenuItem onClick={() => handleFilterChange("")}>Tout</MenuItem>
 					</Menu>
 				</Box>
@@ -202,6 +253,28 @@ const TransactionItem = () => {
 								>
 									<Delete />
 								</Fab>
+								{parseInt(item.prix_restant) > 0 ? (
+									<Fab
+										size="small"
+										aria-label="edit"
+										// onClick={() => handleOpenPaymentDialog(item)}
+										sx={{
+											background: "rgba(0, 128, 0, 0.105)",
+											boxShadow: "0",
+											border: "1px solid rgba(0, 128, 0, 0.145)",
+											"&:hover": {
+												background: "rgba(0, 128, 0, 0.145)",
+												color: "secondary.main",
+											},
+											zIndex: 0,
+										}}
+									>
+										<Edit />
+									</Fab>
+								) : (
+									""
+								)}
+
 								<Fab
 									size="small"
 									aria-label="print"
@@ -227,7 +300,7 @@ const TransactionItem = () => {
 									<TableRow>
 										<TableCell>Nom Medicament</TableCell>
 										<TableCell>Marque</TableCell>
-										<TableCell>Quantité (unité)</TableCell>
+										<TableCell>Quantité (unitaire)</TableCell>
 										<TableCell>Quantité (gros)</TableCell>
 										<TableCell>Prix (Ar)</TableCell>
 									</TableRow>
@@ -236,7 +309,7 @@ const TransactionItem = () => {
 									{item.produits.map((medicament, index) => (
 										<TableRow key={index}>
 											<TableCell>{medicament.product}</TableCell>
-											<TableCell>{medicament.marque_product}</TableCell>
+											<TableCell>{medicament.marque}</TableCell>
 											<TableCell>{medicament.qte_uniter_transaction}</TableCell>
 											<TableCell>{medicament.qte_gros_transaction}</TableCell>
 											<TableCell>{medicament.prix_total}</TableCell>
@@ -254,6 +327,12 @@ const TransactionItem = () => {
 				selectedItem={selectedItem}
 				deleteItem={handleDelete}
 			/>
+			{/* <PaymentDialog
+				open={openPaymentDialog}
+				onClose={() => setOpenPaymentDialog(false)}
+				transaction={selectedTransaction}
+				onPaymentUpdated={handlePaymentUpdated}
+			/> */}
 		</>
 	);
 };

@@ -53,8 +53,7 @@ const Panier = ({
 		},
 	});
 
-	const onSubmit = (data) => {
-		console.log(data);
+	const onSubmit = () => {
 		saveTransaction();
 	};
 
@@ -78,12 +77,14 @@ const Panier = ({
 		<>
 			{addCart.length > 0 ? (
 				<form onSubmit={handleSubmit(onSubmit)}>
-					<TableContainer>
-						<Table>
+					<TableContainer sx={{ maxHeight: "47vh", borderRadius: 3 }}>
+						<Table stickyHeader aria-label="sticky header">
 							<TableHead>
 								<TableRow>
-									{["Nom", "Q.D", "Q.G", "Prix"].map((name, index) => (
-										<TableCell key={index}>{name}</TableCell>
+									{["Nom", "Q.D", "Q.G", "Prix(Ar)"].map((name, index) => (
+										<TableCell style={{ maxHeight: "20px" }} key={index}>
+											{name}
+										</TableCell>
 									))}
 								</TableRow>
 							</TableHead>
@@ -146,8 +147,13 @@ const Panier = ({
 											/>
 										</TableCell>
 										<TableCell>
-											<Stack direction="row" alignItems="center" gap={2}>
-												{item.price} Ar
+											<Stack
+												direction="row"
+												alignItems="center"
+												justifyContent="space-between"
+												gap={2}
+											>
+												{item.price}
 												<Cancel
 													color="error"
 													onClick={() => removeFromCart(item.pk)}
@@ -164,65 +170,69 @@ const Panier = ({
 								))}
 							</TableBody>
 						</Table>
-						<TextField
-							label="Nom du client"
-							required
-							defaultValue={clientName}
-							{...register("clientName", {})}
-							error={!!errors.clientName}
-							helperText={errors.clientName?.message}
-							sx={{
-								mt: 2,
-							}}
-							onChange={(e) => setClientName(e.target.value)}
-							fullWidth
-						/>
-						<Select
-							label="État du paiement"
-							{...register("paymentStatus")}
-							value={paymentStatus}
-							onChange={(e) => setPaymentStatus(e.target.value)}
-							fullWidth
-							sx={{
-								mt: 2,
-							}}
-						>
-							<MenuItem value="Payé">Payé</MenuItem>
-							<MenuItem value="Reste à payer">Reste à payer</MenuItem>
-						</Select>
-						{paymentStatus === "Reste à payer" && (
-							<TextField
-								label="Montant restant"
-								type="number"
-								{...register("remainingAmount")}
-								defaultValue={remainingAmount}
-								onChange={(e) => setRemainingAmount(parseInt(e.target.value, 10))}
-								fullWidth
-								sx={{
-									mt: 2,
-								}}
-							/>
-						)}
-						<Typography variant="h6" sx={{ my: 2 }}>
-							Total: {calculateTotalPrice()} Ar
-						</Typography>
-						<Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-							<Button
-								type="submit"
-								text="Valider "
-								sx={{ py: 1 }}
-								color="secondary"
-								startIcon={<ShoppingBasket />}
-							/>
-							<Button
-								text="Vider "
-								sx={{ py: 1 }}
-								color="inherit"
-								onClick={clearCart}
-								startIcon={<ClearAll />}
-							/>
-						</Stack>
 					</TableContainer>
+					<Typography variant="h6" mt={2}>
+						Total:{" "}
+						<Typography variant="span" color="#4d4373">
+							{calculateTotalPrice()}Ar
+						</Typography>
+					</Typography>
+					<TextField
+						label="Nom du client"
+						required
+						defaultValue={clientName}
+						{...register("clientName", {})}
+						error={!!errors.clientName}
+						helperText={errors.clientName?.message}
+						sx={{
+							mt: 2,
+						}}
+						onChange={(e) => setClientName(e.target.value)}
+						fullWidth
+					/>
+					<Select
+						label="État du paiement"
+						{...register("paymentStatus")}
+						value={paymentStatus}
+						onChange={(e) => setPaymentStatus(e.target.value)}
+						fullWidth
+						sx={{
+							mt: 2,
+						}}
+					>
+						<MenuItem value="Payé">Payé</MenuItem>
+						<MenuItem value="Reste à payer">Reste à payer</MenuItem>
+					</Select>
+					{paymentStatus === "Reste à payer" && (
+						<TextField
+							label="Montant restant"
+							type="number"
+							{...register("remainingAmount")}
+							defaultValue={remainingAmount}
+							onChange={(e) => setRemainingAmount(parseInt(e.target.value, 10))}
+							fullWidth
+							sx={{
+								mt: 2,
+							}}
+						/>
+					)}
+
+					<Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+						<Button
+							type="submit"
+							text="Valider "
+							sx={{ py: 1 }}
+							color="secondary"
+							startIcon={<ShoppingBasket />}
+						/>
+						<Button
+							text="Vider "
+							sx={{ py: 1 }}
+							color="inherit"
+							onClick={clearCart}
+							startIcon={<ClearAll />}
+						/>
+					</Stack>
 				</form>
 			) : (
 				<Typography component="h2" fontSize={22} textAlign="center" mt={5} color="GrayText">

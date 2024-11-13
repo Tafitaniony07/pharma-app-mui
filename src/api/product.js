@@ -27,14 +27,14 @@ export async function stock() {
  */
 export async function createProduct(product) {
 	const { access } = useTokenStore.getState();
-	console.log("Access", product);
+	// console.log("Access", product);
 	try {
 		const res = await myAxiosPrivate.post("stock/create-product", product, {
 			headers: {
 				Authorization: `Bearer ${access}`,
 			},
 		});
-		console.log(res.data);
+		// console.log(res.data);
 		return res;
 	} catch (error) {
 		console.log(error);
@@ -72,7 +72,7 @@ export async function stockInExpired() {
 				Authorization: `Bearer ${access}`,
 			},
 		});
-		console.log(res);
+		// console.log(res);
 		return res;
 	} catch (error) {
 		throw error;
@@ -101,7 +101,7 @@ export async function stockInRupte() {
  */
 export async function UpdateProduct(id, data) {
 	const { access } = useTokenStore.getState();
-	console.log("Update", data);
+	// console.log("Update", data);
 	try {
 		const res = await myAxiosPrivate.patch(`stock/update-product/${id}`, data, {
 			headers: {

@@ -1,9 +1,11 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import * as React from "react";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTokenStore } from "../tokenStore";
 import { useAccountStore } from "../accountStore";
-import useAuth from "../hooks/useAuth";
+// import useAuth from "../hooks/useAuth";
 
 export default function LoaderMain({ account }) {
 	const [open, setOpen] = React.useState(true);

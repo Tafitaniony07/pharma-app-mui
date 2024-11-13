@@ -4,7 +4,27 @@ const Familles = [
 	{ value: "Medicaments", label: "Medicaments" },
 	{ value: "Accessoires", label: "Accessoires" },
 ];
+const Classes_Medic = [
+	{ value: "comprimé", label: "comprimé" },
+	{ value: "sirop", label: "sirop" },
+	{ value: "crème", label: "crème" },
+	{ value: "pommade", label: "pommade" },
+	{ value: "injection", label: "injection" },
+	{ value: "gélule", label: "gélule" },
+	{ value: "poudre", label: "poudre" },
+	{ value: "suppositoire", label: "suppositoire" },
+	{ value: "ampoule", label: "ampoule" },
+];
 
+const Type_Uniter = [
+	{ value: "plaquette", label: "plaquette" },
+	{ value: "sachet", label: "sachet" },
+	{ value: "flacon", label: "flacon" },
+];
+const Type_Gros = [
+	{ value: "boites", label: "boites" },
+	{ value: "paquet", label: "paquet" },
+];
 const FieldAddProduct = [
 	{
 		label: "Famille",
@@ -14,10 +34,10 @@ const FieldAddProduct = [
 		options: Familles,
 	},
 	{ label: "Designation", name: "designation" },
-	{ label: "Classe", name: "classe" },
+	{ label: "Classe", name: "classe", type: "select", defaultValue: "comprimé", options: Classes_Medic },
 	{ label: "Marque", name: "marque" },
-	{ label: "Type Uniter", name: "type_uniter" },
-	{ label: "Type Gros", name: "type_gros" },
+	{ label: "Type Uniter", name: "type_uniter", type: "select", defaultValue: "plaquette", options: Type_Uniter },
+	{ label: "Type Gros", name: "type_gros", type: "select", defaultValue: "boites", options: Type_Gros },
 	{ label: "Prix Uniter", name: "prix_uniter", type: "number" },
 	{ label: "Prix Gros", name: "prix_gros", type: "number" },
 	{ label: "Quantité Uniter", name: "qte_uniter", type: "number", defaultValue: "0" },

@@ -53,7 +53,6 @@ const AdminListProducts = () => {
 				);
 			else setStockData(initialData);
 		});
-		console.log("filtre", initialData);
 	}, [filterText]);
 
 	useEffect(() => {

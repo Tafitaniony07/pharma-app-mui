@@ -18,17 +18,24 @@ export const handlePrint = (item) => {
 						align-items: center;
 					}
 					.header img {
-						max-height: 80px;
+						max-height: 60px;
 					}
 					table {
 						width: 100%;
 						border-collapse: collapse;
-						margin-top: 20px;
+						margin-top: 15px;
 					}
+						p {
+						margin-top:12px;
+						text-align: justify;
+						font-size: 13px;
+						line-height: 8px;
+						}
 					th, td {
 						border: 1px solid #dddddd;
 						text-align: left;
 						padding: 10px 8px;
+						font-size: 13px;
 					}
 					th {
 						background-color: #f2f2f2;
@@ -72,19 +79,29 @@ export const handlePrint = (item) => {
 							.join("")}
 					</tbody>
 					<tfoot>
+					${
+						item.prix_restant == 0
+							? `
 						<tr>
+							<td>État</td>
+							<td>${paymentStatus}</td>
+							<td colspan="3">Total : ${item.prix_total} Ar</td>
+						</tr>`
+							: `
+					<tr>
 							<td>État</td>
 							<td>${paymentStatus}</td>
 							<td colspan="2">Total : ${item.prix_total} Ar</td>
 							<td colspan="1">Restant : ${item.prix_restant} Ar</td>
-						</tr>
+						</tr>`
+					}		
 					</tfoot>
 				</table>
 			</body>
 		</html>
 	`;
 
-	const printWindow = window.open("", "", "height=600,width=500");
+	const printWindow = window.open("", "", "height=600,width=400");
 	printWindow.document.write(printContent);
 	printWindow.document.close();
 	printWindow.print();
