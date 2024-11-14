@@ -170,7 +170,7 @@ const TransactionItem = () => {
 
 	return (
 		<>
-			<Stack spacing={15} direction="row" alignItems="center" justifyContent="space-between">
+			<Stack spacing={15} direction="row" alignItems="center" justifyContent="space-between" pb={3}>
 				<Typography component="h2" sx={{ fontSize: "25px" }} color="primary">
 					Tous les Transactions
 					<Typography component="p" color="black">

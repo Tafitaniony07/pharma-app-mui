@@ -8,53 +8,65 @@ import ListItemText from "@mui/material/ListItemText";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAccountStore } from "../../../accountStore.js";
-import { stockInExpired, stockInRupte } from "../../../api/product.js"; // Importer les fonctions pour obtenir les quantités
+import { stockInExpired, stockInRupte } from "../../../api/product.js";
 import ListMenus from "../menu/menu.jsx";
 
-export default function AdminSideBar() {
-	// Récupère les informations du compte utilisateur depuis le store
-	const { account } = useAccountStore();
-	// Hook de navigation
-	const navigate = useNavigate();
-	// Hook pour obtenir l'emplacement actuel
-	const location = useLocation();
-	// État pour stocker le nombre de produits périmés
-	const [expiredCount, setExpiredCount] = useState(0);
-	// État pour stocker le nombre de produits en rupture de stock
-	const [outOfStockCount, setOutOfStockCount] = useState(0);
+// Créer un store global pour les compteurs
+const useCountStore = (() => {
+	let expiredCount = 0;
+	let outOfStockCount = 0;
+	const subscribers = new Set();
 
-	/**
-	 * Vérifie si le chemin donné correspond au chemin actuel
-	 * @param {string} path - Le chemin à vérifier
-	 * @returns {boolean} - True si le chemin correspond, false sinon
-	 */
+	const subscribe = (callback) => {
+		subscribers.add(callback);
+		return () => subscribers.delete(callback);
+	};
+
+	const setCount = (expired, outOfStock) => {
+		expiredCount = expired;
+		outOfStockCount = outOfStock;
+		subscribers.forEach((callback) => callback());
+	};
+
+	const getCount = () => ({ expiredCount, outOfStockCount });
+
+	return { subscribe, setCount, getCount };
+})();
+
+export default function AdminSideBar() {
+	const { account } = useAccountStore();
+	const navigate = useNavigate();
+	const location = useLocation();
+	const [counts, setCounts] = useState(useCountStore.getCount());
+
 	const isActive = (path) => location.pathname === path;
 
-	/**
-	 * Effet qui charge les compteurs de produits périmés et en rupture
-	 * Redirige vers la page d'accueil si l'utilisateur n'est pas gestionnaire
-	 */
 	useEffect(() => {
-		/**
-		 * Récupère les données des compteurs depuis l'API
-		 */
+		// S'abonner aux changements du store
+		return useCountStore.subscribe(() => {
+			setCounts(useCountStore.getCount());
+		});
+	}, []);
+
+	useEffect(() => {
 		const fetchCounts = async () => {
 			try {
-				const expired = await stockInExpired(); // Récupérer le nombre de médicaments périmés
-				console.log("Expired data:", expired.data); // Afficher la réponse de l'API
-				const outOfStock = await stockInRupte(); // Récupérer le nombre de médicaments en rupture
-				console.log("Out of Stock data:", outOfStock.data); // Afficher la réponse de l'API
-				setExpiredCount(expired.data.length); // Supposons que le résultat soit un tableau
-				setOutOfStockCount(outOfStock.data.length); // Supposons que le résultat soit un tableau
+				const expired = await stockInExpired();
+				const outOfStock = await stockInRupte();
+				// Mettre à jour le store global
+				useCountStore.setCount(expired.data.length, outOfStock.data.length);
 			} catch (error) {
 				console.error("Erreur lors de la récupération des données :", error);
 			}
 		};
 
-		fetchCounts();
-		// Redirige si l'utilisateur n'est pas gestionnaire
+		// Ne charger les données qu'une seule fois au montage initial
+		if (counts.expiredCount === 0 && counts.outOfStockCount === 0) {
+			fetchCounts();
+		}
+
 		if (account.account_type !== "gestionnaires") navigate("/");
-	}, [account.account_type, navigate]);
+	}, [account.account_type, navigate, counts.expiredCount, counts.outOfStockCount]);
 
 	return (
 		<Box
@@ -96,11 +108,11 @@ export default function AdminSideBar() {
 								}}
 							>
 								{item.path === "/stock_expired_date_admin" ? (
-									<Badge badgeContent={expiredCount} color="error">
+									<Badge badgeContent={counts.expiredCount} color="error">
 										{item.icon}
 									</Badge>
 								) : item.path === "/stock_least_quantity_admin" ? (
-									<Badge badgeContent={outOfStockCount} color="error">
+									<Badge badgeContent={counts.outOfStockCount} color="error">
 										{item.icon}
 									</Badge>
 								) : (
