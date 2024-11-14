@@ -1,15 +1,15 @@
 // eslint-disable-next-line no-unused-vars
-import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import logo from "../assets/logo.png";
-import { Button, Stack, Typography } from "@mui/material";
 import { LogoutRounded } from "@mui/icons-material";
-import ExitDialog from "./dialog/exitDialog.jsx";
+import { Button, Stack, Typography } from "@mui/material";
+import AppBar from "@mui/material/AppBar";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Toolbar from "@mui/material/Toolbar";
+import * as React from "react";
 import { useAccountStore } from "../accountStore.js";
+import logo from "../assets/logo.png";
+import ExitDialog from "./modal/exitDialog.jsx";
 
 function NavBar() {
 	const { account } = useAccountStore();

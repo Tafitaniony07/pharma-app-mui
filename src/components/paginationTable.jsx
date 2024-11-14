@@ -1,23 +1,28 @@
-import { TableFooter, TablePagination, TableRow } from "@mui/material";
-import { Box, IconButton } from "@mui/material";
-import { FirstPage, LastPage, KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
+import { FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage } from "@mui/icons-material";
+import { Box, IconButton, TableFooter, TablePagination, TableRow } from "@mui/material";
 import PropTypes from "prop-types";
 
 const TablePaginationActions = (props) => {
+	// Destructure les props nécessaires pour la pagination
 	const { count, page, rowsPerPage, onPageChange } = props;
 
+	// Gestionnaire pour aller à la première page
 	const handleFirstPageButtonClick = (event) => {
 		onPageChange(event, 0);
 	};
 
+	// Gestionnaire pour aller à la page précédente
 	const handleBackButtonClick = (event) => {
 		onPageChange(event, page - 1);
 	};
 
+	// Gestionnaire pour aller à la page suivante
 	const handleNextButtonClick = (event) => {
 		onPageChange(event, page + 1);
 	};
 
+	// Gestionnaire pour aller à la dernière page
+	// Calcule l'index de la dernière page en divisant le nombre total d'éléments par le nombre d'éléments par page
 	const handleLastPageButtonClick = (event) => {
 		onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
 	};

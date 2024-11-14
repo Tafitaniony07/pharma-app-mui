@@ -1,4 +1,4 @@
-import { getTodayDate } from "../getDateToday.js";
+import { getTodayDate } from "../../functions/getDateToday.js";
 
 const Familles = [
 	{ value: "Medicaments", label: "Medicaments" },

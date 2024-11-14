@@ -4,51 +4,17 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import { useNavigate, useLocation } from "react-router-dom";
-import {
-	DateRange,
-	Functions,
-	History,
-	MoneyOff,
-	Password,
-	Person,
-	ProductionQuantityLimitsOutlined,
-} from "@mui/icons-material";
 import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAccountStore } from "../../accountStore";
+import ListMenus from "./menu/menu.jsx";
 
 export default function ProprioSideBar() {
 	const { account } = useAccountStore();
 	const navigate = useNavigate();
 	const location = useLocation();
 	const isActive = (path) => location.pathname === path;
-	const menuItems = [
-		{ text: "DashBoard", icon: <DashboardIcon />, path: "/" },
-		{
-			text: "Stock Périmé",
-			icon: <DateRange />,
-			path: "/expiry_date_admin",
-		},
-		{
-			text: "Stock en Rupture",
-			icon: <ProductionQuantityLimitsOutlined />,
-			path: "/stock_expired_quantity",
-		},
-		{
-			text: "Transactions",
-			icon: <History />,
-			path: "/transactions",
-		},
-		{
-			text: "Total Transactions",
-			icon: <Functions />,
-			path: "/total_transactions",
-		},
-		{ text: "Compte", icon: <Person />, path: "/create_account" },
-		{ text: "Changer Mdp", icon: <Password />, path: "/update_password" },
-		{ text: "Trosa", icon: <MoneyOff />, path: "/list_trosa" },
-	];
+
 	useEffect(() => {
 		if (account.account_type !== "proprios") navigate("/");
 	}, [account.account_type, navigate]);
@@ -62,7 +28,7 @@ export default function ProprioSideBar() {
 			}}
 		>
 			<List sx={{ width: "100%", my: 3 }}>
-				{menuItems.map((item, index) => (
+				{ListMenus.map((item, index) => (
 					<ListItem key={index} disablePadding sx={{ display: "block" }} onClick={() => navigate(item.path)}>
 						<ListItemButton
 							sx={{

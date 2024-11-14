@@ -1,32 +1,45 @@
 import { Save, UploadFile } from "@mui/icons-material";
 import {
 	Box,
-	Typography,
-	TextField,
-	InputAdornment,
 	Dialog,
-	DialogTitle,
 	DialogContent,
+	DialogTitle,
+	InputAdornment,
 	LinearProgress,
 	List,
 	ListItem,
 	ListItemText,
+	TextField,
+	Typography,
 } from "@mui/material";
-import Button from "../btn/MuiButton.jsx";
-import * as XLSX from "xlsx";
 import { addDays } from "date-fns";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast, Toaster } from "sonner";
+import * as XLSX from "xlsx";
 import { createStock } from "../../api/product.js";
 import LoadingButton from "../btn/MuiLoadingButton.jsx";
-import { toast, Toaster } from "sonner";
 
+/**
+ * Composant permettant d'ajouter des produits via un fichier Excel
+ * Gère le téléchargement, la validation et l'enregistrement des données
+ */
 const AddProductExcel = () => {
 	const [stockData, setStockData] = useState([]);
 	const [loadingBtn, setLoadingBtn] = useState(false);
 	const [openDialog, setOpenDialog] = useState(false);
 	const [uploadErrors, setUploadErrors] = useState([]);
-	const [progressCount, setProgressCount] = useState(0); // Compteur de progression
+	const [progressCount, setProgressCount] = useState(0);
 
+	const { reset } = useForm({
+		mode: "onTouched",
+	});
+
+	/**
+	 * Gère le téléchargement et la lecture du fichier Excel
+	 * Convertit les données en format JSON et les valide
+	 * @param {Event} event - L'événement de changement de fichier
+	 */
 	const handleFileUpload = (event) => {
 		const file = event.target.files[0];
 		const reader = new FileReader();
@@ -74,6 +87,10 @@ const AddProductExcel = () => {
 		reader.readAsArrayBuffer(file);
 	};
 
+	/**
+	 * Gère la soumission des données Excel vers l'API
+	 * Affiche une barre de progression et gère les erreurs
+	 */
 	const OnSubmitExcel = async () => {
 		setLoadingBtn(true);
 		setOpenDialog(true);
@@ -86,25 +103,25 @@ const AddProductExcel = () => {
 			}
 
 			for (let i = 0; i < stockData.length; i++) {
-				// Simulate sending each entry one by one to track progress
 				await createStock([stockData[i]]);
 				setProgressCount(i + 1); // Met à jour le compteur de progression
 			}
 
 			setLoadingBtn(false);
 			setOpenDialog(false);
-			toast.success("Ajout du produit réussi !");
+			reset(); // Reset tous les champs du formulaire avec react-hook-form
+			toast.success("Ajout des produits réussi !");
 		} catch (error) {
 			setLoadingBtn(false);
 			setOpenDialog(false);
-			toast.error("Échec de l'ajout des produits.");
+			toast.error("Échec de l'ajout des produits");
 		}
 	};
 
 	return (
 		<Box p={5} sx={{ display: "flex", flexDirection: "column", gap: 3, bgcolor: "white", borderRadius: 5 }}>
 			<Typography fontWeight={700} color="secondary.main">
-				Insérer des produits (Excel)
+				Ajouter des produits via un fichier Excel
 			</Typography>
 			<Box sx={{ display: "flex", gap: 2 }}>
 				<Box sx={{ width: "75%" }}>

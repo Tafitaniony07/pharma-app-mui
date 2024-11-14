@@ -12,36 +12,43 @@ import {
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
-import logo from "../../assets/logo.png";
 import { useForm } from "react-hook-form";
-import Button from "../../components/btn/MuiButton.jsx";
 import { Toaster, toast } from "sonner";
+import logo from "../../assets/logo.png";
+import Button from "../../components/btn/MuiButton.jsx";
 
 const UpdatePasswordForm = () => {
+	// État pour contrôler la visibilité du mot de passe
 	const [showPassword, setShowPassword] = useState(false);
+	// Fonction pour basculer l'affichage du mot de passe
 	const handleClickShowPassword = () => setShowPassword((show) => !show);
 
+	// Configuration du formulaire avec React Hook Form
 	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-		reset,
-		watch,
+		register, // Pour enregistrer les champs du formulaire
+		handleSubmit, // Pour gérer la soumission du formulaire
+		formState: { errors }, // Pour gérer les erreurs de validation
+		reset, // Pour réinitialiser le formulaire
+		watch, // Pour surveiller les valeurs des champs
 	} = useForm({
-		mode: "onTouched",
+		mode: "onTouched", // Validation au focus perdu
 	});
 
+	// Surveillance de la valeur du champ password pour la validation
 	const password = watch("password");
+
+	// Gestion de la soumission du formulaire
 	async function onSubmit(data) {
 		console.log(data);
-		reset("");
+		reset(""); // Réinitialisation des champs
 		toast.success("Mise à jour réussie de vos mots de passe");
 	}
+
+	// Empêche le comportement par défaut sur le mousedown du bouton de visibilité
 	const handleMouseDownPassword = (event) => {
 		event.preventDefault();
 	};
 	const Fields = [
-		// { label: "Nom d'utilisateur", name: "username", type: "text" },
 		{ label: "Adresse Email", name: "email", type: "email" },
 		{ label: "Mot de passe", name: "password", type: "text" },
 		{ label: "Confirmer votre mot de passe", name: "confirmPassword", type: "password" },
@@ -52,10 +59,10 @@ const UpdatePasswordForm = () => {
 			<Box>
 				<img src={logo} width={120} alt="Logo" />
 				<Typography component="h2" fontSize={20} color="inherit" mt={2} mb={1}>
-					Mise à jour du mot de passe !
+					Réinitialisation de votre mot de passe
 				</Typography>
 				<Typography component="p" mb={2}>
-					Veuillez vérifier votre boîte e-mail pour récupérer le code de confirmation.
+					Vérifiez votre boîte mail pour obtenir le code de confirmation.
 				</Typography>
 				<Stack direction="row" justifyContent="space-between" alignItems="center" flexWrap="wrap" gap={3}>
 					{Fields.map((field) =>
@@ -85,7 +92,7 @@ const UpdatePasswordForm = () => {
 												field.name === "confirmPassword"
 													? (value) =>
 															value === password ||
-															"Les mots de passe ne correspondent pas"
+															"Les mots de passe ne correspondent pas. Réessayez."
 													: undefined,
 										})}
 										endAdornment={

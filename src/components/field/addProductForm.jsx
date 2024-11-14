@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Box, Typography, Autocomplete } from "@mui/material";
 import { Save } from "@mui/icons-material";
+import { Autocomplete, Box, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Toaster, toast } from "sonner";
-import FieldAddProduct from "./labelAddProduct.jsx";
-import AddProductExcel from "./addProductExcel.jsx";
+import { ListFournisseur } from "../../api/fournisseur.js";
 import { createProduct } from "../../api/product.js";
 import LoadingButton from "../btn/MuiLoadingButton.jsx";
-import { useEffect, useState } from "react";
+import AddProductExcel from "./addProductExcel.jsx";
 import InputAddProduct from "./Input.jsx";
-import { ListFournisseur } from "../../api/fournisseur.js";
+import FieldAddProduct from "./labelAddProduct.jsx";
 
 const AddProductForm = () => {
 	const {
@@ -22,9 +22,18 @@ const AddProductForm = () => {
 	} = useForm({
 		mode: "onTouched",
 	});
+	// État pour gérer le chargement du bouton
 	const [loadingBtn, setLoadingBtn] = useState(false);
+	// État pour stocker la liste des fournisseurs
 	const [fournisseur, setSelectFournisseur] = useState([]);
+	// État pour stocker le fournisseur sélectionné
 	const [valuefounisseur, setValuefounisseur] = useState("");
+
+	/**
+	 * Gère la soumission du formulaire d'ajout de produit
+	 * Crée un nouveau produit avec les données du formulaire
+	 * @param {Object} data - Les données du formulaire
+	 */
 	const handleRegister = (data) => {
 		setLoadingBtn(true);
 		try {
@@ -50,13 +59,14 @@ const AddProductForm = () => {
 				},
 			};
 
+			// Appel à l'API pour créer un nouveau produit
 			createProduct(datas)
 				.then((response) => {
+					// Vérifie si la création a réussi (status 201 Created)
 					if (response.status === 201 || response.statusText === "Created") {
 						setLoadingBtn(false);
 						resetField();
-						toast.success("Ajout du produit avec succès !");
-						// Réinitialiser les champs du formulaire après une soumission réussie
+						toast.success("Produit ajouté avec succès !");
 					}
 				})
 				.catch((err) => {
@@ -69,6 +79,11 @@ const AddProductForm = () => {
 			toast.error(error);
 		}
 	};
+
+	/**
+	 * Effet qui met à jour les champs adresse et contact
+	 * lorsqu'un fournisseur est sélectionné
+	 */
 	useEffect(() => {
 		fournisseur.map((f) => {
 			if (valuefounisseur === f.nom) {
@@ -78,13 +93,20 @@ const AddProductForm = () => {
 			}
 		});
 	}, [valuefounisseur]);
+
+	/**
+	 * Effet qui charge la liste des fournisseurs
+	 * au chargement du composant
+	 */
 	useEffect(() => {
 		try {
 			ListFournisseur().then((res) => setSelectFournisseur(res.data));
 		} catch (error) {
-			throw err;
+			console.error("Erreur lors de la récupération des fournisseurs :", error);
+			throw error;
 		}
 	}, []);
+
 	return (
 		<Box
 			Box
@@ -106,7 +128,7 @@ const AddProductForm = () => {
 						p: 5,
 					}}
 				>
-					<Typography>Insérer un produit (Details)</Typography>
+					<Typography>Insérer les données du produit</Typography>
 					<Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
 						{FieldAddProduct.map((field, index) => (
 							<Box key={index} sx={{ width: "22%", flexGrow: 1 }}>
