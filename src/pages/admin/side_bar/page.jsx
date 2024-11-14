@@ -41,13 +41,16 @@ export default function AdminSideBar() {
 		const fetchCounts = async () => {
 			try {
 				const expired = await stockInExpired(); // Récupérer le nombre de médicaments périmés
+				console.log("Expired data:", expired.data); // Afficher la réponse de l'API
 				const outOfStock = await stockInRupte(); // Récupérer le nombre de médicaments en rupture
+				console.log("Out of Stock data:", outOfStock.data); // Afficher la réponse de l'API
 				setExpiredCount(expired.data.length); // Supposons que le résultat soit un tableau
 				setOutOfStockCount(outOfStock.data.length); // Supposons que le résultat soit un tableau
 			} catch (error) {
 				console.error("Erreur lors de la récupération des données :", error);
 			}
 		};
+
 		fetchCounts();
 		// Redirige si l'utilisateur n'est pas gestionnaire
 		if (account.account_type !== "gestionnaires") navigate("/");
@@ -92,11 +95,11 @@ export default function AdminSideBar() {
 									justifyContent: "center",
 								}}
 							>
-								{item.path === "/expiry_date_admin" ? (
+								{item.path === "/stock_expired_date_admin" ? (
 									<Badge badgeContent={expiredCount} color="error">
 										{item.icon}
 									</Badge>
-								) : item.path === "/stock_expired_quantity" ? (
+								) : item.path === "/stock_least_quantity_admin" ? (
 									<Badge badgeContent={outOfStockCount} color="error">
 										{item.icon}
 									</Badge>

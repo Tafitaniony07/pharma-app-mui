@@ -87,11 +87,11 @@ export default function SideBarVendeur() {
 									justifyContent: "center",
 								}}
 							>
-								{item.path === "/expiry_date_user" ? (
+								{item.path === "/stock_expired_date_vendeur" ? (
 									<Badge badgeContent={expiredCount} color="error">
 										{item.icon}
 									</Badge>
-								) : item.path === "/stock_expired_quantity_user" ? (
+								) : item.path === "/stock_least_quantity_vendeur" ? (
 									<Badge badgeContent={outOfStockCount} color="error">
 										{item.icon}
 									</Badge>
