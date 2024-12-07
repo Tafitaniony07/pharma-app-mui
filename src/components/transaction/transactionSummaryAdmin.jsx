@@ -21,7 +21,6 @@ const TransactionSummary = () => {
 		// Fonction pour récupérer toutes les factures
 		const fetchTransactions = async () => {
 			const res = await ListFacture();
-			console.log("Status", res.data);
 			setListTransaction(res.data);
 		};
 
@@ -33,10 +32,8 @@ const TransactionSummary = () => {
 				setListVendeur(() => res.data.filter((item) => item.account_type === "vendeur"));
 			}
 		};
-
 		// Appel pour charger les factures
 		fetchTransactions();
-		console.log("Account vendeur", account);
 
 		// Si l'utilisateur est un vendeur, on ne charge que ses données
 		if (account.account_type === "vendeurs") {
@@ -50,7 +47,6 @@ const TransactionSummary = () => {
 	// Fonction pour calculer le total des ventes sur une période donnée pour un vendeur
 	const getTotalByPeriod = (periodStart, vendeur) => {
 		const now = new Date();
-		console.log("Ved", listFactures);
 
 		return (
 			listFactures

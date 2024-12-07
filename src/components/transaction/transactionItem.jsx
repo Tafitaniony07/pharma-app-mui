@@ -64,7 +64,6 @@ const TransactionItem = () => {
 	 */
 	const handleOpenPaymentDialog = (transaction) => {
 		setSelectedTransaction(transaction);
-		console.log(transaction);
 		setOpenPaymentDialog(true);
 	};
 
@@ -163,7 +162,6 @@ const TransactionItem = () => {
 			const res = await ListFacture();
 			setListTransaction(res.data);
 			setFilteredTransactions(res.data);
-			console.log(res.data);
 		};
 		fetch();
 	}, [stateFacture]);
@@ -293,7 +291,11 @@ const TransactionItem = () => {
 								<Fab
 									size="small"
 									aria-label="delete"
-									disabled={account.account_type === "proprios" ? true : false}
+									disabled={
+										account.account_type === "proprios" || parseInt(item.prix_restant) > 0
+											? true
+											: false
+									}
 									onClick={() => handleDeleteTransaction(item)}
 									sx={{
 										background: "rgba(255, 0, 0, 0.105)",
@@ -329,7 +331,6 @@ const TransactionItem = () => {
 								) : (
 									""
 								)}
-
 								<Fab
 									size="small"
 									aria-label="print"
