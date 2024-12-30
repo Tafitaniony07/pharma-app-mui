@@ -4,7 +4,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import {
 	Box,
 	Button,
+	Checkbox,
 	Fab,
+	FormControlLabel,
 	InputAdornment,
 	ListItemText,
 	Menu,
@@ -21,6 +23,7 @@ import {
 } from "@mui/material";
 import { isThisMonth, isThisWeek, isToday } from "date-fns";
 import { useEffect, useState } from "react";
+import { listAccount } from "../../api/account.js";
 import { deleteFacture, ListFacture } from "../../api/facture.js";
 import useAuth from "../../hooks/useAuth.js";
 import handlePrint from "../../pages/facture/page.jsx";
@@ -45,7 +48,9 @@ const TransactionItem = () => {
 	// Récupération des informations du compte utilisateur
 	const { account } = useAuth();
 	const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+	const [listVendeur, setListVendeur] = useState([]);
 	const [openPaymentDialog, setOpenPaymentDialog] = useState(false);
+	const [selectedVendeur, setSelectedVendeur] = useState(false);
 
 	/**
 	 * Gère la recherche de transactions par nom de client
@@ -57,6 +62,44 @@ const TransactionItem = () => {
 		const filtered = listTransactions.filter((transaction) => transaction.client.toLowerCase().includes(value));
 		setFilteredTransactions(filtered);
 	};
+	const handleVendeurCheckboxChange = (username) => {
+		setSelectedVendeur((prevState) => ({
+			...prevState,
+			[username]: !prevState[username],
+		}));
+	};
+	useEffect(() => {
+		const vendeursActifs = Object.keys(selectedVendeur).filter((username) => selectedVendeur[username]);
+
+		if (vendeursActifs.length > 0) {
+			const filtered = listTransactions.filter((transaction) => vendeursActifs.includes(transaction.owner));
+			setFilteredTransactions(filtered);
+		} else {
+			setFilteredTransactions(listTransactions); // Si aucun vendeur n'est sélectionné, afficher toutes les transactions
+		}
+	}, [selectedVendeur, listTransactions]);
+
+	useEffect(() => {
+		if (listVendeur.length > 0) {
+			const initialVendeurState = {};
+			listVendeur.forEach((vendeur) => {
+				initialVendeurState[vendeur.username];
+			});
+		}
+	}, [listVendeur]);
+	useEffect(() => {
+		const fetchVendeurs = async () => {
+			try {
+				const res = await listAccount();
+				if (res.status === 200) {
+					setListVendeur(() => res.data.filter((item) => item.account_type === "vendeur"));
+				}
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchVendeurs();
+	}, []);
 
 	/**
 	 * Ouvre la boîte de dialogue de paiement pour une transaction
@@ -168,7 +211,7 @@ const TransactionItem = () => {
 
 	return (
 		<>
-			<Stack spacing={15} direction="row" alignItems="center" justifyContent="space-between" pb={3}>
+			<Stack spacing={15} direction="row" alignItems="center" justifyContent="space-between" pb={1}>
 				<Typography component="h2" sx={{ fontSize: "25px" }} color="primary">
 					Tous les Transactions
 					<Typography component="p" color="black">
@@ -177,8 +220,14 @@ const TransactionItem = () => {
 				</Typography>
 				<Box flexGrow={1}>
 					<TextField
-						label="Rechercher"
+						// label="Rechercher"
+						placeholder="Nom du client..."
 						fullWidth
+						sx={{
+							"& .MuiOutlinedInput-root": {
+								borderRadius: "50px",
+							},
+						}}
 						size="medium"
 						value={searchText} // Ajoutez la valeur ici
 						onChange={handleSearchChange} // Appelez handleSearchChange lors du changement
@@ -230,6 +279,30 @@ const TransactionItem = () => {
 					</Menu>
 				</Box>
 			</Stack>
+			<Stack direction="row" alignItems="center" pb={2} pl={1}>
+				{listVendeur.map((vendeur) => (
+					<FormControlLabel
+						sx={{
+							background: "#fcfdfd",
+							borderRadius: 5,
+							pr: "15px",
+							"&:hover": {
+								background: "#89998111",
+							},
+						}}
+						key={vendeur.username}
+						control={
+							<Checkbox
+								size="small"
+								checked={selectedVendeur[vendeur.username] || false}
+								onChange={() => handleVendeurCheckboxChange(vendeur.username)}
+								color="secondary"
+							/>
+						}
+						label={vendeur.username}
+					/>
+				))}
+			</Stack>
 			<Box
 				sx={{
 					maxHeight: "66vh", // Définir une hauteur maximale
@@ -276,7 +349,7 @@ const TransactionItem = () => {
 									background: `${
 										parseInt(item.prix_restant) > 0
 											? "rgba(255, 0, 0, 0.115)"
-											: "rgba(0, 128, 0, 0.105)"
+											: "rgba(0, 128, 0, 0.055)"
 									}`,
 								}}
 								px={2}

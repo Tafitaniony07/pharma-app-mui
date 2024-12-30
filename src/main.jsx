@@ -1,6 +1,8 @@
 import { ThemeProvider } from "@mui/material";
+// import React from "react";
 import React from "react";
 import ReactDOM from "react-dom/client";
+import "./assets/calendar-custom.css";
 import MyTheme from "./components/theme/Theme.jsx";
 import "./index.css";
 import Router from "./router/Router.jsx";

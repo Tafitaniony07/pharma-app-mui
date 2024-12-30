@@ -2,11 +2,12 @@
 /* eslint-disable no-useless-catch */
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, InputAdornment, Stack, TextField } from "@mui/material";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { Toaster, toast } from "sonner";
-import { SellProduct, stock } from "../../../api/product.js";
+import { SellProduct } from "../../../api/product.js";
 import AchatDialog from "../../../components/modal/achatDialog.jsx";
+import { useListMedicaments } from "../../../contexts/useListMedicaments.js";
 import Panier from "../panier/page.jsx";
 import MedicamentTable from "../table_product/page.jsx";
 import { TransactionContext } from "../transaction_context/page.jsx";
@@ -33,24 +34,11 @@ const ListMedicamentsVendeur = () => {
 	const [dialogOpen, setDialogOpen] = useState(false);
 
 	// États pour les médicaments
-	const [medic, setMedic] = useState([]);
+	const { medicaments, setMedicaments, loading } = useListMedicaments();
 	const [currentTransaction, setCurrentTransaction] = useState(null);
-	const [loading, setLoading] = useState(true);
 
-	// Récupération initiale des données
-	useEffect(() => {
-		const fetch = async () => {
-			const res = await stock(); // Appelez la fonction stock pour obtenir les données
-			setMedic(res.data); // Stocke les données du stock dans medic
-			setLoading(false); // Mettre à jour l'état de chargement
-		};
-		fetch();
-	}, []);
-
-	// Filtrage des données localement avec useMemo
-	const filteredMedic = useMemo(
-		() => medic.filter((item) => item.detail_product.designation.toLowerCase().includes(filterText.toLowerCase())),
-		[filterText, medic]
+	const filteredMedic = medicaments.filter((item) =>
+		item.detail_product.designation.toLowerCase().includes(filterText.toLowerCase())
 	);
 
 	/**
@@ -209,8 +197,8 @@ const ListMedicamentsVendeur = () => {
 						}}
 					/>
 					<MedicamentTable
-						loadingState={loadingState}
 						addToCart={addToCart}
+						loadingState={loadingState}
 						Medicaments={filteredMedic}
 						loading={loading}
 					/>

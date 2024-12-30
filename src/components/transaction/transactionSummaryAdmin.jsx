@@ -1,14 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-unescaped-entities */
-import { ArrowRight, CalendarMonth } from "@mui/icons-material";
+import { CalendarMonth, MonetizationOn } from "@mui/icons-material";
 import { Box, Fab, Stack, Typography } from "@mui/material";
 import { isWithinInterval, startOfDay, startOfMonth, startOfWeek } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 import { useAccountStore } from "../../accountStore";
 import { listAccount } from "../../api/account";
 import { ListFacture } from "../../api/facture";
+import useAuth from "../../hooks/useAuth";
 
 const TransactionSummary = () => {
+	const { account_type } = useAuth().account;
+	console.log(account_type);
+
 	// État pour stocker la liste des factures
 	const [listFactures, setListTransaction] = useState([]);
 	// État pour stocker la liste des vendeurs
@@ -70,6 +74,7 @@ const TransactionSummary = () => {
 	// Fonction mémorisée pour obtenir les totaux par période pour chaque vendeur
 	const getListPeriodTotal = useCallback(() => {
 		return listVendeur.map((vendeur) => {
+			console.log("total", getTotalByPeriod(startOfMonth(new Date()), vendeur));
 			return {
 				// Créer un objet avec les totaux par période
 				vendeur: vendeur.username,
@@ -88,10 +93,18 @@ const TransactionSummary = () => {
 			<Typography variant="h5" color="primary">
 				Aperçu des transactions
 			</Typography>
-			<Typography variant="body1">Découvrez le total des transactions par vendeur et par période</Typography>
+			<Typography variant="body1" sx={{ display: `${account_type === "vendeurs" ? "none" : "block"}` }}>
+				Découvrez le total des transactions par vendeur et par période
+			</Typography>
 			{listSummary.map((item, i) => {
 				return (
-					<Stack direction="row" spacing={2} sx={{ mt: 3 }} key={i}>
+					<Stack
+						direction={`${account_type === "vendeurs" ? "column" : "row"}`}
+						spacing={2}
+						width="100%"
+						mt={2}
+						key={i}
+					>
 						<Box bgcolor="secondary.main" color="white" p={2} borderRadius={2} flex={1}>
 							<Stack
 								direction="row"
@@ -118,7 +131,7 @@ const TransactionSummary = () => {
 								</Fab>
 							</Stack>
 							<Stack direction="row">
-								<ArrowRight
+								<MonetizationOn
 									sx={{
 										bgcolor: "rgb(255, 255, 255,0.077)",
 										borderRadius: "20px",
@@ -154,7 +167,7 @@ const TransactionSummary = () => {
 							</Stack>
 
 							<Stack direction="row">
-								<ArrowRight
+								<MonetizationOn
 									sx={{
 										bgcolor: "rgb(255, 255, 255,0.077)",
 										borderRadius: "20px",
@@ -190,7 +203,7 @@ const TransactionSummary = () => {
 							</Stack>
 
 							<Stack direction="row">
-								<ArrowRight
+								<MonetizationOn
 									sx={{
 										bgcolor: "rgb(255, 255, 255,0.077)",
 										borderRadius: "20px",
@@ -205,5 +218,8 @@ const TransactionSummary = () => {
 		</>
 	);
 };
+// </>
+// );
+// };
 
 export default TransactionSummary;

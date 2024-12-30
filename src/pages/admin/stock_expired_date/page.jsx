@@ -1,6 +1,6 @@
 import { Box, Stack } from "@mui/material";
+import CardExpDate from "../../../components/cardExpDate.jsx";
 import NavBar from "../../../components/header.jsx";
-import ListMedicamentExpiryDate from "../../../components/stock_state/listMedicamentExpiryDate.jsx";
 import useAuth from "../../../hooks/useAuth.js";
 import ProprioSideBar from "../../proprio/pSideBar.jsx";
 import AdminSideBar from "../side_bar/page.jsx";
@@ -16,7 +16,8 @@ const StockExpiredDateAdmin = () => {
 						{account.account_type === "gestionnaires" ? <AdminSideBar /> : <ProprioSideBar />}
 					</Box>
 					<Box bgcolor="white" borderRadius={5} p={3} mr={2} flex={4}>
-						<ListMedicamentExpiryDate />
+						{/* <ListMedicamentExpiryDate /> */}
+						<CardExpDate />
 					</Box>
 				</Stack>
 			</Box>

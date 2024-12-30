@@ -1,8 +1,10 @@
+// eslint-disable-next-line no-unused-vars
 import { Box, Stack } from "@mui/material";
-import CardExpDate from "../../../components/cardExpDate.jsx";
 import NavBar from "../../../components/header.jsx";
 import SideBarVendeur from "../side_bar/page.jsx";
-const StockExpiredDateVendeur = () => {
+import ListMedicamentsVendeur from "../vente_dashbord/page.jsx";
+
+const ShopProduct = () => {
 	return (
 		<>
 			<NavBar />
@@ -17,14 +19,12 @@ const StockExpiredDateVendeur = () => {
 				<Box flex={1}>
 					<SideBarVendeur />
 				</Box>
-				<Box bgcolor="white" minHeight="80vh" borderRadius={5} p={3} mr={2} flex={9}>
-					{/* <ListMedicamentExpiryDate />
-					 */}
-					<CardExpDate />
+				<Box flex={9}>
+					<ListMedicamentsVendeur />
 				</Box>
 			</Stack>
 		</>
 	);
 };
 
-export default StockExpiredDateVendeur;
+export default ShopProduct;

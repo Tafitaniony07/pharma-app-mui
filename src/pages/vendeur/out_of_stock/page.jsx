@@ -1,10 +1,10 @@
 import { Box, Stack } from "@mui/material";
 // eslint-disable-next-line no-unused-vars
 import React from "react";
+import CardOutOfStock from "../../../components/cardOutOfStock.jsx";
 import NavBar from "../../../components/header.jsx";
-import ListRuptureStock from "../../../components/stock_state/listRuptureStock.jsx";
 import SideBarVendeur from "../side_bar/page.jsx";
-const StockLeastQuantityVendeur = () => {
+const OutOfStockVendeur = () => {
 	return (
 		<>
 			<NavBar />
@@ -20,11 +20,12 @@ const StockLeastQuantityVendeur = () => {
 					<SideBarVendeur />
 				</Box>
 				<Box bgcolor="white" borderRadius={5} p={3} mr={3} flex={9}>
-					<ListRuptureStock />
+					{/* <ListRuptureStock /> */}
+					<CardOutOfStock />
 				</Box>
 			</Stack>
 		</>
 	);
 };
 
-export default StockLeastQuantityVendeur;
+export default OutOfStockVendeur;

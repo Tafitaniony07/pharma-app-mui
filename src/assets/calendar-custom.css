@@ -1,0 +1,59 @@
+/* Rendre le texte blanc
+.react-calendar {
+	color: white;
+	background: transparent;
+	border: none;
+}
+
+/* Supprimer les bordures par défaut */
+.react-calendar__tile {
+	border: 1px solid rgba(255, 255, 255, 0.065);
+	background: transparent;
+	color: rgba(255, 255, 255, 0.825);
+	padding: 10px;
+	border-radius: 5px;
+	margin: 5px 0;
+}
+.react-calendar__month-view__weekdays__weekday {
+	margin: 40px 0 10px 0;
+	text-align: center;
+	color: #fff;
+	text-transform: capitalize;
+}
+.react-calendar__month-view__weekdays__weekday :nth-child(1) {
+	text-decoration: none !important;
+}
+
+/* Ajouter un cadre arrondi à la date active */
+.react-calendar__tile--active {
+	background: #22c55e1b; /* Couleur de votre choix */
+	color: #ffffff;
+	font-weight: bold;
+}
+
+.active-date {
+	background: #22c55e; /* Couleur de votre choix */
+	color: #ffffff;
+	font-weight: bold;
+}
+
+/* Hover avec effet de surbrillance */
+.react-calendar__tile:hover {
+	background: #fcd34d; /* Couleur d'hover légère */
+}
+
+/* Changer la couleur des boutons de navigation */
+.react-calendar__navigation button {
+	color: white;
+	background: rgba(255, 255, 255, 0.025);
+	border: none;
+	margin: 0 10px;
+	text-transform: capitalize;
+	padding: 10px 15px;
+	border-radius: 10px;
+}
+
+/* Personnaliser les bordures de navigation au survol */
+.react-calendar__navigation button:hover {
+	background: #22c55e;
+}

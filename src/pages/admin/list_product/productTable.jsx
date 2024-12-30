@@ -181,6 +181,7 @@ const ProductTable = ({ columns, data, handleView, handleEdit, handleDelete, loa
 									</TableRow>
 							  ))}
 					</TableBody>
+
 					<PaginationTable
 						count={sortedData.length}
 						rowsPerPage={rowsPerPage}

@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
-import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Fab } from "@mui/material";
-import { format } from "date-fns";
+import { ChevronRight, Close } from "@mui/icons-material";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Fab, Typography } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
-import { ChevronRight, Close } from "@mui/icons-material";
+import { format } from "date-fns";
 
 const ViewProductDialog = ({ open, onClose, selectedItem }) => {
 	if (!selectedItem) return null;
@@ -20,7 +20,7 @@ const ViewProductDialog = ({ open, onClose, selectedItem }) => {
 			value: `${selectedItem.qte_gros} ${selectedItem.detail_product.type_gros}`,
 		},
 		{
-			label: `Quantité Uniter`,
+			label: `Quantité unitaire`,
 			value: `${selectedItem.qte_uniter} ${selectedItem.detail_product.type_uniter}`,
 		},
 		{
@@ -43,7 +43,7 @@ const ViewProductDialog = ({ open, onClose, selectedItem }) => {
 							<Chip
 								icon={<ChevronRight />}
 								label={detail.value}
-								sx={{ backgroundColor: "#f0f0f0", fontSize: "15px" }}
+								sx={{ backgroundColor: "#045D5D03", fontSize: "15px" }}
 							/>
 						</Stack>
 					))}

@@ -1,17 +1,19 @@
 import {
+	AddBoxOutlined,
 	DateRange,
+	FormatListBulletedSharp,
 	Functions,
 	History,
 	MoneyOff,
 	Password,
 	ProductionQuantityLimitsOutlined,
 } from "@mui/icons-material";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 
 const ListMenus = [
 	{ text: "DashBoard", icon: <DashboardIcon />, path: "/" },
-	{ text: "Ajout Produit", icon: <AddCircleIcon />, path: "/add_product" },
+	{ text: "Produits", icon: <FormatListBulletedSharp />, path: "/list_product" },
+	{ text: "Ajout Produit", icon: <AddBoxOutlined />, path: "/add_product" },
 	{
 		text: "Stock Périmé",
 		icon: <DateRange />,
@@ -20,7 +22,7 @@ const ListMenus = [
 	{
 		text: "Stock en Rupture",
 		icon: <ProductionQuantityLimitsOutlined />,
-		path: "/stock_least_quantity_admin",
+		path: "/out_of_stock_admin",
 	},
 	{
 		text: "Transactions",
