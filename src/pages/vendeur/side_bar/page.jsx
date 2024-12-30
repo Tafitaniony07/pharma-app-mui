@@ -41,7 +41,7 @@ export default function SideBarVendeur() {
 					<ListItem
 						key={index}
 						disablePadding
-						sx={{ display: "block" }}
+						sx={{ display: "block", my: 5 }}
 						onClick={() => {
 							if (item.path === "/logout") {
 								handleClick();
@@ -72,7 +72,6 @@ export default function SideBarVendeur() {
 							<ListItemIcon
 								sx={{
 									minWidth: 0,
-									mr: 3,
 									color: isActive(item.path) ? "#4d4373" : "inherit",
 									justifyContent: "center",
 								}}

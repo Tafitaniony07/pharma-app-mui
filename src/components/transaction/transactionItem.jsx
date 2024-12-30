@@ -68,16 +68,6 @@ const TransactionItem = () => {
 			[username]: !prevState[username],
 		}));
 	};
-	useEffect(() => {
-		const vendeursActifs = Object.keys(selectedVendeur).filter((username) => selectedVendeur[username]);
-
-		if (vendeursActifs.length > 0) {
-			const filtered = listTransactions.filter((transaction) => vendeursActifs.includes(transaction.owner));
-			setFilteredTransactions(filtered);
-		} else {
-			setFilteredTransactions(listTransactions); // Si aucun vendeur n'est sélectionné, afficher toutes les transactions
-		}
-	}, [selectedVendeur, listTransactions]);
 
 	useEffect(() => {
 		if (listVendeur.length > 0) {
@@ -87,6 +77,7 @@ const TransactionItem = () => {
 			});
 		}
 	}, [listVendeur]);
+
 	useEffect(() => {
 		const fetchVendeurs = async () => {
 			try {
@@ -100,6 +91,17 @@ const TransactionItem = () => {
 		};
 		fetchVendeurs();
 	}, []);
+
+	useEffect(() => {
+		const vendeursActifs = Object.keys(selectedVendeur).filter((username) => selectedVendeur[username]);
+
+		if (vendeursActifs.length > 0) {
+			const filtered = listTransactions.filter((transaction) => vendeursActifs.includes(transaction.owner));
+			setFilteredTransactions(filtered);
+		} else {
+			setFilteredTransactions(listTransactions); // Si aucun vendeur n'est sélectionné, afficher toutes les transactions
+		}
+	}, [selectedVendeur, listTransactions]);
 
 	/**
 	 * Ouvre la boîte de dialogue de paiement pour une transaction

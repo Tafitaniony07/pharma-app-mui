@@ -64,15 +64,7 @@ const AdminDashboard = () => {
 							/>
 						</Stack>
 						<Stack direction="row" alignItems="stretch" gap={2} mt={2} height={510}>
-							<Box
-								bgcolor="secondary.main"
-								borderRadius={5}
-								p={2}
-								display="flex"
-								alignItems="center"
-								justifyContent="center"
-								flex={2}
-							>
+							<Box bgcolor="secondary.main" borderRadius={5} p={3} flex={2.5}>
 								<GraphView />
 							</Box>
 							<Box
