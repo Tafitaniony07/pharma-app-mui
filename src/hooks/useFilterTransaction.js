@@ -69,7 +69,8 @@ const useTransactionFilter = (listTransactions) => {
 	// Effet secondaire : appliquer les filtres et réinitialiser les vendeurs quand searchText change
 	useEffect(() => {
 		if (searchText === "") {
-			resetVendeurSelection(); // Réinitialiser les vendeurs quand la recherche est vide
+			resetVendeurSelection();
+			applyFilters();
 		} else {
 			applyFilters();
 		}
