@@ -57,7 +57,7 @@ const TransactionData = ({ data, deleteTransaction, openPaymentDialog, print, ac
 						<Fab
 							size="small"
 							aria-label="delete"
-							disabled={account.account_type === "proprios" || parseInt(item.prix_restant) > 0}
+							disabled={account.account_type === "proprios" || account.account_type === "vendeurs"}
 							onClick={() => deleteTransaction(item)}
 							sx={{
 								background: "rgba(255, 0, 0, 0.105)",
@@ -75,6 +75,7 @@ const TransactionData = ({ data, deleteTransaction, openPaymentDialog, print, ac
 							<Fab
 								size="small"
 								aria-label="edit"
+								disabled={account.account_type === "proprios" || account.account_type === "vendeurs"}
 								onClick={() => openPaymentDialog(item)}
 								sx={{
 									background: "rgba(0, 128, 0, 0.105)",

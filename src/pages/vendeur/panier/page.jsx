@@ -197,6 +197,7 @@ const Panier = ({
 						onChange={(e) => setClientName(e.target.value)}
 						fullWidth
 					/>
+					w
 					{/* <ControlledTextField
 						name="clientName"
 						control={control}
@@ -233,7 +234,6 @@ const Panier = ({
 							}}
 						/>
 					)}
-
 					<Stack direction="row" spacing={2} sx={{ mt: 2 }}>
 						<Button
 							type="submit"

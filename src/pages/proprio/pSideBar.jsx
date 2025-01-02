@@ -110,7 +110,7 @@ export default function ProprioSideBar() {
 									<Badge badgeContent={counts.expiredCount} color="error">
 										{item.icon}
 									</Badge>
-								) : item.path === "/stock_least_quantity_admin" ? (
+								) : item.path === "/out_of_stock_admin" ? (
 									<Badge badgeContent={counts.outOfStockCount} color="error">
 										{item.icon}
 									</Badge>

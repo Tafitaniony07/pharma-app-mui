@@ -1,5 +1,6 @@
 import {
 	DateRange,
+	FormatListBulletedSharp,
 	Functions,
 	History,
 	MoneyOff,
@@ -11,6 +12,8 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 
 const ListMenus = [
 	{ text: "DashBoard", icon: <DashboardIcon />, path: "/" },
+	{ text: "Produits", icon: <FormatListBulletedSharp />, path: "/list_product" },
+
 	{
 		text: "Stock Périmé",
 		icon: <DateRange />,
@@ -19,7 +22,7 @@ const ListMenus = [
 	{
 		text: "Stock en Rupture",
 		icon: <ProductionQuantityLimitsOutlined />,
-		path: "/stock_least_quantity_admin",
+		path: "/out_of_stock_admin",
 	},
 	{
 		text: "Transactions",
