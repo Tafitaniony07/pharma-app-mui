@@ -18,21 +18,6 @@ import { useForm } from "react-hook-form";
 import Button from "../../../components/btn/MuiButton.jsx";
 import { TruncateText } from "../../../functions/TruncateText.js";
 
-/**
- * Composant Panier qui gère l'affichage et la logique du panier d'achat
- * @param {Array} addCart - Liste des articles dans le panier
- * @param {string} clientName - Nom du client
- * @param {string} paymentStatus - Statut du paiement ('Payé' ou 'Non payé')
- * @param {number} remainingAmount - Montant restant à payer
- * @param {Function} updateCartQuantity - Fonction pour mettre à jour la quantité d'un article
- * @param {Function} calculateTotalPrice - Fonction pour calculer le prix total
- * @param {Function} setClientName - Fonction pour définir le nom du client
- * @param {Function} setPaymentStatus - Fonction pour définir le statut du paiement
- * @param {Function} setRemainingAmount - Fonction pour définir le montant restant
- * @param {Function} saveTransaction - Fonction pour sauvegarder la transaction
- * @param {Function} clearCart - Fonction pour vider le panier
- * @param {Function} removeFromCart - Fonction pour retirer un article du panier
- */
 const Panier = ({
 	addCart,
 	clientName,
@@ -54,6 +39,7 @@ const Panier = ({
 		setValue,
 		reset,
 		formState,
+		// control,
 		getValues,
 		formState: { errors },
 	} = useForm({
@@ -70,10 +56,6 @@ const Panier = ({
 		},
 	});
 
-	/**
-	 * Gestionnaire de soumission du formulaire
-	 * Appelle la fonction saveTransaction pour enregistrer la vente
-	 */
 	const onSubmit = () => {
 		saveTransaction();
 	};
@@ -215,6 +197,16 @@ const Panier = ({
 						onChange={(e) => setClientName(e.target.value)}
 						fullWidth
 					/>
+					{/* <ControlledTextField
+						name="clientName"
+						control={control}
+						label="Nom du client"
+						defaultValue={clientName}
+						error={!!formState.errors.clientName}
+						helperText={formState.errors.clientName?.message}
+						setClientName={setLocalClientName} // Passez la fonction setClientName
+						setValue={setValue} // Passez setValue pour mettre à jour la valeur dans react-hook-form
+					/> */}
 					<Select
 						label="État du paiement"
 						{...register("paymentStatus")}

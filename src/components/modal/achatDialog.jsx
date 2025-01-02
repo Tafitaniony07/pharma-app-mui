@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
 
-import { Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
+import { Close } from "@mui/icons-material";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Fab, Typography } from "@mui/material";
 import handlePrint from "../../pages/facture/page.jsx";
 import Button from "../btn/MuiButton.jsx";
 
-const AchatDialog = ({ dialogOpen, setDialogOpen, navigate, transaction }) => {
-	console.log(transaction);
+const AchatDialog = ({ dialogOpen, setDialogOpen, onClose, navigate, transaction }) => {
 	return (
 		<Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
 			<DialogTitle
@@ -14,14 +14,14 @@ const AchatDialog = ({ dialogOpen, setDialogOpen, navigate, transaction }) => {
 					mt: 2,
 				}}
 			>
-				Achat réussi
+				Achat validé
 			</DialogTitle>
 			<DialogContent
 				sx={{
 					px: 5,
 				}}
 			>
-				<Typography variant="body1">Votre achat a été enregistré avec succès !</Typography>
+				<Typography variant="body1">Transaction enregistrée avec succès</Typography>
 			</DialogContent>
 			<DialogActions
 				sx={{
@@ -33,6 +33,14 @@ const AchatDialog = ({ dialogOpen, setDialogOpen, navigate, transaction }) => {
 					"& > :not(style) ~ :not(style)": { marginLeft: 0 },
 				}}
 			>
+				<Fab
+					size="small"
+					aria-label="view"
+					onClick={onClose}
+					sx={{ boxShadow: "0", position: "absolute", right: 5, top: 5, bgcolor: "#ff000011" }}
+				>
+					<Close />
+				</Fab>
 				<Button
 					color="secondary"
 					text="Voir la transaction"

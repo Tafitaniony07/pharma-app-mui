@@ -2,11 +2,7 @@ import { DateRange, History, Logout, ProductionQuantityLimitsSharp, ShoppingBask
 import DashboardIcon from "@mui/icons-material/Dashboard";
 
 const ListMenus = [
-	{
-		icon: <DashboardIcon />,
-		path: "/",
-	},
-	{ icon: <ShoppingBasketOutlined />, path: "/shop" },
+	{ icon: <ShoppingBasketOutlined />, path: "/" },
 
 	{
 		icon: <DateRange />,
@@ -19,6 +15,10 @@ const ListMenus = [
 	{
 		icon: <History />,
 		path: "/list_transaction_vendeur",
+	},
+	{
+		icon: <DashboardIcon />,
+		path: "/data",
 	},
 	// { icon: <Functions />, path: "/total_transaction_vendeur" },
 

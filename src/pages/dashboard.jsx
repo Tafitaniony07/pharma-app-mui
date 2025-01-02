@@ -1,6 +1,6 @@
 import { useAccountStore } from "../accountStore";
 import AdminDashboard from "./admin/dashbord/page.jsx";
-import VendeurDashboard from "./vendeur/dashbord/page.jsx";
+import ShopProduct from "./vendeur/achat/page.jsx";
 
 /**
  * Composant Dashboard qui gère l'affichage du tableau de bord en fonction du type de compte
@@ -16,7 +16,7 @@ export default function Dashboard() {
 	}
 	// Affiche le dashboard vendeur pour les comptes vendeurs
 	else if (account.account_type === "vendeurs") {
-		return <VendeurDashboard />;
+		return <ShopProduct />;
 	}
 
 	// Retourne null si le type de compte n'est pas reconnu

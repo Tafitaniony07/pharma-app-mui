@@ -61,7 +61,7 @@ const CardExpDate = () => {
 			>
 				{productExpired.map((product, index) => (
 					<Box
-						bgcolor="#045D5D03"
+						bgcolor="#9ecbcc30"
 						color="#171717"
 						padding="10px"
 						borderRadius={2}

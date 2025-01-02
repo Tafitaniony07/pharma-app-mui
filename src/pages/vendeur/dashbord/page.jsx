@@ -41,7 +41,7 @@ const VendeurDashboard = () => {
 								title="Total de medicaments en stock "
 								count={medicaments.length}
 								type="Medicament"
-								path="/shop"
+								path="/"
 							/>
 						</Stack>
 						<Stack direction="row" alignItems="stretch" gap={2} mt={2}>

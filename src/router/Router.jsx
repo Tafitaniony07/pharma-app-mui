@@ -18,7 +18,7 @@ import { MedicamentsProvider } from "../contexts/listMedicamentsContext.jsx";
 import { OutOfStockProvider } from "../contexts/outOfStockContext.jsx";
 import ListProductPage from "../pages/admin/list_product/page.jsx";
 import OutOfStockAdmin from "../pages/admin/out_of_stock/page.jsx";
-import ShopProduct from "../pages/vendeur/achat/page.jsx";
+import VendeurDashboard from "../pages/vendeur/dashbord/page.jsx";
 import OutOfStockVendeur from "../pages/vendeur/out_of_stock/page.jsx";
 import { TransactionProvider } from "../pages/vendeur/transaction_context/page.jsx";
 import MainLayout from "./Layout.jsx";
@@ -44,7 +44,7 @@ export default function Router() {
 
 										<Route path="/list_transaction_vendeur" element={<ListTransactionVendeur />} />
 										<Route path="/out_of_stock_vendeur" element={<OutOfStockVendeur />} />
-										<Route path="/shop" element={<ShopProduct />} />
+										<Route path="/data" element={<VendeurDashboard />} />
 										<Route
 											path="/stock_expired_date_vendeur"
 											element={<StockExpiredDateVendeur />}
